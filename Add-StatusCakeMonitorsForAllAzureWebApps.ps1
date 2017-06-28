@@ -11,7 +11,11 @@ $definedUrlTestNames = Get-StatusCakeTests $statuscakeUsername $stauscakeApiKey 
 
 #Use in the event you want to reset Status Cake.
 #$definedUrlTestIds =Get-StatusCakeTests $statuscakeUsername $stauscakeApiKey | Select-Object TestID | % {$_.TestId}
-#Delete-StatusCakeTests $statuscakeUsername $stauscakeApiKey $definedUrlTestIds
+#Delete-StatusCakeTests $statuscakeUsername $stauscakeApiKey 2325596 $definedUrlTestIds
+
+#Get detailed test information - if needed
+#Get-StatusCakeDetailedTest $statuscakeUsername $stauscakeApiKey
+
 
 #Login to Azure
 Login-AzureRmAccount 
@@ -71,6 +75,23 @@ function Get-StatusCakeTests() {
     return $definedUrlTests
 }
 
+function Get-StatusCakeDetailedTest() {
+    param (
+        [string] $statuscakeUsername,
+        [string] $stauscakeApiKey,
+        $testId
+    )
+
+    $baseurl = "https://www.statuscake.com/API"
+    $testurl = "$baseurl/Tests"
+    $authHeaders = @{"Username"="$statuscakeUsername";"API"="$stauscakeApiKey"}
+
+    $tResponse = Invoke-WebRequest "$testurl/Details/?TestID=$testId"  -Headers $authHeaders
+    $testData = $tResponse.Content | ConvertFrom-Json
+
+    return $testData
+}
+
 function Add-StatusCakeTestUrl() {
     param (
         [string] $statuscakeUsername,
@@ -85,8 +106,10 @@ function Add-StatusCakeTestUrl() {
 
     $testParams = @{WebsiteName="$websiteName"  ;
                     WebsiteURL=$websiteUrl;
+                    WebsiteHost="Microsoft Azure";
                     CheckRate="300";
                     TestType="HTTP";
+                    ContactGroup="0";
                     Confirmation=3;
                     }
     $tResponse = Invoke-WebRequest "$testurl/Update" -Headers $authHeaders -Method Put -Body $testParams
