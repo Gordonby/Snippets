@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,28 +20,64 @@ namespace Push_data
         {
             private static string token = string.Empty;
 
+            enum DatasetMode
+            {
+                Push,
+                Streaming,
+                PushStreaming,
+                AzureAS,
+                AsOnPrem
+            }
+
+            enum SampleDataset
+            {
+                SalesMarketing,
+                Temperature
+            }
+
+
             static void Main(string[] args)
             {
 
                 //Get an authentication access token
                 token = GetToken();
-                //Look at in https://jwt.io/
+                //Look at it in https://jwt.io/
 
-                //Create a Sales-Marketing sample dataset in Power BI
-                var sampleDatasetId = GetDataset("SalesMarketing");
+                //Create a regular dataset in Power BI
+                Console.WriteLine("Standard push dataset");
+                string dsName = "SalesMarketing";
+                var sampleDatasetId = GetDataset(dsName);
                 if (sampleDatasetId == null)
                 {
-                    CreateSampleDataset();
+                    CreateSampleDataset(DatasetMode.Push, SampleDataset.SalesMarketing, dsName);
 
-                    sampleDatasetId = GetDataset("SalesMarketing");
+                    sampleDatasetId = GetDataset(dsName);
                 }
-
-                //Add rows into a Power BI table
                 AddRows(sampleDatasetId, "Product");
 
-                //Streaming dataset
-                string streamingDatasetId = ConfigurationManager.AppSettings["StreamingDatasetId"];
-                AddStreamingRow(streamingDatasetId);
+                //Create a Streaming dataset in Power BI
+                Console.WriteLine("Streaming dataset");
+                dsName = "Temperature";
+                sampleDatasetId = GetDataset(dsName);
+                if (sampleDatasetId == null)
+                {
+                    CreateSampleDataset(DatasetMode.Streaming, SampleDataset.Temperature, dsName);
+
+                    sampleDatasetId = GetDataset(dsName);
+                }
+                AddStreamingRow(sampleDatasetId, "Temp");
+
+                //Create a Streaming dataset in Power BI
+                Console.WriteLine("Hybrid (PushStream) dataset");
+                dsName = "TempHybrid";
+                sampleDatasetId = GetDataset(dsName);
+                if (sampleDatasetId == null)
+                {
+                    CreateSampleDataset(DatasetMode.PushStreaming, SampleDataset.Temperature, dsName);
+
+                    sampleDatasetId = GetDataset(dsName);
+                }
+                AddStreamingRow(sampleDatasetId, "Temp");
 
                 Console.ReadLine();
 
@@ -78,7 +114,7 @@ namespace Push_data
             #endregion
 
             #region Create a dataset in Power BI
-            private static void CreateSampleDataset()
+            private static void CreateSampleDataset(DatasetMode mode, SampleDataset dsType, string dsName)
             {
                 string powerBIDatasetsApiUrl = "https://api.powerbi.com/v1.0/myorg/datasets";
                 //POST web request to create a dataset.
@@ -92,15 +128,36 @@ namespace Push_data
                 //Add token to the request header
                 request.Headers.Add("Authorization", String.Format("Bearer {0}", token));
 
-                //Create dataset JSON for POST request
-                string datasetJson = "{\"name\": \"SalesMarketing\", \"tables\": " +
-                    "[{\"name\": \"Product\", \"columns\": " +
+                //Choose dataset
+                string dsCols = string.Empty;
+                switch (dsType)
+                {
+                    case SampleDataset.SalesMarketing:
+                        dsCols = "[{\"name\": \"Product\", \"columns\": " +
                     "[{ \"name\": \"ProductID\", \"dataType\": \"Int64\"}, " +
                     "{ \"name\": \"Name\", \"dataType\": \"string\"}, " +
                     "{ \"name\": \"Category\", \"dataType\": \"string\"}," +
                     "{ \"name\": \"IsCompete\", \"dataType\": \"bool\"}," +
-                    "{ \"name\": \"ManufacturedOn\", \"dataType\": \"DateTime\"}" +
-                    "]}]}";
+                    "{ \"name\": \"ManufacturedOn\", \"dataType\": \"DateTime\"}]" +
+                    "}]";
+                        break;
+                    case SampleDataset.Temperature:
+                        dsCols = "[{\"name\": \"Temp\", \"columns\": " +
+                    "[{ \"name\": \"ambient_temperature\", \"dataType\": \"Int64\"}, " +
+                    "{ \"name\": \"sensor_uuid\", \"dataType\": \"string\"}, " +
+                    "{ \"name\": \"humidity\", \"dataType\": \"Int64\"}," +
+                    "{ \"name\": \"photosensor\", \"dataType\": \"Int64\"}," +
+                    "{ \"name\": \"radiation_level\", \"dataType\": \"Int64\"}," +
+                    "{ \"name\": \"timestamp\", \"dataType\": \"DateTime\"}]" +
+                    "}]";
+                        break;
+                }
+
+                //Create dataset JSON for POST request
+                string dsMode = Enum.GetName(typeof(DatasetMode), mode);
+                //string dsName = Enum.GetName(typeof(SampleDataset), dsType);
+
+                string datasetJson = string.Format("{{\"name\": \"{0}\", \"defaultMode\": \"{1}\", \"tables\": {2}}}",  dsName, dsMode, dsCols);
 
                 //POST web request
                 byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(datasetJson);
@@ -114,8 +171,6 @@ namespace Push_data
                     var response = (HttpWebResponse)request.GetResponse();
 
                     Console.WriteLine(string.Format("Dataset {0}", response.StatusCode.ToString()));
-
-                    Console.ReadLine();
                 }
             }
             #endregion
@@ -147,7 +202,7 @@ namespace Push_data
                         JObject results = JsonConvert.DeserializeObject<dynamic>(responseContent);
 
                         //var dsMatch = results.
-                        var dsMatch = results.ToObject<Datasets>().value.Where(d => d.Name.Equals(datasetName)).FirstOrDefault(); 
+                        var dsMatch = results.ToObject<Datasets>().value.Where(d => d.Name.Equals(datasetName)).FirstOrDefault();
 
                         if (dsMatch == null)
                         {
@@ -170,7 +225,7 @@ namespace Push_data
             private static void AddRows(string datasetId, string tableName)
             {
                 string powerBIApiAddRowsUrl = String.Format("https://api.powerbi.com/v1.0/myorg/datasets/{0}/tables/{1}/rows", datasetId, tableName);
-                
+
                 //POST web request to add rows.
                 //To add rows to a dataset in a group, use the Groups uri: https://api.powerbi.com/v1.0/myorg/groups/{group_id}/datasets/{dataset_id}/tables/{table_name}/rows
                 //Change request method to "POST"
@@ -189,7 +244,7 @@ namespace Push_data
                     "{\"ProductID\":2,\"Name\":\"LL Crankarm\",\"Category\":\"Components\",\"IsCompete\":true,\"ManufacturedOn\":\"07/30/2014\"}," +
                     "{\"ProductID\":3,\"Name\":\"HL Mountain Frame - Silver\",\"Category\":\"Bikes\",\"IsCompete\":true,\"ManufacturedOn\":\"07/30/2014\"}]}";
 
-               
+
 
                 //POST web request
                 byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(rowsJson);
@@ -200,16 +255,19 @@ namespace Push_data
                 {
                     writer.Write(byteArray, 0, byteArray.Length);
 
-                    var response = (HttpWebResponse)request.GetResponse();
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                    string requestId = response.Headers.GetValues("RequestId").ToString();
 
                     Console.WriteLine("Rows Added");
 
                 }
             }
 
-            private static void AddStreamingRow(string datasetId)
+            private static void AddStreamingRow(string datasetId, string tableName)
             {
-                string powerBIApiAddRowsUrl = String.Format("https://api.powerbi.com/v1.0/myorg/datasets/{0}/rows", datasetId);
+                // string powerBIApiAddRowsUrl = String.Format("https://api.powerbi.com/v1.0/myorg/datasets/{0}/rows", datasetId);
+                string powerBIApiAddRowsUrl = String.Format("https://api.powerbi.com/v1.0/myorg/datasets/{0}/tables/{1}/rows", datasetId, tableName);
 
                 HttpWebRequest request = System.Net.WebRequest.Create(powerBIApiAddRowsUrl) as System.Net.HttpWebRequest;
                 request.KeepAlive = true;
