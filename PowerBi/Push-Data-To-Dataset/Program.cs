@@ -43,41 +43,65 @@ namespace Push_data
                 token = GetToken();
                 //Look at it in https://jwt.io/
 
+                //Create a Streaming dataset in Power BI
+                Console.WriteLine("Hybrid (PushStream) dataset");
+                try
+                {
+                    string dsName = "TempHyb22";
+                    var sampleDatasetId = GetDataset(dsName);
+                    if (sampleDatasetId == null)
+                    {
+                        CreateSampleDataset(DatasetMode.PushStreaming, SampleDataset.Temperature, dsName);
+
+                        sampleDatasetId = GetDataset(dsName);
+                    }
+                    AddStreamingRow(sampleDatasetId, "Temp");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
                 //Create a regular dataset in Power BI
                 Console.WriteLine("Standard push dataset");
-                string dsName = "SalesMarketing";
-                var sampleDatasetId = GetDataset(dsName);
-                if (sampleDatasetId == null)
+                try
                 {
-                    CreateSampleDataset(DatasetMode.Push, SampleDataset.SalesMarketing, dsName);
+                    string dsName = "SalesMarketing11";
+                    var sampleDatasetId = GetDataset(dsName);
+                    if (sampleDatasetId == null)
+                    {
+                        CreateSampleDataset(DatasetMode.Push, SampleDataset.SalesMarketing, dsName);
 
-                    sampleDatasetId = GetDataset(dsName);
+                        sampleDatasetId = GetDataset(dsName);
+                    }
+                    AddRows(sampleDatasetId, "Product");
                 }
-                AddRows(sampleDatasetId, "Product");
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
 
                 //Create a Streaming dataset in Power BI
                 Console.WriteLine("Streaming dataset");
-                dsName = "Temperature";
-                sampleDatasetId = GetDataset(dsName);
-                if (sampleDatasetId == null)
+                try
                 {
-                    CreateSampleDataset(DatasetMode.Streaming, SampleDataset.Temperature, dsName);
+                    string dsName = "Temperature11";
+                    var sampleDatasetId = GetDataset(dsName);
+                    if (sampleDatasetId == null)
+                    {
+                        CreateSampleDataset(DatasetMode.Streaming, SampleDataset.Temperature, dsName);
 
-                    sampleDatasetId = GetDataset(dsName);
+                        sampleDatasetId = GetDataset(dsName);
+                    }
+                    AddStreamingRow(sampleDatasetId, "Temp");
                 }
-                AddStreamingRow(sampleDatasetId, "Temp");
-
-                //Create a Streaming dataset in Power BI
-                Console.WriteLine("Hybrid (PushStream) dataset");
-                dsName = "TempHybrid";
-                sampleDatasetId = GetDataset(dsName);
-                if (sampleDatasetId == null)
+                catch (Exception ex)
                 {
-                    CreateSampleDataset(DatasetMode.PushStreaming, SampleDataset.Temperature, dsName);
-
-                    sampleDatasetId = GetDataset(dsName);
+                    Console.WriteLine(ex.Message);
                 }
-                AddStreamingRow(sampleDatasetId, "Temp");
+
+               
 
                 Console.ReadLine();
 
@@ -117,6 +141,8 @@ namespace Push_data
             private static void CreateSampleDataset(DatasetMode mode, SampleDataset dsType, string dsName)
             {
                 string powerBIDatasetsApiUrl = "https://api.powerbi.com/v1.0/myorg/datasets";
+                string dsMode = Enum.GetName(typeof(DatasetMode), mode);
+
                 //POST web request to create a dataset.
                 //To create a Dataset in a group, use the Groups uri: https://api.PowerBI.com/v1.0/myorg/groups/{group_id}/datasets
                 HttpWebRequest request = System.Net.WebRequest.Create(powerBIDatasetsApiUrl) as System.Net.HttpWebRequest;
@@ -127,6 +153,12 @@ namespace Push_data
 
                 //Add token to the request header
                 request.Headers.Add("Authorization", String.Format("Bearer {0}", token));
+
+                //Add a requestId header to provide traceability in the Msft back end
+                string requestId = Guid.NewGuid().ToString();
+                request.Headers.Add("RequestId", requestId);
+                Console.WriteLine(string.Format("Creating {0} dataset {1} with RequestId {2}", dsMode, dsName, requestId));
+
 
                 //Choose dataset
                 string dsCols = string.Empty;
@@ -154,10 +186,7 @@ namespace Push_data
                 }
 
                 //Create dataset JSON for POST request
-                string dsMode = Enum.GetName(typeof(DatasetMode), mode);
-                //string dsName = Enum.GetName(typeof(SampleDataset), dsType);
-
-                string datasetJson = string.Format("{{\"name\": \"{0}\", \"defaultMode\": \"{1}\", \"tables\": {2}}}",  dsName, dsMode, dsCols);
+                string datasetJson = string.Format("{{\"name\": \"{0}\", \"defaultMode\": \"{1}\", \"tables\": {2}}}", dsName, dsMode, dsCols);
 
                 //POST web request
                 byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(datasetJson);
@@ -189,6 +218,11 @@ namespace Push_data
 
                 //Add token to the request header
                 request.Headers.Add("Authorization", String.Format("Bearer {0}", token));
+
+                //Add a requestId header to provide traceability in the Msft back end
+                string requestId = Guid.NewGuid().ToString();
+                request.Headers.Add("RequestId", requestId);
+                Console.WriteLine(string.Format("Getting dataset {0} with RequestId {1}", datasetName, requestId));
 
                 string datasetId = string.Empty;
                 //Get HttpWebResponse from GET request
@@ -238,6 +272,11 @@ namespace Push_data
                 //Add token to the request header
                 request.Headers.Add("Authorization", String.Format("Bearer {0}", token));
 
+                //Add a requestId header to provide traceability in the Msft back end
+                string requestId = Guid.NewGuid().ToString();
+                request.Headers.Add("RequestId", requestId);
+                Console.WriteLine(string.Format("Adding rows to dataset {0} with RequestId {1}", datasetId, requestId));
+
                 //JSON content for product row
                 string rowsJson = "{\"rows\":" +
                     "[{\"ProductID\":1,\"Name\":\"Adjustable Race\",\"Category\":\"Components\",\"IsCompete\":true,\"ManufacturedOn\":\"07/30/2014\"}," +
@@ -257,8 +296,6 @@ namespace Push_data
 
                     HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-                    string requestId = response.Headers.GetValues("RequestId").ToString();
-
                     Console.WriteLine("Rows Added");
 
                 }
@@ -266,8 +303,8 @@ namespace Push_data
 
             private static void AddStreamingRow(string datasetId, string tableName)
             {
-                // string powerBIApiAddRowsUrl = String.Format("https://api.powerbi.com/v1.0/myorg/datasets/{0}/rows", datasetId);
-                string powerBIApiAddRowsUrl = String.Format("https://api.powerbi.com/v1.0/myorg/datasets/{0}/tables/{1}/rows", datasetId, tableName);
+                 string powerBIApiAddRowsUrl = String.Format("https://api.powerbi.com/v1.0/myorg/datasets/{0}/rows", datasetId);
+                //string powerBIApiAddRowsUrl = String.Format("https://api.powerbi.com/v1.0/myorg/datasets/{0}/tables/{1}/rows", datasetId, tableName);
 
                 HttpWebRequest request = System.Net.WebRequest.Create(powerBIApiAddRowsUrl) as System.Net.HttpWebRequest;
                 request.KeepAlive = true;
@@ -277,6 +314,11 @@ namespace Push_data
 
                 //Add token to the request header
                 request.Headers.Add("Authorization", String.Format("Bearer {0}", token));
+
+                //Add a requestId header to provide traceability in the Msft back end
+                string requestId = Guid.NewGuid().ToString();
+                request.Headers.Add("RequestId", requestId);
+                Console.WriteLine(string.Format("Adding rows to streaming-dataset {0} with RequestId {1}", datasetId, requestId));
 
                 string dtNow = DateTime.UtcNow.ToString("o");
                 string rowJson = "{\"rows\":[{\"ambient_temperature\" :98.6,\"sensor_uuid\" :\"AAAAA555555\",\"timestamp\" :\"" + dtNow + "\",\"humidity\" :98.6,\"photosensor\" :98.6,\"radiation_level\" :98.6}]}";
