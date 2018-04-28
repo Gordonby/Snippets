@@ -1,8 +1,8 @@
 {
   "Name": "NSG Writer",
-  "Id": "randon-guid",
+  "Id": "random-guid",
   "IsCustom": true,
-  "Description": "Can read and write NSG security rules, just in your resourcegroup.",
+  "Description": "Can read and write NSG security rules, just in a resourcegroup.",
   "Actions": [
     "Microsoft.Network/networkSecurityGroups/securityRules/write",
     "Microsoft.Network/networkSecurityGroups/securityRules/read"
