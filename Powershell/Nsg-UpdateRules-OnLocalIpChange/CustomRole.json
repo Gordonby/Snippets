@@ -1,6 +1,5 @@
 {
   "Name": "NSG Writer",
-  "Id": "random-guid",
   "IsCustom": true,
   "Description": "Can read and write NSG security rules, just in a resourcegroup.",
   "Actions": [
