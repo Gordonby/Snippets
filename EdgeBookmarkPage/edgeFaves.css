@@ -4,6 +4,10 @@ body {
 
 
 a {
-    display: inline-block;
+    display: block;
 	margin:5px;
   }
+ 
+ a img {
+	 margin-right:5px;
+ }
