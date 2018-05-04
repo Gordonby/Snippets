@@ -44,8 +44,9 @@ function GetEdgeFavouritesAsValidHtml()
         $anchor = $_
         $dataUri = $anchor.DataUri
         $anchorText = $anchor.BookMarkName
+        $href = $anchor.Href
 
-        $anchorHtml += "<a href=`"`">"
+        $anchorHtml += "<a href=`"$href`" target=`"_blank`">"
         $anchorHtml += "<img width=`"16`" height=`"16`" src=`"$dataUri`" />"
         $anchorHtml += "$anchorText</a>"
     }
