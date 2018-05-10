@@ -1,5 +1,5 @@
 {
-  "Name": "NSG Writer",
+  "Name": "NSG Tweaker",
   "IsCustom": true,
   "Description": "Can read and write NSG security rules",
   "Actions": [
