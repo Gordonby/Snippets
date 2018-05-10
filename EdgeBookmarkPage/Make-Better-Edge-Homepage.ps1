@@ -91,29 +91,6 @@ function GetFirefoxBookmarks() {
     
 }
 
-##############################################################################
-#.SYNOPSIS
-# Determines the location of the SQLLite dll to use, then adds it for use.
-#
-#.DESCRIPTION
-# Taken from Halr9000's answer to this SO question: 
-# https://stackoverflow.com/a/4559524
-#
-##############################################################################
-function Add-SqliteAssembly {
-    # determine bitness (32 vs. 64) of current PowerShell session
-    # I'm assuming bitness = system architecture here, which won't work on IA64, but who cares
-    switch ( [intptr]::Size ) {
-        4   { $binarch = 'x86' }
-        8   { $binarch = 'x64' }
-    }
-    $modPath = $MyInvocation.MyCommand.Module.ModuleBase
-    $SQLiteBinName = 'System.Data.SQLite.dll'
-    $SQLiteBinPath = "$modPath\$binarch\$SQLiteBinName"
-    Write-Host $SQLiteBinPath
-
-    Add-Type -Path $SQLiteBinPath 
-}
 
 
 
