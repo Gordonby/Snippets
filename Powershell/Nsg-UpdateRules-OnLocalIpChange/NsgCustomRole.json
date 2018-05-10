@@ -1,7 +1,7 @@
 {
-  "Name": "NSG Tweaker",
+  "Name": "NSG Writer",
   "IsCustom": true,
-  "Description": "Can read and write NSG security rules",
+  "Description": "Can read and write NSG security rules, just in a resourcegroup.",
   "Actions": [
     "Microsoft.Network/networkSecurityGroups/securityRules/write",
     "Microsoft.Network/networkSecurityGroups/securityRules/read"
@@ -10,6 +10,6 @@
 
   ],
   "AssignableScopes": [
-    
+    "/subscriptions/your-subscription-id"
   ]
 }
