@@ -53,10 +53,69 @@ function GetEdgeFavouritesAsValidHtml()
 
     $baseHtml = Invoke-WebRequest "https://cdn.rawgit.com/Gordonby/Snippets/master/EdgeBookmarkPage/scaffold.html" -Headers @{"Cache-Control"="no-cache"}
     
-    $xHtmlIeBookmarks = $baseHtml.Content.Replace("<div id=`"EdgeBookMarks`"></div>",$anchorHtml)
+    $xHtmlIeBookmarks = $baseHtml.Content.Replace("<div id=`"EdgeBookMarksPlaceholder`"></div>",$anchorHtml)
 
     return $xHtmlIeBookmarks
 }
+
+function GetFirefoxBookmarks() {
+    $appDataPath = [Environment]::GetFolderPath('ApplicationData')
+    $firefoxProfilePath = "$appDataPath\Mozilla\Firefox\Profiles"
+
+    $backupFolder = Get-ChildItem -Directory -Path $firefoxProfilePath | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    $backupFilePath = "$firefoxProfilePath\$backupFolder\places.sqlite" 
+
+    #Test path to make sure it exists
+
+
+    #Open the SQLLite database.
+    #Ref: https://www.powershellgallery.com/packages/PSSQLite
+    Import-Module PSSQLite
+    
+    #$Query = "SELECT visit_date, url, title, visit_count, frecency FROM moz_places, moz_historyvisits WHERE moz_places.id = moz_historyvisits.place_id"
+    $query = "SELECT a.title AS Title, b.url AS URL, lastModified FROM moz_bookmarks AS a JOIN moz_places AS b ON a.fk = b.id"
+
+    $results = Invoke-SqliteQuery -Query $Query -DataSource $backupFilePath | sort-object lastModified -Descending
+
+    $anchorHtml = ""
+    $results | % {
+        $anchorText = $_.Title
+        $href = $.URL
+
+        $anchorHtml += "<a href=`"$href`" target=`"_blank`">"
+        #$anchorHtml += "<img width=`"16`" height=`"16`" />"
+        $anchorHtml += "$anchorText</a>"
+    }
+
+
+    
+}
+
+##############################################################################
+#.SYNOPSIS
+# Determines the location of the SQLLite dll to use, then adds it for use.
+#
+#.DESCRIPTION
+# Taken from Halr9000's answer to this SO question: 
+# https://stackoverflow.com/a/4559524
+#
+##############################################################################
+function Add-SqliteAssembly {
+    # determine bitness (32 vs. 64) of current PowerShell session
+    # I'm assuming bitness = system architecture here, which won't work on IA64, but who cares
+    switch ( [intptr]::Size ) {
+        4   { $binarch = 'x86' }
+        8   { $binarch = 'x64' }
+    }
+    $modPath = $MyInvocation.MyCommand.Module.ModuleBase
+    $SQLiteBinName = 'System.Data.SQLite.dll'
+    $SQLiteBinPath = "$modPath\$binarch\$SQLiteBinName"
+    Write-Host $SQLiteBinPath
+
+    Add-Type -Path $SQLiteBinPath 
+}
+
+
 
 $EdgeFavourites = GetEdgeFavouritesAsValidHtml
 $myDocsPath = [Environment]::GetFolderPath('MyDocuments')
