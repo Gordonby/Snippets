@@ -3,6 +3,8 @@
   "IsCustom": true,
   "Description": "Can read and write NSG security rules, just in a resourcegroup.",
   "Actions": [
+    "Microsoft.Network/networkSecurityGroups/read",
+    "Microsoft.Network/networkSecurityGroups/defaultSecurityRules/read",
     "Microsoft.Network/networkSecurityGroups/securityRules/write",
     "Microsoft.Network/networkSecurityGroups/securityRules/read"
   ],
