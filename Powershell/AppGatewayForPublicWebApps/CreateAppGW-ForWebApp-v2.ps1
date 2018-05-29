@@ -4,10 +4,10 @@
 #Creates a new Azure Application Gateway for an existing Web App.
 #Will optionally create multi-site listeners if the web app has custom domains configured
 
-$webappname = "westeurope3g"
+$webappname = "westeurope4"
 $resourcegroupname = "RegionalWebApps"
 $resourcegrouplocation = "WestEurope"
-$appgatewayName = "AppGwForWebApps"
+$appgatewayName = "AppGwForWebApps3"
 
 Login-AzureRmAccount
 
@@ -51,15 +51,20 @@ $fipconfig = New-AzureRmApplicationGatewayFrontendIPConfig -Name fipconfig01 -Pu
 # Create a new listener using the front-end ip configuration and port created earlier
 if ($OtherWebAppHostNames -eq $null) {
     $listener = New-AzureRmApplicationGatewayHttpListener -Name listener01 -Protocol Http -FrontendIPConfiguration $fipconfig -FrontendPort $fp
+    $rule = New-AzureRmApplicationGatewayRequestRoutingRule -Name "$($webappname)Rule" -RuleType Basic -BackendHttpSettings $poolSetting -HttpListener $listener -BackendAddressPool $pool 
+
 }
 else {
-    $listener = New-AzureRmApplicationGatewayHttpListener -Name "$($webappname)Listener" -Protocol Http -FrontendIPConfiguration $fipconfig -FrontendPort $fp -HostName $OtherWebAppHostNames
+    $OtherWebAppHostNames | % {
+        $listener = New-AzureRmApplicationGatewayHttpListener -Name "$($_)Listener" -Protocol Http -FrontendIPConfiguration $fipconfig -FrontendPort $fp -HostName $_
+        $rule = New-AzureRmApplicationGatewayRequestRoutingRule -Name "$($webappname)Rule" -RuleType Basic -BackendHttpSettings $poolSetting -HttpListener $listener -BackendAddressPool $pool 
+    }
 }
-# Create a new rule
-$rule = New-AzureRmApplicationGatewayRequestRoutingRule -Name "$($webappname)Rule" -RuleType Basic -BackendHttpSettings $poolSetting -HttpListener $listener -BackendAddressPool $pool 
 
 # Define the application gateway SKU to use
-$sku = New-AzureRmApplicationGatewaySku -Name Standard_Small -Tier Standard -Capacity 2
+$sku = New-AzureRmApplicationGatewaySku -Name WAF_Medium -Tier WAF -Capacity 2
+
+$wafConfig = New-AzureRmApplicationGatewayWebApplicationFirewallConfiguration -Enabled $true -FirewallMode "Detection"
 
 # Create the application gateway
-$appgw = New-AzureRmApplicationGateway -Name $appgatewayName -ResourceGroupName $rg.ResourceGroupName -Location $rg.location -BackendAddressPools $pool -BackendHttpSettingsCollection $poolSetting -Probes $probeconfig -FrontendIpConfigurations $fipconfig  -GatewayIpConfigurations $gipconfig -FrontendPorts $fp -HttpListeners $listener -RequestRoutingRules $rule -Sku $sku
+$appgw = New-AzureRmApplicationGateway -Name $appgatewayName -ResourceGroupName $rg.ResourceGroupName -Location $rg.location -BackendAddressPools $pool -BackendHttpSettingsCollection $poolSetting -Probes $probeconfig -FrontendIpConfigurations $fipconfig  -GatewayIpConfigurations $gipconfig -FrontendPorts $fp -HttpListeners $listener -RequestRoutingRules $rule -Sku $sku -WebApplicationFirewallConfig $wafConfig
