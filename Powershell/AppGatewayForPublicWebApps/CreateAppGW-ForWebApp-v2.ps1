@@ -7,7 +7,7 @@
 $webappname = "westeurope4"
 $resourcegroupname = "RegionalWebApps"
 $resourcegrouplocation = "WestEurope"
-$appgatewayName = "AppGwForWebApps3"
+$appgatewayName = "AppGwForWebApps"
 
 Login-AzureRmAccount
 
