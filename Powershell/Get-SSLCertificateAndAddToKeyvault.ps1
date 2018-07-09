@@ -1,10 +1,34 @@
+﻿<#
+    .DESCRIPTION
+        Obtains a certificate from Let's Encrypt and stores it in an Azure KeyVault
+
+    .PARAMETER KeyvaultName
+        The name of the Azure Keyvault that you want the certificate to be stored in
+    
+    .PARAMETER Rootdomain
+        The domain (DNS Zone) that you own 
+        Eg. azdemo.co.uk 
+    
+    .PARAMETER Alias
+        The subdomain that you're wanting to obtain a certificate for.
+        Eg. mywebapp
+
+    .PARAMETER RegistrationEmail
+        Used by Let's Encrypt for ownership.  
+        Must resolve to a valid address with a valid MX domain.
+
+    .NOTES
+        AUTHOR: Gordon Byers
+        LASTEDIT: July 9, 2018
+#>
+
 param (
     [parameter(Mandatory=$true)]
-	[String] $vaultName = "gobyers",
+	[String] $KeyvaultName = "gobyers",
     [parameter(Mandatory=$true)]
-	[String] $rootdomain = "azdemo.co.uk",
+	[String] $Rootdomain = "azdemo.co.uk",
     [parameter(Mandatory=$true)]
-	[String] $alias = "westeurope4",
+	[String] $Alias = "*",
     [parameter(Mandatory=$true)]
 	[String] $RegistrationEmail="gordon.byers@microsoft.com"
 )
@@ -33,11 +57,23 @@ catch {
     }
 }
 
+function CreateRandomPassword() {
+    Write-Host "Creating random password"
+    $bytes = New-Object Byte[] 32
+    $rand = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+    $rand.GetBytes($bytes)
+    $rand.Dispose()
+    $password = [System.Convert]::ToBase64String($bytes)
+    return $password
+}
+
 #Setting varaibles up with better naming conventions
-$domain = $alias + "." + $rootdomain
-$vaultcertificateName=$domain.replace(".","")
+$vaultcertificateName=$alias + $Rootdomain.replace(".","")
 $acmeCertname = $alias + "$(get-date -format yyyy-MM-dd--HH-mm)"
 $pfxFile = Join-Path $pwd "tempcert.pfx"
+
+#Getting an alternative alias ready, for use with AZure Web Apps
+$aliases = @($alias, "$alias-az")
 
 #Making sure that Azure is managing your DNS
 $dnsZone = Get-AzureRmDnsZone | ? {$_.Name -eq $rootdomain}
@@ -46,49 +82,64 @@ if($dnsZone -eq $null) {
     break;
 }
 
-#Let’s Encrypt uses the ACME protocol for verification.
+#Lets Encrypt uses the ACME protocol for verification. import-module ACMESharp
 if (!(Get-ACMEVault))
 {
     Initialize-ACMEVault
 }
 New-ACMERegistration -Contacts "mailto:$RegistrationEmail" -AcceptTos
-New-ACMEIdentifier -Dns $domain -Alias $alias -ErrorAction SilentlyContinue
+
+$aliases | % {
+    New-ACMEIdentifier -Dns $_ + "." + $rootdomain -Alias $_
+}
 
 #Requesting a validation challenge before we can get a certificate
-$acmeChallenge = Complete-ACMEChallenge $alias -ChallengeType dns-01 -Handler manual
+$acmeChallenges = @()
+$aliases | % {
+    $acmeChallenges += Complete-ACMEChallenge $_ -ChallengeType dns-01 -Handler manual
+}
 
 #Parsing the challenge output for the right DNS entries to create
-$manualChallenge = $acmeChallenge.Challenges | ? {$_.HandlerName -eq "manual"}
-$dnsName = $manualChallenge.Challenge.RecordName.replace(".$rootdomain","")
-$dnsValue = $manualChallenge.Challenge.RecordValue
+$acmeChallenges | % {
+    $acmeChallenge = $_
 
-#Finding any existing DNS records for the requested domain entry
-$existingDnsRecordset = Get-AzureRmDnsRecordSet -Name $dnsName -RecordType TXT -ZoneName $dnsZone.name -ResourceGroupName $dnsZone.resourcegroupname  -ErrorAction SilentlyContinue
+    $manualChallenge = $acmeChallenge.Challenges | ? {$_.HandlerName -eq "manual"}
+    $dnsName = $manualChallenge.Challenge.RecordName.replace(".$rootdomain","")
+    $dnsValue = $manualChallenge.Challenge.RecordValue
 
-if($existingDnsRecordset -eq $null) {
-    Write-Output "Adding DNS entry $dnsName"
-    $Records = @()
-    $Records += New-AzureRmDnsRecordConfig -Value $dnsValue
-    $RecordSet = New-AzureRmDnsRecordSet -Name $dnsName -RecordType TXT -ResourceGroupName $dnsZone.resourcegroupname -TTL 60 -ZoneName $dnsZone.name -DnsRecords $Records -ErrorAction SilentlyContinue
+    #Finding any existing DNS records for the requested domain entry
+    $existingDnsRecordset = Get-AzureRmDnsRecordSet -Name $dnsName -RecordType TXT -ZoneName $dnsZone.name -ResourceGroupName $dnsZone.resourcegroupname  -ErrorAction SilentlyContinue
+
+    if($existingDnsRecordset -eq $null) {
+        Write-Output "Adding DNS entry $dnsName"
+        $Records = @()
+        $Records += New-AzureRmDnsRecordConfig -Value $dnsValue
+        $RecordSet = New-AzureRmDnsRecordSet -Name $dnsName -RecordType TXT -ResourceGroupName $dnsZone.resourcegroupname -TTL 60 -ZoneName $dnsZone.name -DnsRecords $Records -ErrorAction SilentlyContinue
+    }
+    else {
+        Write-Output "Updating DNS entry $dnsName from $($existingDnsRecordset.Records[0].value) to  $dnsValue"
+        $existingDnsRecordset.Records[0].value = $dnsValue
+        Set-AzureRmDnsRecordSet -RecordSet $existingDnsRecordset
+    }
 }
-else {
-    Write-Output "Updating DNS entry $dnsName from $($existingDnsRecordset.Records[0].value) to  $dnsValue"
-    $existingDnsRecordset.Records[0].value = $dnsValue
-    Set-AzureRmDnsRecordSet -RecordSet $existingDnsRecordset
-}
+
 Start-Sleep -s 5
 
 #Notifying that challenge conditions have been met
-Submit-ACMEChallenge $alias -ChallengeType dns-01
-(Update-ACMEIdentifier $alias -ChallengeType dns-01).Challenges | Where-Object {$_.Type -eq "dns-01"}
+$aliases | % {
+    Submit-ACMEChallenge $_ -ChallengeType dns-01
+    (Update-ACMEIdentifier $_ -ChallengeType dns-01).Challenges | Where-Object {$_.Type -eq "dns-01"}
+}
 
 #Requesting a certificate
-New-ACMECertificate ${alias} -Generate -Alias $acmeCertname
+New-ACMECertificate ${alias} -Generate -Alias $acmeCertname -AlternativeIdentifierRefs $($Aliases | ? {$_ -ne $alias}) 
 Submit-ACMECertificate $acmeCertname
 Update-AcmeCertificate $acmeCertname
 
 #Making a Pfx certificate
-Get-ACMECertificate $acmeCertname -ExportPkcs12 $pfxFile -CertificatePassword 'g1Bb3Ri$h'
+$randomPw=CreateRandomPassword
+Write-Output "Certificate Password $randomPw" 
+Get-ACMECertificate $acmeCertname -ExportPkcs12 $pfxFile -CertificatePassword $randomPw
 
 #Checking file exists
 $pfxFileExists = test-path($pfxFile)
@@ -101,20 +152,22 @@ else  {
     Write-Output "PFX saved to $pfxFile.  File Exists [$pfxFileExists]"
 
     #Update certificate in key-vault
-    #ref: https://blogs.technet.microsoft.com/kv/2016/09/26/get-started-with-azure-key-vault-certificates/
-    #ref: https://docs.microsoft.com/en-us/azure/key-vault/key-vault-key-rotation-log-monitoring#key-rotation-using-azure-automation
-    $securepfxpwd = ConvertTo-SecureString –String 'g1Bb3Ri$h' –AsPlainText –Force
+    $securepfxpwd = ConvertTo-SecureString –String $randomPw –AsPlainText –Force
 
-    $existingCert=Get-AzureKeyVaultSecret -VaultName $vaultName -Name $vaultcertificateName -ErrorAction SilentlyContinue
+    $existingCert=Get-AzureKeyVaultSecret -VaultName $keyvaultName -Name $vaultcertificateName -ErrorAction SilentlyContinue
     if(!$existingCert -eq $null) {
         Write-Host "Certificate last updated : $($existingCert.Updated)"
     }
 
     Write-Output "Importing Certificate from ($pfxFile)"
-    $cert = Import-AzureKeyVaultCertificate -VaultName $vaultName -Name $vaultcertificateName -FilePath $pfxFile -Password $securepfxpwd
+    $cert = Import-AzureKeyVaultCertificate -VaultName $keyvaultName -Name $vaultcertificateName -FilePath $pfxFile -Password $securepfxpwd
 
-    $newCert=Get-AzureKeyVaultSecret -VaultName $vaultName -Name $vaultcertificateName 
+    Write-Output "Storing password for cert in Keyvault as secret"
+    Set-AzureKeyVaultSecret -VaultName $KeyvaultName -Name "$vaultcertificateName-pw" -SecretValue $securepfxpwd
+
+    $newCert=Get-AzureKeyVaultSecret -VaultName $keyvaultName -Name $vaultcertificateName 
     Write-Output "Certificate last updated : $($newCert.Updated)"
 }
 
 #Cleanup
+Remove-Item $pfxFile
