@@ -11,7 +11,7 @@
     
     .PARAMETER Alias
         The subdomain that you're wanting to obtain a certificate for.
-        Eg. mywebapp
+        Eg. mywebapp or *
 
     .PARAMETER RegistrationEmail
         Used by Let's Encrypt for ownership.  
@@ -20,6 +20,7 @@
     .NOTES
         AUTHOR: Gordon Byers
         LASTEDIT: July 9, 2018
+        DEPENDENCIES: Dependant on v2.5 of module Posh-ACME. https://github.com/rmbolger/Posh-ACME
 #>
 
 param (
@@ -56,6 +57,7 @@ catch {
         throw $_.Exception
     }
 }
+#Connect-AzureRmAccount
 
 function CreateRandomPassword() {
     Write-Host "Creating random password"
@@ -67,13 +69,25 @@ function CreateRandomPassword() {
     return $password
 }
 
+Function Get-AccessToken() {
+    $tenantId = (Get-AzureRmContext).Tenant.Id
+
+    $cache = (Get-AzureRmContext).tokencache
+    $cacheItem = $cache.ReadItems() | Where-Object { $_.TenantId -eq $tenantId } | Select-Object -First 1
+    return $cacheItem.AccessToken
+}
+
 #Setting varaibles up with better naming conventions
-$vaultcertificateName=$alias + $Rootdomain.replace(".","")
-$acmeCertname = $alias + "$(get-date -format yyyy-MM-dd--HH-mm)"
+$vaultcertificateName=$alias.Replace("*", "star")  + $Rootdomain.replace(".","")
 $pfxFile = Join-Path $pwd "tempcert.pfx"
 
-#Getting an alternative alias ready, for use with AZure Web Apps
-$aliases = @($alias, "$alias-az")
+#Getting an alternative alias ready, for use with Azure Web Apps
+if ($alias -ne "*") {
+    $aliases = @("$alias.$rootdomain", "$alias-az.$rootdomain")
+}
+else {
+    $aliases = @("*.$rootdomain", "*.scm.$rootdomain")
+}
 
 #Making sure that Azure is managing your DNS
 $dnsZone = Get-AzureRmDnsZone | ? {$_.Name -eq $rootdomain}
@@ -82,64 +96,21 @@ if($dnsZone -eq $null) {
     break;
 }
 
-#Lets Encrypt uses the ACME protocol for verification. import-module ACMESharp
-if (!(Get-ACMEVault))
-{
-    Initialize-ACMEVault
-}
-New-ACMERegistration -Contacts "mailto:$RegistrationEmail" -AcceptTos
+#Lets Encrypt uses the ACME protocol for verification. 
+Set-PAServer LE_PROD #LE_STAGE
 
-$aliases | % {
-    New-ACMEIdentifier -Dns $_ + "." + $rootdomain -Alias $_
-}
+#Set up parameters we need to use the Posh-ACME DnsPlugin for Azure
+$subId = (Get-AzureRmContext).Subscription.Id
+$token = Get-AccessToken
+$azureParams = @{AZSubscriptionId=$subId;AZAccessToken=$token;}
 
-#Requesting a validation challenge before we can get a certificate
-$acmeChallenges = @()
-$aliases | % {
-    $acmeChallenges += Complete-ACMEChallenge $_ -ChallengeType dns-01 -Handler manual
-}
+#Create a random password for the PFX file
+$randomPw = CreateRandomPassword
+$securepfxpwd = ConvertTo-SecureString –String $randomPw –AsPlainText –Force
 
-#Parsing the challenge output for the right DNS entries to create
-$acmeChallenges | % {
-    $acmeChallenge = $_
-
-    $manualChallenge = $acmeChallenge.Challenges | ? {$_.HandlerName -eq "manual"}
-    $dnsName = $manualChallenge.Challenge.RecordName.replace(".$rootdomain","")
-    $dnsValue = $manualChallenge.Challenge.RecordValue
-
-    #Finding any existing DNS records for the requested domain entry
-    $existingDnsRecordset = Get-AzureRmDnsRecordSet -Name $dnsName -RecordType TXT -ZoneName $dnsZone.name -ResourceGroupName $dnsZone.resourcegroupname  -ErrorAction SilentlyContinue
-
-    if($existingDnsRecordset -eq $null) {
-        Write-Output "Adding DNS entry $dnsName"
-        $Records = @()
-        $Records += New-AzureRmDnsRecordConfig -Value $dnsValue
-        $RecordSet = New-AzureRmDnsRecordSet -Name $dnsName -RecordType TXT -ResourceGroupName $dnsZone.resourcegroupname -TTL 60 -ZoneName $dnsZone.name -DnsRecords $Records -ErrorAction SilentlyContinue
-    }
-    else {
-        Write-Output "Updating DNS entry $dnsName from $($existingDnsRecordset.Records[0].value) to  $dnsValue"
-        $existingDnsRecordset.Records[0].value = $dnsValue
-        Set-AzureRmDnsRecordSet -RecordSet $existingDnsRecordset
-    }
-}
-
-Start-Sleep -s 5
-
-#Notifying that challenge conditions have been met
-$aliases | % {
-    Submit-ACMEChallenge $_ -ChallengeType dns-01
-    (Update-ACMEIdentifier $_ -ChallengeType dns-01).Challenges | Where-Object {$_.Type -eq "dns-01"}
-}
-
-#Requesting a certificate
-New-ACMECertificate ${alias} -Generate -Alias $acmeCertname -AlternativeIdentifierRefs $($Aliases | ? {$_ -ne $alias}) 
-Submit-ACMECertificate $acmeCertname
-Update-AcmeCertificate $acmeCertname
-
-#Making a Pfx certificate
-$randomPw=CreateRandomPassword
-Write-Output "Certificate Password $randomPw" 
-Get-ACMECertificate $acmeCertname -ExportPkcs12 $pfxFile -CertificatePassword $randomPw
+#Request a certificate
+$cert = New-PACertificate -Domain $aliases -Contact $RegistrationEmail -AcceptTOS -DnsPlugin Azure -PluginArgs $azureParams -DNSSleep 5 -PfxPass $randomPw -Verbose -force
+Copy-Item $cert.PfxFile $pfxFile
 
 #Checking file exists
 $pfxFileExists = test-path($pfxFile)
@@ -152,8 +123,6 @@ else  {
     Write-Output "PFX saved to $pfxFile.  File Exists [$pfxFileExists]"
 
     #Update certificate in key-vault
-    $securepfxpwd = ConvertTo-SecureString –String $randomPw –AsPlainText –Force
-
     $existingCert=Get-AzureKeyVaultSecret -VaultName $keyvaultName -Name $vaultcertificateName -ErrorAction SilentlyContinue
     if(!$existingCert -eq $null) {
         Write-Host "Certificate last updated : $($existingCert.Updated)"
