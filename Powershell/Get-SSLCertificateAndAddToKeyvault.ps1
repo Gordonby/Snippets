@@ -31,7 +31,7 @@ param (
     [parameter(Mandatory=$true)]
 	[String] $Alias = "*",
     [parameter(Mandatory=$true)]
-	[String] $RegistrationEmail="gordon.byers@microsoft.com"
+	[String] $RegistrationEmail
 )
 
 $connectionName = "AzureRunAsConnection"
@@ -69,11 +69,23 @@ function CreateRandomPassword() {
     return $password
 }
 
+Function Get-SPAccessToken() {
+    param(
+        [parameter(Mandatory=$true)][string]$spApplicationId
+    )
+
+    $cache = (Get-AzureRmContext).tokencache
+    $cacheItem = $cache.ReadItems() | Where-Object { $_.ClientId -eq $spApplicationId } | Select-Object -First 1
+
+    return $cacheItem.AccessToken
+}
+
 Function Get-AccessToken() {
     $tenantId = (Get-AzureRmContext).Tenant.Id
 
     $cache = (Get-AzureRmContext).tokencache
     $cacheItem = $cache.ReadItems() | Where-Object { $_.TenantId -eq $tenantId } | Select-Object -First 1
+
     return $cacheItem.AccessToken
 }
 
@@ -101,8 +113,13 @@ Set-PAServer LE_PROD #LE_STAGE
 
 #Set up parameters we need to use the Posh-ACME DnsPlugin for Azure
 $subId = (Get-AzureRmContext).Subscription.Id
-$token = Get-AccessToken
+$token = if($servicePrincipalConnection -eq $null) {Get-AccessToken} else {Get-SPAccessToken -spApplicationId $servicePrincipalConnection.ApplicationId} 
 $azureParams = @{AZSubscriptionId=$subId;AZAccessToken=$token;}
+
+if($token -eq $null) {
+    Write-Error "Authentication token not populated.  Check how you are authenticating."
+    break;
+}
 
 #Create a random password for the PFX file
 $randomPw = CreateRandomPassword
@@ -140,3 +157,5 @@ else  {
 
 #Cleanup
 Remove-Item $pfxFile
+
+
