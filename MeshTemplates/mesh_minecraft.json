@@ -1,0 +1,93 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Location of the resources."
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "minecraftNetwork",
+      "type": "Microsoft.ServiceFabricMesh/networks",
+      "location": "[parameters('location')]",
+      "dependsOn": [],
+      "properties": {
+        "addressPrefix": "10.0.0.4/22",
+        "ingressConfig": {
+          "layer4": [
+            {
+              "name": "minecraftIngress",
+              "publicPort": "25565",
+              "applicationName": "minecraftApp",
+              "serviceName": "minecraftService",
+              "endpointName": "minecraftListener"
+            },
+			{
+              "name": "rconIngress",
+              "publicPort": "25575",
+              "applicationName": "rconApp",
+              "serviceName": "rconService",
+              "endpointName": "rconListener"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "minecraftApp",
+      "type": "Microsoft.ServiceFabricMesh/applications",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "Microsoft.ServiceFabricMesh/networks/minecraftNetwork"
+      ],
+      "properties": {
+        "description": "Service Fabric Mesh Minecraft!",
+        "services": [
+          {
+            "type": "Microsoft.ServiceFabricMesh/services",
+            "location": "[parameters('location')]",
+            "name": "minecraftService",
+            "properties": {
+              "description": "Service Fabric Mesh Minecraft Service.",
+              "osType": "linux",
+              "codePackages": [
+                {
+                  "name": "minecraftServer",
+                  "image": "openhack/minecraft-server",
+                  "endpoints": [
+                    {
+                      "name": "minecraftListener",
+                      "port": "25565"
+                    },
+					{
+                      "name": "rconListener",
+                      "port": "25575"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "2",
+                      "memoryInGB": "8"
+                    }
+                  }
+                }
+              ],
+              "replicaCount": "1",
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'minecraftNetwork')]"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
