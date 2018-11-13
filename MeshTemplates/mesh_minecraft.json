@@ -59,7 +59,7 @@
               "codePackages": [
                 {
                   "name": "minecraftServer",
-                  "image": "openhack/minecraft-server",
+                  "image": "openhack/minecraft-server:v1",
                   "endpoints": [
                     {
                       "name": "minecraftListener",
