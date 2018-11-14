@@ -1,0 +1,174 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "WestEurope",
+      "metadata": {
+        "description": "Location of the resources."
+      }
+    },
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure storage account that contains the file share."
+      }
+    },
+    "storageAccountKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Access key for the Azure storage account that contains the file share."
+      }
+    },
+    "fileShareName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure Files file share that provides the volume for the container."
+      }
+    },
+    "stateFolderName": {
+      "type": "string",
+      "defaultValue": "CounterService",
+      "metadata": {
+        "description": "Folder in which to store the state. Provide a empty value to create a unique folder for each container to store the state. A non-empty value will retain the state across deployments, however if more than one applications are using the same folder, the counter may update more frequently."
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-09-01-preview",
+      "name": "AzureFileShareAccountKey",
+      "type": "Microsoft.ServiceFabricMesh/secrets",
+      "location": "[parameters('location')]",
+      "dependsOn": [],
+      "properties": {
+        "kind": "inlinedValue",
+        "contentType": "text/plain",
+        "description": "Access key for the Azure storage account that contains the file share."
+      }
+    },
+    {
+      "apiVersion": "2018-09-01-preview",
+      "name": "AzureFileShareAccountKey/v1",
+      "type": "Microsoft.ServiceFabricMesh/secrets/values",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "Microsoft.ServiceFabricMesh/secrets/AzureFileShareAccountKey"
+      ],
+      "properties": {
+        "value": "[parameters('storageAccountKey')]"
+      }
+    },
+    {
+      "apiVersion": "2018-09-01-preview",
+      "name": "MinecraftVolume",
+      "type": "Microsoft.ServiceFabricMesh/volumes",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "Microsoft.ServiceFabricMesh/secrets/AzureFileShareAccountKey/values/v1"
+      ],
+      "properties": {
+        "description": "Azure Files storage volume for Minecraft.",
+        "provider": "SFAzureFile",
+        "azureFileParameters": {
+          "shareName": "[parameters('fileShareName')]",
+          "accountName": "[parameters('storageAccountName')]",
+          "accountKey": "[resourceId('Microsoft.ServiceFabricMesh/secrets/values','AzureFileShareAccountKey','v1')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "MinecraftNetwork",
+      "type": "Microsoft.ServiceFabricMesh/networks",
+      "location": "[parameters('location')]",
+      "dependsOn": [],
+      "properties": {
+        "addressPrefix": "10.0.0.4/22",
+        "ingressConfig": {
+          "layer4": [
+            {
+              "name": "minecraftIngress",
+              "publicPort": "25565",
+              "applicationName": "minecraftApp",
+              "serviceName": "minecraftService",
+              "endpointName": "minecraftListener"
+            },
+			{
+              "name": "rconIngress",
+              "publicPort": "25575",
+              "applicationName": "rconApp",
+              "serviceName": "rconService",
+              "endpointName": "rconListener"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2018-07-01-preview",
+      "name": "minecraftApp",
+      "type": "Microsoft.ServiceFabricMesh/applications",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "Microsoft.ServiceFabricMesh/networks/MinecraftNetwork",
+        "Microsoft.ServiceFabricMesh/volumes/MinecraftVolume"
+      ],
+      "properties": {
+        "description": "Service Fabric Mesh Minecraft!",
+        "services": [
+          {
+            "type": "Microsoft.ServiceFabricMesh/services",
+            "location": "[parameters('location')]",
+            "name": "minecraftService",
+            "properties": {
+              "description": "Service Fabric Mesh Minecraft Service.",
+              "osType": "linux",
+              "codePackages": [
+                {
+                  "name": "minecraftServer",
+                  "image": "openhack/minecraft-server:latest",
+                  "volumeRefs": [
+                    {
+                      "name": "[resourceId('Microsoft.ServiceFabricMesh/volumes', 'MinecraftVolume')]",
+                      "destinationPath": "/data"
+                    }
+                  ],
+                  "endpoints": [
+                    {
+                      "name": "minecraftListener",
+                      "port": "25565"
+                    },
+					          {
+                      "name": "rconListener",
+                      "port": "25575"
+                    }
+                  ],
+                  "environmentVariables": [
+                    {
+                      "name": "EULA",
+                      "value": "TRUE"
+                    }
+                  ],
+                  "resources": {
+                    "requests": {
+                      "cpu": "2",
+                      "memoryInGB": "8"
+                    }
+                  }
+                }
+              ],
+              "replicaCount": "1",
+              "networkRefs": [
+                {
+                  "name": "[resourceId('Microsoft.ServiceFabricMesh/networks', 'minecraftNetwork')]"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
