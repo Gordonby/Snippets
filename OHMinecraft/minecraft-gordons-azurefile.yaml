@@ -1,0 +1,98 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: gordminecraft007
+provisioner: kubernetes.io/azure-file
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=1000
+  - gid=1000
+parameters:
+  skuName: Standard_LRS
+  storageAccount: gordminecraft007
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: system:azure-cloud-provider
+rules:
+- apiGroups: ['']
+  resources: ['secrets']
+  verbs:     ['get','create']
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:azure-cloud-provider
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: system:azure-cloud-provider
+subjects:
+- kind: ServiceAccount
+  name: persistent-volume-binder
+  namespace: kube-system
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gminefield
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: gordminecraft007
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: minecraftg
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: minecraftg
+    spec:
+      containers:
+      - name: minecraftpersistg
+        image: openhack/minecraft-server
+        ports:
+        - containerPort: 25565
+        - containerPort: 25575
+        env:
+        - name: EULA
+          value: "TRUE"
+        volumeMounts:
+        - mountPath: "/data"
+          name: volumemine
+      volumes:
+        - name: volumemine
+          persistentVolumeClaim:
+            claimName: gminefield
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraftg
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 25565
+    targetPort: 25565
+    protocol: TCP
+    name: mine
+  - port: 25575
+    targetPort: 25575
+    protocol: TCP
+    name: rcon
+  selector:
+    app: minecraftg    
