@@ -26,13 +26,6 @@
       "metadata": {
         "description": "Name of the Azure Files file share that provides the volume for the container."
       }
-    },
-    "stateFolderName": {
-      "type": "string",
-      "defaultValue": "CounterService",
-      "metadata": {
-        "description": "Folder in which to store the state. Provide a empty value to create a unique folder for each container to store the state. A non-empty value will retain the state across deployments, however if more than one applications are using the same folder, the counter may update more frequently."
-      }
     }
   },
   "resources": [
