@@ -79,7 +79,7 @@
       }
     },
     {
-      "apiVersion": "2018-09-01-preview",
+      "apiVersion": "2018-07-01-preview",
       "name": "MinecraftNetwork",
       "type": "Microsoft.ServiceFabricMesh/networks",
       "location": "[parameters('location')]",
@@ -95,7 +95,7 @@
               "serviceName": "minecraftService",
               "endpointName": "minecraftListener"
             },
-			{
+			      {
               "name": "rconIngress",
               "publicPort": "25575",
               "applicationName": "rconApp",
