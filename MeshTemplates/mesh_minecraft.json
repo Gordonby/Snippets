@@ -70,6 +70,12 @@
                       "port": "25575"
                     }
                   ],
+                  "environmentVariables": [
+                    {
+                      "name": "EULA",
+                      "value": "TRUE"
+                    }
+                  ],
                   "resources": {
                     "requests": {
                       "cpu": "2",
