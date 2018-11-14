@@ -79,7 +79,7 @@
       }
     },
     {
-      "apiVersion": "2018-07-01-preview",
+      "apiVersion": "2018-09-01-preview",
       "name": "MinecraftNetwork",
       "type": "Microsoft.ServiceFabricMesh/networks",
       "location": "[parameters('location')]",
@@ -107,7 +107,7 @@
       }
     },
     {
-      "apiVersion": "2018-07-01-preview",
+      "apiVersion": "2018-09-01-preview",
       "name": "minecraftApp",
       "type": "Microsoft.ServiceFabricMesh/applications",
       "location": "[parameters('location')]",
