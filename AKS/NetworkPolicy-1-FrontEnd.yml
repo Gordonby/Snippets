@@ -6,7 +6,6 @@ spec:
   podSelector:
     matchLabels:
       app: azure-vote-front
-      role: frontend
   ingress:
     - from:
       - podSelector:
