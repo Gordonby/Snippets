@@ -1,4 +1,4 @@
-kind: NetworkPolicy
+ind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: web-allow-external
@@ -10,3 +10,15 @@ spec:
   - ports:
     - port: 80
     from: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-pods-deny-egress
+spec:
+  podSelector:
+    matchLabels:
+      role: frontend
+  policyTypes:
+  - Egress
+  egress: []
