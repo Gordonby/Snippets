@@ -8,3 +8,5 @@ spec:
       role: frontend
   ingress:
   - from: []
+  - ports:
+    - port: 5000
