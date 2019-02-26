@@ -1,12 +1,12 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: azure-vote-front-policy
+  name: azure-vote-back-policy
 spec:
   podSelector:
     matchLabels:
-      app: azure-vote-front
-      role: frontend
+      app: azure-vote-back
+      role: backend
   ingress:
     - from:
       - podSelector:
