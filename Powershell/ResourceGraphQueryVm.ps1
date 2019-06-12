@@ -3,9 +3,10 @@ Install-Module -Name Az.ResourceGraph
 
 # Connect to Azure
 Connect-AzAccount
+Select-AzSubscription "gobyers-int"
 
 # Filter to the right subscriptions
-$subscriptions = Get-AzSubscription | ? {$_.name -like "Contoso*"} | select  Id -ExpandProperty
+$subscriptions = Get-AzSubscription | ? {$_.name -like "Contoso*"} | select -ExpandProperty Id 
 
 # Compose query
 $query="where type == 'microsoft.compute/virtualmachines' |
