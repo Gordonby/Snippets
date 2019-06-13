@@ -18,9 +18,9 @@ $subscriptionExtendFilter = "extend SubscriptionName = case(`r`n" + [system.Stri
 $query="where type == 'microsoft.compute/virtualmachines' |
 where tags !hasprefix 'orchestrator' | 
 $subscriptionExtendFilter |
-project subscriptionId, resourceGroup, name, properties.hardwareProfile.vmSize, properties.licenseType, tags"
+project subscriptionId, SubscriptionName, resourceGroup, name, properties.hardwareProfile.vmSize, properties.licenseType, tags"
 
 # Run query
-$results = Search-AzGraph -Query $query -Subscription $subscriptions
+$results = Search-AzGraph -Query $query -Subscription $subscriptions -First 5000
 
 $results
