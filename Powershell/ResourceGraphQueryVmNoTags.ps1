@@ -13,6 +13,6 @@ where tags !hasprefix 'orchestrator' |
 project subscriptionId, resourceGroup, name, properties.hardwareProfile.vmSize, properties.licenseType, tags"
 
 # Run query
-$results = Search-AzGraph -Query $query -Subscription $subscriptions
+$results = Search-AzGraph -Query $query -Subscription $subscriptions -First 5000
 
 $results
