@@ -3,7 +3,7 @@ Install-Module -Name Az.ResourceGraph
 
 # Connect to Azure
 Connect-AzAccount
-Select-AzSubscription "gobyers-int"
+Select-AzSubscription "subname"
 
 # Filter to the right subscriptions
 $subscriptions = Get-AzSubscription | ? {$_.name -like "Contoso*"} | select -ExpandProperty Id 
@@ -14,4 +14,4 @@ where tags.environment == 'dev' |
 project subscriptionId, resourceGroup, name, properties.hardwareProfile.vmSize, properties.licenseType"
 
 # Run query
-Search-AzGraph -Query $query -Subscription $subscriptions
+Search-AzGraph -Query $query -Subscription $subscriptions -First 5000
