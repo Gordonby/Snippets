@@ -16,21 +16,39 @@ namespace OcrMe
     {
         // Find your cog services accounts with: https://portal.azure.com/#blade/HubsExtension/BrowseResourceBlade/resourceType/Microsoft.CognitiveServices%2Faccounts
 
-        // Replace <Subscription Key> with your valid Computer Vision subscription key.
-        const string subscriptionKey = "";
-
         const string uriBase = "https://westeurope.api.cognitive.microsoft.com/vision/v2.0/ocr";
 
         private static async Task Main()
         {
-            // Get the path and filename to process from the user.
-            Console.WriteLine(DateTime.Now.ToShortTimeString());
-            Console.WriteLine("OCR an image:");
-            Console.Write("Enter the path to the directory you wish to ocr: ");
-
             List<string> validExtensions = new List<string>() { ".JPG" };
 
+            // Get the path and filename to process from the user.
+            Console.WriteLine(DateTime.Now.ToShortTimeString());
+            Console.WriteLine("OCR images in directory");
+            Console.WriteLine("-----------------------");
+            Console.WriteLine("");
+            Console.WriteLine(string.Format("Using the cog services uriBase : {0}",uriBase));
+
+            Console.WriteLine("Enter your OCR key :");
+            string subscriptionKey = Console.ReadLine();
+            
+            Console.WriteLine("Enter the path to the directory you wish to ocr: ");
             string dirPath = Console.ReadLine();
+
+            Console.WriteLine("Only process files modified in the last week? [yes/no]");
+            DateTime fileModFilter;
+            switch (Console.ReadLine())
+            {
+                case "no":
+                    fileModFilter = new DateTime(1970, 1, 1, 0, 0, 0);
+                    break;
+                case "yes":
+                    fileModFilter = DateTime.Now.AddDays(-7);
+                    break;
+                default:
+                    fileModFilter = DateTime.Now.AddDays(-7);
+                    break;
+            }
 
             if (Directory.Exists(dirPath))
             {
@@ -41,24 +59,30 @@ namespace OcrMe
 
                     if (validExtensions.Contains(extension.ToUpper()))
                     {
-                        Console.Write(DateTime.Now.ToShortTimeString());
-                        Console.WriteLine(" Processing {0}:", filePath);
+                        DateTime lastMod = File.GetLastWriteTimeUtc(filePath);
 
-                        ResizeImageIfNeeded(filePath, 4199, 4199);
-
-                        JToken ocrContent = await MakeOCRRequest(filePath);
-
-                        string jumbledSentance = "";
-                        foreach (JToken wordBlock in ocrContent.SelectTokens("$..text"))
+                        if (lastMod > fileModFilter)
                         {
-                            jumbledSentance += wordBlock.ToString() + " ";
+
+                            Console.Write(DateTime.Now.ToShortTimeString());
+                            Console.WriteLine(" Processing {0}:", filePath);
+
+                            ResizeImageIfNeeded(filePath, 4199, 4199);
+
+                            JToken ocrContent = await MakeOCRRequest(subscriptionKey, filePath);
+
+                            string jumbledSentance = "";
+                            foreach (JToken wordBlock in ocrContent.SelectTokens("$..text"))
+                            {
+                                jumbledSentance += wordBlock.ToString() + " ";
+                            }
+
+                            string fileName = System.IO.Path.GetFileName(filePath);
+
+                            string textFilePath = filePath.Replace(fileName, fileName.Replace(extension, ".txt"));
+
+                            System.IO.File.WriteAllText(textFilePath, jumbledSentance);
                         }
-
-                        string fileName = System.IO.Path.GetFileName(filePath);
-
-                        string textFilePath = filePath.Replace(fileName, fileName.Replace(extension, ".txt"));
-
-                        System.IO.File.WriteAllText(textFilePath, jumbledSentance);
                     }
                 }
             }
@@ -135,7 +159,7 @@ namespace OcrMe
         /// the Computer Vision REST API.
         /// </summary>
         /// <param name="imageFilePath">The image file with printed text.</param>
-        static async Task<JToken> MakeOCRRequest(string imageFilePath)
+        static async Task<JToken> MakeOCRRequest(string subscriptionKey, string imageFilePath)
         {
             try
             {
