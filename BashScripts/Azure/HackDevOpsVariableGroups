@@ -1,0 +1,38 @@
+variablegroupname=ClusterMeta
+variablegroupid=1
+adoorg=kubists
+adoproj=Openhack-Team4
+
+#use the system.accesstoken on the build agent and a pat token when testing locally.
+#bearerToken=$(System.AccessToken)
+#header="Authorization: Bearer $bearerToken"
+
+patToken=`echo -n "crap:kjdfksjdkfjsdklfjsdklfjsdkljfskldjfklsdf" | base64`
+header="Authorization: Basic $patToken"
+
+puturl="https://dev.azure.com/$adoorg/$adoproj/_apis/distributedtask/variablegroups/$variablegroupid?api-version=5.0-preview.1"
+geturl="https://dev.azure.com/kubists/openhack-team4/_apis/distributedtask/variablegroups/$variablegroupid?api-version=4.1-preview.1"
+
+groupoutput=$(curl -X GET "$geturl" -H "Content-Type: application/json" -H "$header")
+echo $groupoutput | jq -r ".variables"
+
+#test values
+#newSlot="orange"
+#currentSlot="yellow"
+
+productionslot=$(helm get api-poi | grep "productionSlot:" | sed 's/^productionSlot: //')
+echo $productionslot
+
+currentSlot=$productionslot
+
+if [ "$currentSlot" == "blue" ]; then
+    newSlot="green"
+else
+    newSlot="blue"
+fi
+
+payload='{ "variables": { "newSlot": { "value": "'"$newSlot"'" }, "currentSlot": { "value": "'"$currentSlot"'" } }, "type": "Vsts", "name": "'"$variablegroupname"'" }'
+
+setvarresponse=$(curl -X PUT -H "Content-Type: application/json" -H "$header" -d "$payload" "$puturl")
+
+echo $setvarresponse
