@@ -1,0 +1,30 @@
+variablegroupname=GordVarGroup
+variablegroupid=1
+adoorg=myadoorganisationname
+adoproj=myadoprojectname
+
+#use the system.accesstoken on the build agent and a pat token when testing locally.
+#bearerToken=$(System.AccessToken)
+#header="Authorization: Bearer $bearerToken"
+
+patToken=`echo -n "mypat:sdsdsdsdsd42uy4nptvr5mizjfwhy5ufiabguls2gtla" | base64 -w 0`
+header="Authorization: Basic $patToken"
+
+url="https://dev.azure.com/$adoorg/$adoproj/_apis/distributedtask/variablegroups/$variablegroupid?api-version=5.0-preview.1"
+
+groupoutput=$(curl -X GET "$url" -H "Content-Type: application/json" -H "$header")
+
+#lets trim down to just the properties we need
+vargroupupdate=$(echo $groupoutput | jq -r "{name, variables, type, id}")
+
+#lets set up the variables for what we want to update.  
+#These would come from whatever system or file youre looking at.  
+#For this we'll just use test values.
+newfruit="banana"
+vargroupupdate=$(echo $vargroupupdate | jq --arg varvalupdate "$newfruit" '.variables.fruit.value |= $varvalupdate')
+
+newcar="audi"
+vargroupupdate=$(echo $vargroupupdate | jq --arg varvalupdate "$newcar" '.variables.car.value |= $varvalupdate')
+
+setvarresponse=$(curl -X PUT -H "Content-Type: application/json" -H "$header" -d "$vargroupupdate" "$url")
+echo $setvarresponse
