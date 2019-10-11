@@ -70,4 +70,6 @@ az network nsg rule create -g $RGNAME --nsg-name ${VMNAME}NSG -n DenyAll --prior
 az vm disk attach --vm-name $VMNAME -g $RGNAME --sku Premium_LRS --new -z 64 --name ghe-${VMNAME}-data.vhd --caching ReadWrite
 
 az network public-ip update -g $RGNAME -n ${VMNAME}PublicIP --dns-name $DNSNAME
+
+echo "Wait a few minutes for the Server to  finish coming up, then access via..."
 az network public-ip show -g $RGNAME -n ${VMNAME}PublicIP -o json --query "dnsSettings.fqdn"
