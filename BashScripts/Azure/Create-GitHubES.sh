@@ -7,7 +7,7 @@ MYSOURCEIPRANGE=86.176.175.178
 #Check latest images with this
 #az vm image list -f GitHub-Enterprise -l $LOC -p GitHub --all
 
-az vm create -n $VMNAME -g $RGNAME --size Standard_DS11_v2 -l $LOC --image GitHub:GitHub-Enterprise:GitHub-Enterprise:2.15.23 --storage-sku Premium_LRS
+az vm create -n $VMNAME -g $RGNAME --size Standard_DS11_v2 -l $LOC --image GitHub:GitHub-Enterprise:GitHub-Enterprise:2.18.4 --storage-sku Premium_LRS
 
 az network nsg show -n ${VMNAME}NSG -g $RGNAME
 
