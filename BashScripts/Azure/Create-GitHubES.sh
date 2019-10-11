@@ -3,6 +3,7 @@ LOC=westeurope
 RGNAME=GHES
 VMNAME=GHES-Amsterdam
 MYSOURCEIPRANGE=86.176.175.178
+DNSNAME=gordonsgithub1
 
 #Check latest images with this
 #az vm image list -f GitHub-Enterprise -l $LOC -p GitHub --all
@@ -58,6 +59,6 @@ az network nsg rule create -g $RGNAME --nsg-name ${VMNAME}NSG -n DenyAll --prior
 
 #My "Non-prod" data disk, see size and caching setting.
 #az vm disk attach --vm-name $VMNAME -g $RGNAME --sku Premium_LRS --new -z 512 --disk ghe-data.vhd
-az vm disk attach --vm-name $VMNAME -g $RGNAME --sku Premium_LRS --new -z 64 --name ghe-data.vhd --caching ReadWrite
+az vm disk attach --vm-name $VMNAME -g $RGNAME --sku Premium_LRS --new -z 64 --name ghe-${VMNAME}-data.vhd --caching ReadWrite
 
-az network public-ip update -g $RGNAME -n ${VMNAME}PublicIP --dns-name gordonsgithubes
+az network public-ip update -g $RGNAME -n ${VMNAME}PublicIP --dns-name $DNSNAME
