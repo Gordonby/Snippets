@@ -52,6 +52,14 @@ az network nsg rule create -g $RGNAME --nsg-name ${VMNAME}NSG -n SimpleGit --pri
     --source-address-prefixes $MYSOURCEIPRANGE --source-port-ranges '*' \
     --destination-address-prefixes '*' --destination-port-ranges 9418 --access Allow \
     --protocol Tcp --description "Simple Git protocol port."
+az network nsg rule create -g $RGNAME --nsg-name ${VMNAME}NSG -n PublicHTTP --priority 800 \
+    --source-address-prefixes '*' --source-port-ranges '*' \
+    --destination-address-prefixes '*' --destination-port-ranges 80 --access Allow \
+    --protocol Tcp --description "Public HTTP access"
+az network nsg rule create -g $RGNAME --nsg-name ${VMNAME}NSG -n PublicHTTPS --priority 810 \
+    --source-address-prefixes '*' --source-port-ranges '*' \
+    --destination-address-prefixes '*' --destination-port-ranges 443 --access Allow \
+    --protocol Tcp --description "Public HTTPS access"
 az network nsg rule create -g $RGNAME --nsg-name ${VMNAME}NSG -n DenyAll --priority 900 \
     --source-address-prefixes '*' --source-port-ranges '*' \
     --destination-address-prefixes '*' --destination-port-ranges '*' --access Deny\
