@@ -72,6 +72,8 @@ echo "Adding windows nodepool"
     --max-count 2 \
     --node-taints key=value:NoSchedule
 
+echo "Getting kube context"
+  az aks get-credentials -g K8s -n ${PREFIX}aks${SUFFIX}
 
 echo "Adding clusterrolebinding for dashboard"
 kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
