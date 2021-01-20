@@ -4,9 +4,9 @@ az extension update -n aks-preview
 echo "Displaying current subscription context"
 az account show -o table
 
-LOC="eastus"
+LOC="westeurope"
 
-PREFIX="g5"
+PREFIX="priv"
 SUFFIX=$(date -d "$D" '+%d%m')
 
 USERNAME_WIN=""
@@ -39,41 +39,10 @@ read -p "Still want to create the cluster? [use ctrl+c to cancel] " ANSWER
 echo "Creating the cluster"
 az aks create -n ${PREFIX}aks${SUFFIX} \
     -g K8s --location $LOC \
-    --vm-set-type VirtualMachineScaleSets \
-    --node-count 1 \
-    --enable-vmss \
-    --enable-cluster-autoscaler \
-    --min-count 1 --max-count 4 \
     --load-balancer-sku standard \
-    --generate-ssh-keys \
-    --node-vm-size=Standard_B2s \
-    --kubernetes-version $VERSION \
-    --windows-admin-password $PASSWORD_WIN \
-    --windows-admin-username $USERNAME_WIN \
+    --enable-private-cluster \
     --network-plugin azure \
-    --enable-addons monitoring \
-    --workspace-resource-id $MONID \
-    --verbose
-
-echo "Adding the ACR role"
-  az aks update -n ${PREFIX}aks${SUFFIX} -g K8s --attach-acr $ACRNAME
-
-echo "Adding windows nodepool"
-  az aks nodepool add \
-    --resource-group K8s \
-    --cluster-name ${PREFIX}aks${SUFFIX} \
-    --name winpoo \
-    --node-count 1 \
-    --kubernetes-version  $VERSION \
-    --os-type Windows \
-    --node-vm-size=Standard_B2s \
-    --enable-cluster-autoscaler \
-    --min-count 1 \
-    --max-count 2 \
-    --node-taints key=value:NoSchedule
-
-echo "Getting kube context"
-  az aks get-credentials -g K8s -n ${PREFIX}aks${SUFFIX}
-
-echo "Adding clusterrolebinding for dashboard"
-kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+    --vnet-subnet-id "/subscriptions/2d5bb2c8-8be8-4539-b48f-fbfd86852fa9/resourceGroups/ContosoDomain/providers/Microsoft.Network/virtualNetworks/ContosoDomain-vnet/subnets/Aks" \
+    --docker-bridge-address 172.17.0.1/16 \
+    --dns-service-ip 10.2.0.10 \
+    --service-cidr 10.2.0.0/24
