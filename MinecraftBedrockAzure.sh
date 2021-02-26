@@ -1,8 +1,11 @@
+SUB="PseudoProd"
 RG="MinecraftBedrock"
 LOC="uksouth"
 STOR="minecaftbedrock555"
 CONT="minecraftbedrockaci"
 WORLD="byers-mine-world"
+
+az account set -s $SUB
 
 az group create --name $RG --location $LOC
 
@@ -14,7 +17,7 @@ az storage account create \
     --enable-large-file-share \
     --output none
 
-key=$(az storage account keys list -g $RG -n $STOR --query [0].value -o tsv)
+KEY=$(az storage account keys list -g $RG -n $STOR --query [0].value -o tsv)
 
 az storage share create \
     --account-name $STOR \
