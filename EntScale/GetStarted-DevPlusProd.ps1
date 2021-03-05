@@ -58,7 +58,7 @@ $AzureAdCred = Get-Credential
 Connect-AzureAD -Credential $AzureAdCred
 
 #Get AzOps Service Principal from Azure AD
-$aadServicePrincipals = Get-AzureADServicePrincipal -Filter "DisplayName eq 'AzOps'"
+$aadServicePrincipals = Get-AzureADServicePrincipal -Filter "DisplayName eq 'AzOpsRootReader'"
 
 #Get Azure AD Directory Role
 $DirectoryRole = Get-AzureADDirectoryRole -Filter "DisplayName eq 'Directory Readers'"
@@ -71,33 +71,3 @@ else {
     #Add service principal to Directory Role
     Add-AzureADDirectoryRoleMember -ObjectId $DirectoryRole.ObjectId -RefObjectId $aadServicePrincipal.ObjectId
 }
-
-$escapedServicePrincipalJson = $servicePrincipalJson.Replace('"','\"')
-Write-Output $escapedServicePrincipalJson
-
-{
-    "clientId":  "ba6aa4bb-8019-4336-927d-c1f502989d97",
-    "displayName":  "AzOps",
-    "name":  "http://AzOps",
-    "clientSecret":  "6de50002-c53a-4413-ac55-890882db22a0",
-    "tenantId":  "b06e8efc-739c-414e-a10b-220b51db40b1",
-    "subscriptionId":  "3f2fc8be-dbf2-44e1-84e8-321228974d35"
-}
-
-
-$DirectoryRole = Get-AzureADDirectoryRole | Where-Object  -Filter "DisplayName eq 'Directory Readers'"
-
-#Define the new management group scope
-$mgScope = "/providers/Microsoft.Management/managementGroups/cntso"
-
-#Retrieve the Service Principal
-$sp = Get-AzADServicePrincipal -DisplayName "AzOpsCanary3"
-
-#Remove any Root scope assignments that have been made for this Service Principal
-Get-AzRoleAssignment -Scope "/" -ObjectId $sp.Id | % {
-    Write-Output "Removing role $($_.RoleDefinitionId)"
-    Remove-AzRoleAssignment -Scope "/" -ObjectId $_.ObjectId -RoleDefinitionId $_.RoleDefinitionId
-}
-
-#Make a new, scoped Role Assignment
-New-AzRoleAssignment -Scope $mgScope -RoleDefinitionName 'Owner' -ObjectId $sp.Id
