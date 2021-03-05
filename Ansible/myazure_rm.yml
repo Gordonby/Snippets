@@ -1,6 +1,8 @@
 plugin: azure_rm
 include_vm_resource_groups:
 - ansible-inventory-test-rg
+vars:
+  ansible_python_interpreter: /usr/bin/python3
 auth_source: auto
 
 keyed_groups:

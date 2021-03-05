@@ -1,0 +1,12 @@
+#Permission ref: https://github.com/Azure/azure-cli/issues/7656#issuecomment-574020898
+
+az login --service-principal --username $APPID --password $PW --tenant $TENANT
+
+echo "Current Expiry set for " $(az ad sp credential list --id $APPID --query [].endDate -o tsv)
+NEWPW=$(az ad sp credential reset --name $APPID --query password -o tsv)
+
+sleep 10s
+
+az login --service-principal --username $APPID --password $NEWPW --tenant $TENANT
+
+echo "New Expiry set for " $(az ad sp credential list --id $APPID --query [].endDate -o tsv)
