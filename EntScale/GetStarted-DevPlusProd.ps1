@@ -18,10 +18,14 @@ $prodMgScope = "/providers/Microsoft.Management/managementGroups/$prodBootstrapP
 
 #Create Service Principal and assign Owner role to the right scopes
 $servicePrincipals=@()
-$servicePrincipals += New-AzADServicePrincipal -Role Reader -Scope $rootscope -DisplayName AzOpsRootReader
+$servicePrincipals += New-AzADServicePrincipal -DisplayName AzOpsRootReader
+#$servicePrincipals += New-AzADServicePrincipal -DisplayName AzOpsCredRotateHelper
 $servicePrincipals += New-AzADServicePrincipal -Role Owner -Scope $devMgScope -DisplayName AzOpsDev
 $servicePrincipals += New-AzADServicePrincipal -Role Owner -Scope $prodMgScope -DisplayName AzOpsProd
-#$servicePrincipals += New-AzADServicePrincipal -DisplayName AzOpsCredRotateHelper
+
+
+New-AzRoleAssignment -Scope $devMgScope -RoleDefinitionName 'Reader' -ObjectId $servicePrincipals[0].Id
+New-AzRoleAssignment -Scope $prodMgScope -RoleDefinitionName 'Reader' -ObjectId $servicePrincipals[0].Id
 
 $servicePrincipals | % {
     #Provide reader access to the current subscription.

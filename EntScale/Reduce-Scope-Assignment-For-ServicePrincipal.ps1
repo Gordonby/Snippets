@@ -1,14 +1,22 @@
-﻿#Define the new management group scope
-$mgScope = "/providers/Microsoft.Management/managementGroups/cntso"
+﻿#Define management group variables
+$devBootstrapPrefix="codev"
+$prodBootstrapPrefix="coprd"
+
+
+
+#Define management group ids
+$devMgScope = "/providers/Microsoft.Management/managementGroups/$devBootstrapPrefix"
+$prodMgScope = "/providers/Microsoft.Management/managementGroups/$prodBootstrapPrefix"
 
 #Retrieve the Service Principal
-$sp = Get-AzADServicePrincipal -DisplayName "AzOpsCanary3"
+$sp = Get-AzADServicePrincipal -DisplayName "AzOpsRootReader"
 
 #Remove any Root scope assignments that have been made for this Service Principal
 Get-AzRoleAssignment -Scope "/" -ObjectId $sp.Id | % {
-    Write-Output "Removing role $($_.RoleDefinitionId)"
+    Write-Output "Removing role $($_.RoleDefinitionId) "
     Remove-AzRoleAssignment -Scope "/" -ObjectId $_.ObjectId -RoleDefinitionId $_.RoleDefinitionId
 }
 
-#Make a new, scoped Role Assignment
-New-AzRoleAssignment -Scope $mgScope -RoleDefinitionName 'Owner' -ObjectId $sp.Id
+#Make new, scoped Role Assignments
+New-AzRoleAssignment -Scope $devMgScope -RoleDefinitionName 'Reader' -ObjectId $sp.Id
+New-AzRoleAssignment -Scope $prodMgScope -RoleDefinitionName 'Reader' -ObjectId $sp.Id
