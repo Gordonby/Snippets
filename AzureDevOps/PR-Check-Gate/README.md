@@ -6,6 +6,8 @@ When you run pipelines in Azure DevOps as part of a build policy, the pipeline w
 
 You'll need to use an Environment as part of your pipeline.  On the Environment, we'll add an Approval that will run some code to verify the other Pull Request policies have been approved/met.
 
+![overview.png](overview.png)
+
 *Components*
 1. A Sample `pipeline` file is provided in this directory, it'll create the Environment stubs for you in Azure DevOps. If you're using your own existing pipeline file, make sure to declare an `Environment`
 1. A deployed `Azure Function` (of type PowerShell), which uses the PowerShell script in this folder. You won't need to change this code, as the variable components will be defined in your Environment Approval Gate.
