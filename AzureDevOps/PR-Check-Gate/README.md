@@ -1,6 +1,8 @@
 # Azure DevOps Pull Request Policy Checking
 
-When you run pipelines in Azure DevOps as part of a build policy, the pipeline will not wait for other Pull Request policies to be satisfied first. It'll just be run, and depends on the PR feedback you're yet to get - you might not want it to work that way.
+When you run pipelines in Azure DevOps as part of a build policy, the selected pipeline will start immediately with the Pull Request.
+Often this is the desired behavior, you want to compile your code and run your unit tests, ready for the PR approvers to see.
+However, sometimes you won't want to burn pipeline minutes or compute time running your build until the PR has met some of the other Pull Request Policies (such as Work item association, or specific approvers).
 
 ## The Process
 
