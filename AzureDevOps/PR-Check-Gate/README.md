@@ -15,6 +15,19 @@ You'll need to use an Environment as part of your pipeline.  On the Environment,
 1. A deployed `Azure Function` (of type PowerShell), which uses the PowerShell script in this folder. You won't need to change this code, as the variable components will be defined in your Environment Approval Gate.
 1. An `Environment approval gate`, defined to call the Azure Function.  A sample configuration image is provided in this folder.
 
+## The Azure Function
+
+Environment Approval Gates can be super helpful in providing the right governance for your pipelines, however most of the available gate options are quite limited in their capability. The nature of what we're trying to achieve is a series of checks which can only take place inside an Azure Function or API call. 
+
+`We're limited in the available Azure DevOps variables from the Approval Gates, namely the absence of the PullRequest. We therefore need to begin with the most relevant variable, the BuildId`
+
+*Function steps*
+1. Take a number of parameters from the Azure DevOps request (namely the BuildId, ProjectId and OrganisationName)
+1. Call the Azure DevOps API to obtain the Build details from the provided BuildId, to obtain the PullRequestId
+1. Call the Azure DevOps API to obtain the Pull Request Policy details
+1. Loop through all the PR Policies to evaluate blocking policies that are not yet approved
+1. Respond to the Azure DevOps request with an indicator to proceed, and a list of the Blocking Policies
+
 ## Security
 
 The Azure Function will either use an ADO security access token which is passed to it by the ADO Approval gate, or from the Azure Function Application Settings, depending on your preferences.
