@@ -8,6 +8,10 @@ stages:
     timeoutInMinutes: 10
     steps:
     - bash: echo "This check validates the build reason of $(Build.Reason). The PR number was $(System.PullRequest.PullRequestId)."
+    - bash: echo "It runs on a seperate stage which is not linked to an environment"
+    - bash: echo "In order to avoid unnecessary environment approvals"
+    - bash: echo "If the BuildReason and Branch conditons are not satisfied"
+    - bash: echo "Not ideal, but just accept it!"
 
 - stage: PRApprovalMet
   dependsOn: BuildReasonCheck
@@ -23,7 +27,10 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: echo Pull-Request policies have been satisified
+          - script: echo "Pull-Request policies have been satisified"
+          - script: echo "There's no good reason that this runs on a seperate stage"
+          - script: echo "But the deployment stage has several Environment approval gates"
+          - script: echo "And i just wanted to keep the PR Policy prerequisite checks seperate"
 
 - stage: DoDeploy
   dependsOn: PRApprovalMet
@@ -39,4 +46,4 @@ stages:
       runOnce:
         deploy:
           steps:
-          - script: echo Hello world
+          - script: echo "In this stage, do your deployment to your Development environment"
