@@ -1,3 +1,5 @@
+#https://docs.microsoft.com/en-us/rest/api/azure/devops/policy/evaluations/list?view=azure-devops-rest-6.1
+
 ADOORG="gdoggmsft"
 ADOPROJ="TEST-EntScaleRepoBootstrap4"
 
