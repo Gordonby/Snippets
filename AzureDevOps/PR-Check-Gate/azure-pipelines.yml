@@ -1,0 +1,42 @@
+trigger: none
+
+stages:
+- stage: BuildReasonCheck
+  condition: and(eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.SourceBranch'], 'refs/heads/system'))
+  jobs:
+  - job:
+    timeoutInMinutes: 10
+    steps:
+    - bash: echo "This check validates the build reason of $(Build.Reason). The PR number was $(System.PullRequest.PullRequestId)."
+
+- stage: PRApprovalMet
+  dependsOn: BuildReasonCheck
+  condition: and(eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.SourceBranch'], 'refs/heads/system'))
+  jobs:
+  - deployment: PRApprovalMet
+    displayName: Check Pull Request Policy
+    pool:
+      vmImage: 'Ubuntu-latest'
+
+    environment: 'ADO-PR-Policies'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Pull-Request policies have been satisified
+
+- stage: DoDeploy
+  dependsOn: PRApprovalMet
+  condition: and(eq(variables['Build.Reason'], 'PullRequest'), ne(variables['System.PullRequest.SourceBranch'], 'refs/heads/system'))
+  jobs:
+  - deployment: DoDeploy
+    displayName: Deploy your resources
+    pool:
+      vmImage: 'Ubuntu-latest'
+
+    environment: 'DevEnv'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Hello world
