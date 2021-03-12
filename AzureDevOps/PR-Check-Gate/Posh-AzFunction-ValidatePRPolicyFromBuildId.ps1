@@ -1,4 +1,4 @@
-﻿using namespace System.Net
+using namespace System.Net
 
 # Input bindings are passed in via param block.
 param($Request, $TriggerMetadata)
@@ -17,21 +17,33 @@ $ADOPROJ = $Request.Body.Project
 $uri = $Request.Body.URI
 
 # Write some of the parameters to the logs
-Write-Host "Received BuildId: $buildId"
+Write-Verbose "Received BuildId: $buildId"
 Write-Host "Received Uri: $uri"
 Write-Host "Received project: $ADOPROJ"
 Write-Host "Received projectId: $projectId"
 
+#Basic validation of passed parameters
+if($buildId -eq $NULL) { Write-Error "buildId not provided"; Return }
+if($projectId -eq $NULL) { Write-Error "ProjectId not provided"; Return }
+if($ADOPROJ -eq $NULL) { Write-Error "Project not provided"; Return }
+if($uri -eq $NULL) { Write-Error "URI not provided"; Return }
+
 #Use the Azure
 if (-not $Request.Body.AuthToken) {
-    Write-Verbose "Setting PAT token from AppSettings"
-    $patenv=ls env:APPSETTING_ADO_PAT
-    $pat =  $patenv.Value
+    try{
+        Write-Verbose "Setting PAT token from AppSettings"
+        $patenv=ls env:APPSETTING_ADO_PAT
+        $pat =  $patenv.Value
+    } catch {
+        $failure = $_.Exception.Message
+        Write-Error "[ERROR] Failed to GET PAT token from AppSettings or Request Body. $failure"
+        Return
+    }
 } else {
     Write-Verbose "Setting token from Request Body Parameter"
     $pat = $Request.Body.AuthToken
 }
-if($pat.Length -lt 1) { Write-Host "WARNING: PAT Token is empty"}
+if($pat.Length -lt 1) { Write-Error "WARNING: PAT Token is empty"; Return}
 
 #Base64 encode the PAT token, ready for a HTTP request header
 $base64AuthInfo= [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($pat)"))
@@ -47,6 +59,8 @@ $PR=$buildresponse.triggerInfo.'pr.number'
 $PROJID=$buildresponse.project.id
 
 Write-Host "Resolved PR: $PR from BuildId $BUILDID"
+
+if($PR.Length -lt 1) { Write-Error "WARNING: Failed to Retrieve Valid Pull Request ID from Build $buildId"; Return}
 
 Write-Verbose "Checking PR Policy"
 $ARTIFACTID="vstfs:///CodeReview/CodeReviewId/$PROJID/$PR"
