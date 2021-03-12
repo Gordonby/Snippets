@@ -18,9 +18,9 @@ $uri = $Request.Body.URI
 
 # Write some of the parameters to the logs
 Write-Verbose "Received BuildId: $buildId"
-Write-Host "Received Uri: $uri"
-Write-Host "Received project: $ADOPROJ"
-Write-Host "Received projectId: $projectId"
+Write-Verbose "Received Uri: $uri"
+Write-Verbose "Received project: $ADOPROJ"
+Write-Verbose "Received projectId: $projectId"
 
 #Basic validation of passed parameters
 if($buildId -eq $NULL) { Write-Error "buildId not provided"; Return }
