@@ -2,7 +2,8 @@
 
 When you run pipelines in Azure DevOps as part of a build policy, the selected pipeline will start immediately with the Pull Request.
 Often this is the desired behavior, you want to compile your code and run your unit tests, ready for the PR approvers to see.
-However, sometimes you won't want to burn pipeline minutes or compute time running your build until the PR has met some of the other Pull Request Policies (such as Work item association, or specific approvers).
+
+However, sometimes you won't want to burn pipeline minutes or compute time running your build until some of the more basic Pull Request policies have been satisfied (such as Work item association, or specific approvers). Unfortunately this isn't possible for Azure DevOps to accomodate, as all Pull Request policies operate independantly. We therefore need to lean on the Azure DevOps API as part of a gate for a pipeline.
 
 ## The Process
 
