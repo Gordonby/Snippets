@@ -28,7 +28,7 @@ if($projectId -eq $NULL) { Write-Error "ProjectId not provided"; Return }
 if($ADOPROJ -eq $NULL) { Write-Error "Project not provided"; Return }
 if($uri -eq $NULL) { Write-Error "URI not provided"; Return }
 
-#Use the Azure
+#Acquire the PAT token from either body parameter or from the App Settings of the Azure Function
 if (-not $Request.Body.AuthToken) {
     try{
         Write-Verbose "Setting PAT token from AppSettings"
@@ -90,6 +90,9 @@ if($BlockingPolicies.count -eq 0) {$prStatus = "Satisfied"} else {$prStatus = "W
 
 $returnObj = New-Object PSObject -Property ([Ordered]@{prstatus=$prStatus; BlockingPolicies=$BlockingPolicies })
 Write-Verbose $returnObj
+
+#Any cleanup
+$pat = $NULL
 
 # Associate values to output bindings by calling 'Push-OutputBinding'.
 Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
