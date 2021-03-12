@@ -4,7 +4,7 @@ using namespace System.Net
 param($Request, $TriggerMetadata)
 
 # Write to the Azure Functions log stream.
-Write-Host "PowerShell HTTP trigger function processed a request."
+Write-Host "PowerShell HTTP trigger initiated."
 
 # Set constants
 #Define any PolicyTypes that we want to exclude from our policy checks
