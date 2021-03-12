@@ -30,4 +30,9 @@ Environment Approval Gates can be super helpful in providing the right governanc
 
 ## Security
 
+### Tokens
 The Azure Function will either use an ADO security access token which is passed to it by the ADO Approval gate, or from the Azure Function Application Settings, depending on your preferences.
+
+### Network
+As Azure DevOps is a SaaS service (Azure DevOps Server 20XX not withstanding), so it will call the PowerShell Azure Function with a HTTPS request over the internet.
+The Azure Function then makes outbound API calls to Azure DevOps with a HTTPS request over the internet.
