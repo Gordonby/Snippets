@@ -29,6 +29,28 @@ Environment Approval Gates can be super helpful in providing the right governanc
 1. Loop through all the PR Policies to evaluate blocking policies that are not yet approved
 1. Respond to the Azure DevOps request with an indicator to proceed, and a list of the Blocking Policies
 
+## Invoking the Azure Function
+
+Inside the `Environment` you've defined, navigate to Approvals and Checks, and add a new `Invoke Azure Function` check. Provide the URL and Function Key from your Azure Function, use the POST method and provide these values;
+
+Headers
+```
+{
+"Content-Type":"application/json"
+}
+```
+
+Body
+```
+{
+"URI": "$(System.CollectionUri)", 
+"ProjectId": "$(system.TeamProjectId)",
+"Project":"$(System.TeamProject)",
+"BuildId": "$(Build.BuildId)",
+"AuthToken": "$(system.AccessToken)"
+}
+```
+
 ## Security
 
 ### ADO Access Token
