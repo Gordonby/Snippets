@@ -51,6 +51,11 @@ Body
 }
 ```
 
+Success Criteria
+```
+eq(root['prstatus'], 'satisfied')
+```
+
 ## Security
 
 ### ADO Access Token
