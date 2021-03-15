@@ -8,7 +8,7 @@ Write-Host "PowerShell HTTP trigger initiated."
 
 # Set constants
 #Define any PolicyTypes that we want to exclude from our policy checks
-$exclusionsTypes =@("Build")
+$exclusionsTypes =@("Build", "Require a merge strategy")
 
 # Hydrate params from body of the request.
 $buildId = $Request.Body.buildId
@@ -48,12 +48,23 @@ if($pat.Length -lt 1) { Write-Error "WARNING: PAT Token is empty"; Return}
 #Base64 encode the PAT token, ready for a HTTP request header
 $base64AuthInfo= [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($pat)"))
 
-#Figure out the Orgname from URI. TODO. Write a Regex for this.
-$ADOORG=$uri.replace("https://","").replace(".visualstudio.com/","")
+#Figure out the BaseUri from URI. TODO. Write a Regex for this.
+if($uri -like "https://dev.azure.com/*") {
+    Write-Verbose "(newer dev.azure.com URI detected)"
 
-$BuildURL="https://dev.azure.com/$ADOORG/$ADOPROJ/_apis/build/builds/$($BUILDID)?api-version=6.0"
+    $baseApiUrl="$($uri)$ADOPROJ/_apis"
 
-Write-Verbose "Calling $BuildURL"
+} elseif($uri -like "*.visualstudio.com/*") {
+    Write-Verbose "(older VSTS URI detected)"
+    $ADOORG=$uri.replace("https://","").replace(".visualstudio.com/","")
+
+    $baseApiUrl="https://dev.azure.com/$ADOORG/$ADOPROJ/_apis"
+}
+Write-Verbose "Using ADO Org: $ADOORG"
+
+$BuildURL="$baseApiUrl/build/builds/$($BUILDID)?api-version=6.0"
+
+Write-Host "Calling $BuildURL"
 $buildresponse=Invoke-RestMethod -Uri $BuildURL -Headers @{Authorization = "Basic {0}" -f $base64AuthInfo} -Method Get
 $PR=$buildresponse.triggerInfo.'pr.number'
 $PROJID=$buildresponse.project.id
@@ -64,7 +75,7 @@ if($PR.Length -lt 1) { Write-Error "WARNING: Failed to Retrieve Valid Pull Reque
 
 Write-Verbose "Checking PR Policy"
 $ARTIFACTID="vstfs:///CodeReview/CodeReviewId/$PROJID/$PR"
-$PRURL="https://dev.azure.com/$ADOORG/$ADOPROJ/_apis/policy/evaluations?artifactId=$ARTIFACTID&api-version=6.1-preview.1"
+$PRURL="$baseApiUrl/policy/evaluations?artifactId=$ARTIFACTID&api-version=6.1-preview.1"
 $prresponse=Invoke-RestMethod -Uri $PRURL -Headers @{Authorization = "Basic {0}" -f $base64AuthInfo} -Method Get
 
 $BlockingPolicies=@()
