@@ -59,7 +59,8 @@ eq(root['prstatus'], 'satisfied')
 ## Security
 
 ### ADO Access Token
-The Azure Function needs an ADO security access token which is passed to it by the ADO Approval gate, or retrieved from the Azure Function Application Settings, depending on your preference.
+The Azure Function needs an ADO security access token to communicate with the Azure DevOps API.
+The token can be passed to the function by the ADO Approval gate in the HTTP request body, or retrieved from the Azure Function Application Settings, depending on your preference. 
 
 ### Azure Function Access
 The Azure Function uses a "function level" key to protect itself from being called anonymously. You can read more about this here: [https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#function-access-keys](https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#function-access-keys)
