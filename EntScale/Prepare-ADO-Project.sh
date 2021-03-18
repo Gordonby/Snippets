@@ -1,4 +1,4 @@
-# Azure DevOps - Enterprise Scale project onboarding [v0.3]
+# Azure DevOps - Enterprise Scale project onboarding [v0.5]
 # Scripted version of the manual Azure DevOps instructions from https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/setup-azuredevops.md
 # This script is optimised for a more complex Enterprise Scale bootstrap, using a Canary (dev) and Prod Top level bootstrap deployments.
 
@@ -13,11 +13,9 @@ az login --use-device-code
 
 #User provided variables, definitely change these
 ADOORG="gdoggmsft"
-ADOPROJ="EntScaleTwoOh"
+ADOPROJ="Enterprise-Scale"
 MGDEVNAME="dev"
 MGPRODNAME="prod"
-APPROVPIPELINE="gobyers@microsoft.com" #Used to protect the /.azure-pipelines/ directory with an explict approver
-
 
 #Power variables, you can leave these as default
 IMPORTREPO=1 #If you set this to 1, we'll import the ent-scale repo
@@ -28,34 +26,36 @@ ENTSCALEGITURL="https://github.com/Gordonby/Enterprise-Scale.git"
 #Internal variables - Don't tweak these.
 ADOURL="https://dev.azure.com/$ADOORG/"
 
+
 echo "Using $ADOURL"
 az devops configure --defaults organization=$ADOURL
 
 echo "Creating project $ADOPROJ"
-az devops project create --name $ADOPROJ
+az devops project create --name $ADOPROJ --process "Agile"
 
 echo "Acquiring selected project $ADOPROJ"
 PROJ=$(az devops project show -p $ADOPROJ)
 echo $PROJ
 az devops configure -d project=$ADOPROJ
 
-echo "Creating repo $REPONAME"
-az repos create --name $REPONAME
+#echo "Creating repo $REPONAME"
+#az repos create --name $REPONAME
+REPONAME=$ADOPROJ
 REPOID=$(az repos show -r $REPONAME --query id -o tsv)
 
 echo "Importing repo"
-if [$IMPORTREPO==1]
-then
+#if [$IMPORTREPO==1]
+#then
     az repos import create --git-source-url $ENTSCALEGITURL -r $REPONAME
-else
-    az repos create -r $REPONAME
-
+#else
     #TODO:Need to manually push the 3 pipeline files
-fi
+    #echo "TODO"
+#fi
 
 echo "Creating AzOps-Pull pipeline"
 PIPEPULL=$(az pipelines create --name 'AzOps-Pull' --description 'Pipeline for AzOps Pull' \
 --repository $REPONAME --repository-type tfsgit --branch main --yml-path .azure-pipelines/devplusprod/azops-pull.yml)
+PIPEPULLID=$(az pipelines show --name 'AzOps-Pull' --query "id" -o tsv)
 
 PIPEDEVPUSH=$(az pipelines create --name 'AzOps-Dev-Push' --description 'Pipeline for AzOps Dev Push' \
 --repository $REPONAME --repository-type tfsgit --branch main --yml-path .azure-pipelines/devplusprod/azops-dev-push.yml)
@@ -65,7 +65,7 @@ PIPEPRODPUSH=$(az pipelines create --name 'AzOps-Prod-Push' --description 'Pipel
 --repository $REPONAME --repository-type tfsgit --branch main --yml-path .azure-pipelines/devplusprod/azops-prod-push.yml)
 PIPEPRODPUSHID=$(az pipelines show --name 'AzOps-Prod-Push' --query "id" -o tsv)
 
-echo "Creating pipeline variables"
+echo "Creating RepoPath pipeline variables"
 az pipelines variable create --name REPOPATH \
                              --detect true \
                              --pipeline-id $PIPEDEVPUSHID \
@@ -75,6 +75,15 @@ az pipelines variable create --name REPOPATH \
                              --detect true \
                              --pipeline-id $PIPEPRODPUSHID \
                              --value $MGPRODNAME
+
+echo "Creating CREDENTIALS pipeline variables"
+az pipelines variable create --name AZURE_CREDENTIALS \
+                             --detect true \
+                             --pipeline-id $PIPEDEVPUSHID 
+
+az pipelines variable create --name AZURE_CREDENTIALS \
+                             --detect true \
+                             --pipeline-id $PIPEPRODPUSHID 
 
 echo "Creating Main branch policy - Approver Count"
 az repos policy approver-count create --allow-downvotes true \
@@ -109,13 +118,14 @@ az repos policy merge-strategy create --blocking true \
                                       --allow-squash true
 
 echo "Creating Main branch policy - Pipeline Approvers"
+RANDOMUSERID=$(az devops user list --top 1 --query members[0].id -o tsv)
 az repos policy required-reviewer create --blocking true \
                                          --branch main \
                                          --enabled true \
                                          --message "Changes to pipelines will need additional approval" \
                                          --repository-id $REPOID \
                                          --path-filter "/.azure-pipelines/" \
-                                         --required-reviewer-ids $APPROVPIPELINE
+                                         --required-reviewer-ids $RANDOMUSERID
 
 
 echo "Creating Main branch build policy - AzOps Dev Push"
@@ -144,7 +154,28 @@ az repos policy build create --blocking true \
 
 
 #Work still to be done.
+USERSTORYID=$(az boards work-item create --title "Ent-Scale Setup" --type 'User Story' --description "Manual tasks needed to complete ADO Enterprise-Scale setup" --query "id" -o tsv)
+echo "USERSTORYID" $USERSTORYID
 # 1. SPN variables set in the Pipelines
+TASKID=$(az boards work-item create --title "Ent-Scale Setup : Set SPN Variables in Pipelines" --type 'Task' --description "3 Service Principal Credentials need to be created, and JSON representation added to the pipeline variables" --query "id" -o tsv)
+echo $TASKID
+az boards work-item relation add --id $TASKID --relation-type 'parent' --target-id $USERSTORYID
 # 2. Permissions assigned for security groups.
+TASKID=$(az boards work-item create --title "Set Project permissions" --type 'Task' --query "id" -o tsv)
+echo $TASKID
+az boards work-item relation add --id $TASKID --relation-type 'parent' --target-id $USERSTORYID
 # 3. Environment approver for production
+TASKID=$(az boards work-item create --title "Set Environment Approver for Production" --type 'Task' --query "id" -o tsv)
+echo $TASKID
+az boards work-item relation add --id $TASKID --relation-type 'parent' --target-id $USERSTORYID
 # 4. Add the Build Service to the Project Contributors group
+TASKID=$(az boards work-item create --title "Add Build Service to Project Contributors" --type 'Task' --query "id" -o tsv)
+echo $TASKID
+az boards work-item relation add --id $TASKID --relation-type 'parent' --target-id $USERSTORYID
+# 5. Set pipeline folder required reviewer
+TASKID=$(az boards work-item create --title "Change azure-pipelines required reviewer" --type 'Task' --query "id" -o tsv)
+echo $TASKID
+az boards work-item relation add --id $TASKID --relation-type 'parent' --target-id $USERSTORYID
+
+sleep 30s
+az boards work-item show --id $USERSTORYID --open
