@@ -1,4 +1,4 @@
-# Azure DevOps - Enterprise Scale project onboarding [v0.5]
+# Azure DevOps - Enterprise Scale project onboarding [v0.6]
 # Scripted version of the manual Azure DevOps instructions from https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/setup-azuredevops.md
 # This script is optimised for a more complex Enterprise Scale bootstrap, using a Canary (dev) and Prod Top level bootstrap deployments.
 
@@ -13,14 +13,14 @@ az login --use-device-code
 
 #User provided variables, definitely change these
 ADOORG="gdoggmsft"
-ADOPROJ="Enterprise-Scale"
+ADOPROJ="Ent-Scale"
 MGDEVNAME="dev"
 MGPRODNAME="prod"
 
 #Power variables, you can leave these as default
-IMPORTREPO=1 #If you set this to 1, we'll import the ent-scale repo
+IMPORTREPO=0 #If you set this to 1, we'll import the ent-scale repo
 MINAPPROVCOUNT=1
-REPONAME="EntScale"
+#REPONAME="EntScale"
 ENTSCALEGITURL="https://github.com/Gordonby/Enterprise-Scale.git"
 
 #Internal variables - Don't tweak these.
@@ -44,13 +44,21 @@ REPONAME=$ADOPROJ
 REPOID=$(az repos show -r $REPONAME --query id -o tsv)
 
 echo "Importing repo"
-#if [$IMPORTREPO==1]
-#then
+if (( $IMPORTREPO == 1 )); then
     az repos import create --git-source-url $ENTSCALEGITURL -r $REPONAME
-#else
-    #TODO:Need to manually push the 3 pipeline files
-    #echo "TODO"
-#fi
+else
+    GITURL=$(az repos show -r $REPONAME --query remoteUrl -o tsv)
+    git clone $GITURL
+    cd $REPONAME
+    mkdir ".azure-pipelines"
+    cd ".azure-pipelines"
+    curl -O https://raw.githubusercontent.com/Gordonby/Enterprise-Scale/main/.azure-pipelines/devplusprod/azops-pull.yml
+    curl -O https://raw.githubusercontent.com/Gordonby/Enterprise-Scale/main/.azure-pipelines/devplusprod/azops-dev-push.yml
+    curl -O https://raw.githubusercontent.com/Gordonby/Enterprise-Scale/main/.azure-pipelines/devplusprod/azops-prod-push.yml
+    git add *
+    git commit -m "Adding pipelines"
+    git push 
+fi
 
 echo "Creating AzOps-Pull pipeline"
 PIPEPULL=$(az pipelines create --name 'AzOps-Pull' --description 'Pipeline for AzOps Pull' \
@@ -89,7 +97,7 @@ echo "Creating Main branch policy - Approver Count"
 az repos policy approver-count create --allow-downvotes true \
                                       --blocking true \
                                       --branch main \
-                                      --creator-vote-counts true \
+                                      --creator-vote-counts false \
                                       --enabled true \
                                       --minimum-approver-count $MINAPPROVCOUNT \
                                       --repository-id $REPOID \
