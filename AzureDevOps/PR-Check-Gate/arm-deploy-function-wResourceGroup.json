@@ -126,7 +126,7 @@
       "name": "deployFunctionApp",
       "resourceGroup": "[parameters('rgName')]",
       "dependsOn": [
-        "[parameters('rgName')]"
+        "[parameters('rgName')]",
       ],
       "properties": {
         "expressionEvaluationOptions": {

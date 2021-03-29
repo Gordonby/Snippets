@@ -1,0 +1,100 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"Name": {
+			"type": "string",
+			"defaultValue": "fnADOExtensionaa"
+		}
+	},
+	"variables": {
+		"storageName": "[substring(tolower(concat(parameters('Name'),uniqueString(parameters('Name')))),0,23)]"
+	},
+	"resources": [{
+			"type": "Microsoft.Storage/storageAccounts",
+			"apiVersion": "2019-06-01",
+			"name": "[variables('storageName')]",
+			"location": "[resourceGroup().location]",
+			"sku": {
+				"name": "Standard_LRS"
+			},
+			"kind": "StorageV2",
+            "properties": {
+                "supportsHttpsTrafficOnly": true,
+                "minimumTlsVersion": "TLS1_2"
+            }
+		},
+		{
+			"type": "Microsoft.Web/serverfarms",
+			"apiVersion": "2018-11-01",
+			"name": "[parameters('Name')]",
+			"location": "[resourceGroup().location]",
+			"sku": {
+				"name": "Y1",
+				"tier": "Dynamic"
+			},
+			"properties": {
+				"name": "[parameters('Name')]",
+				"computeMode": "Dynamic"
+			},
+			"kind": "functionapp"
+		},
+		{
+			"apiVersion": "2018-11-01",
+			"type": "Microsoft.Web/sites",
+			"name": "[parameters('Name')]",
+			"location": "[resourceGroup().location]",
+			"kind": "functionapp",
+			"dependsOn": [
+				"[resourceId('Microsoft.Web/serverfarms', parameters('Name'))]",
+				"[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+			],
+			"properties": {
+				"serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('Name'))]",
+                "use32BitWorkerProcess": true,
+                "powerShellVersion": "~7",
+                "clientAffinityEnabled": false,
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "powershell"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(parameters('name')), 'bf50')]"
+                        }
+                        ]
+                }
+			},
+            "resources": [{
+                "apiVersion": "2018-11-01",
+                "name": "web",
+                "type": "sourcecontrols",
+                "dependsOn": [
+                    "[resourceId('Microsoft.Web/sites/', parameters('Name'))]"
+                ],
+                "properties": {
+                    "RepoUrl": "https://github.com/Gordonby/AdoGateFunctions.git",
+                    "branch": "main",
+                    "publishRunbook": true,
+                    "IsManualIntegration": true
+                }
+            }]
+		}
+	],
+	"outputs": {
+	}
+}
