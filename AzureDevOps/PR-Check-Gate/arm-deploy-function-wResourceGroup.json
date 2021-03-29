@@ -1,168 +1,162 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "rgName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the resourceGroup to create"
-      },
-      "minLength":3
-    },
-    "rgLocation": {
-      "type": "string",
-      "metadata": {
-        "description": "Location for the resourceGroup"
-      },
-      "defaultValue": "[deployment().location]"
-    },
-    "principalId": {
-      "type": "string",
-      "metadata": {
-        "description": "Optional PrincipalId (AzureAD Security-Group/User)that will be given access to the resourceGroup"
-      },
-      "defaultValue":""
-    },
-    "roleDefinition": {
-      "type": "string",
-      "allowedValues" : ["Contributor","Reader","NetworkContributor"],
-      "defaultValue": "Reader",
-      "metadata": {
-        "description": "Role Definition to apply to the PrincipalId on the Resource Group"
-      }
-    },
-    "FunctionAppName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name for the FunctionApp to host the code"
-      },
-      "minLength":3
-    }
-  },
-  "variables": { 
-    "roleDefinitionMap": {
-      "Contributor": "b24988ac-6180-42a0-ab88-20f7382dd24c",
-      "Reader": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
-      "NetworkContributor": "4d97b98b-1d4f-4787-a291-c67834d212e7"
-    },
-    "roleDefinitionId" :"[Variables('roleDefinitionMap')[Parameters('roleDefinition')]]",
-    "roleAssignmentName":"[guid(parameters('rgName'),parameters('roleDefinition'),parameters('principalId'))]",
+	"$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"rgName": {
+			"type": "string",
+			"metadata": {
+				"description": "Name of the resourceGroup to create"
+			},
+			"minLength": 3
+		},
+		"rgLocation": {
+			"type": "string",
+			"metadata": {
+				"description": "Location for the resourceGroup"
+			},
+			"defaultValue": "[deployment().location]"
+		},
+		"principalId": {
+			"type": "string",
+			"metadata": {
+				"description": "Optional PrincipalId (AzureAD Security-Group/User)that will be given access to the resourceGroup"
+			},
+			"defaultValue": ""
+		},
+		"roleDefinition": {
+			"type": "string",
+			"allowedValues": ["Contributor", "Reader", "NetworkContributor"],
+			"defaultValue": "Reader",
+			"metadata": {
+				"description": "Role Definition to apply to the PrincipalId on the Resource Group"
+			}
+		},
+		"FunctionAppName": {
+			"type": "string",
+			"metadata": {
+				"description": "Name for the FunctionApp to host the code"
+			},
+			"minLength": 3
+		}
+	},
+	"variables": {
+		"roleDefinitionMap": {
+			"Contributor": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+			"Reader": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+			"NetworkContributor": "4d97b98b-1d4f-4787-a291-c67834d212e7"
+		},
+		"roleDefinitionId": "[Variables('roleDefinitionMap')[Parameters('roleDefinition')]]",
+		"roleAssignmentName": "[guid(parameters('rgName'),parameters('roleDefinition'),parameters('principalId'))]",
 
-    "storageAccountName":"[fnGeneral.storageName(parameters('FunctionAppName'),parameters('rgName'))]",
-    "FunctionAppName" : "[concat(parameters('FunctionAppName'), uniqueString(parameters('rgName')))]"
-  },
-  "functions": [
-  {
-    "namespace": "fnGeneral",
-    "members": {
-      "storageName": {
-        "parameters": [
-          {
-            "name": "namePrefix",
-            "type": "string"
-          },
-          {
-            "name": "randSeed",
-            "type": "string"
-          }
-        ],
-        "output": {
-          "type": "string",
-          "value": "[substring(concat(toLower(parameters('namePrefix')), uniqueString(parameters('randSeed')), uniqueString(parameters('randSeed'))),0,23)]"
-        }
-      }
-    }
-  }
-],
-  "resources": [
-    {
-      "type": "Microsoft.Resources/resourceGroups",
-      "apiVersion": "2019-10-01",
-      "name": "[parameters('rgName')]",
-      "location": "[parameters('rgLocation')]",
-      "properties": {}
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-10-01",
-      "name": "ApplyLockAndRole",
-      "resourceGroup": "[parameters('rgName')]",
-      "dependsOn": [
-        "[parameters('rgName')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "resources": [
-            {
-              "type": "Microsoft.Authorization/locks",
-              "apiVersion": "2017-04-01",
-              "name": "DontDelete",
-              "properties": {
-                "level": "CanNotDelete",
-                "notes": "Prevent deletion of the resourceGroup"
-              }
-            },
-            {
-              "condition": "[not(empty(parameters('principalId')))]",
-              "type": "Microsoft.Authorization/roleAssignments",
-              "apiVersion": "2020-04-01-preview",
-              "name": "[variables('roleAssignmentName')]",
-              "properties": {
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('roleDefinitionId'))]",
-                "principalId": "[parameters('principalId')]",
-                "scope": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('rgName'))]"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-10-01",
-      "name": "deployFunctionApp",
-      "resourceGroup": "[parameters('rgName')]",
-      "dependsOn": [
-        "[parameters('rgName')]",
-      ],
-      "properties": {
-        "expressionEvaluationOptions": {
-            "scope": "inner"
-        },
-        "parameters": {
-          "storageAccountName": {
-            "value": "[variables('storageAccountName')]"
-          },
-          "FunctionAppName": {
-            "value": "[variables('FunctionAppName')]"
-          },
-          "rgLocation": {
-            "value": "[parameters('rgLocation')]"
-          }
-        },
-        "mode": "Incremental",
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "parameters" :{    
-            "storageAccountName": {
-              "type": "string"
-            },
-            "FunctionAppName": {
-              "type": "string"
-            },
-            "rgLocation": {
-              "type": "string"
-            },
-          },
-          "variables" : {
-            "storageResouceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-          },
-          "resources": [
-            {
+		"storageAccountName": "[fnGeneral.storageName(parameters('FunctionAppName'),parameters('rgName'))]",
+		"FunctionAppName": "[concat(parameters('FunctionAppName'), uniqueString(parameters('rgName')))]"
+	},
+	"functions": [{
+		"namespace": "fnGeneral",
+		"members": {
+			"storageName": {
+				"parameters": [{
+						"name": "namePrefix",
+						"type": "string"
+					},
+					{
+						"name": "randSeed",
+						"type": "string"
+					}
+				],
+				"output": {
+					"type": "string",
+					"value": "[substring(concat(toLower(parameters('namePrefix')), uniqueString(parameters('randSeed')), uniqueString(parameters('randSeed'))),0,23)]"
+				}
+			}
+		}
+	}],
+	"resources": [{
+			"type": "Microsoft.Resources/resourceGroups",
+			"apiVersion": "2019-10-01",
+			"name": "[parameters('rgName')]",
+			"location": "[parameters('rgLocation')]",
+			"properties": {}
+		},
+		{
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2019-10-01",
+			"name": "ApplyLockAndRole",
+			"resourceGroup": "[parameters('rgName')]",
+			"dependsOn": [
+				"[parameters('rgName')]"
+			],
+			"properties": {
+				"mode": "Incremental",
+				"template": {
+					"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+					"contentVersion": "1.0.0.0",
+					"resources": [{
+							"type": "Microsoft.Authorization/locks",
+							"apiVersion": "2017-04-01",
+							"name": "DontDelete",
+							"properties": {
+								"level": "CanNotDelete",
+								"notes": "Prevent deletion of the resourceGroup"
+							}
+						},
+						{
+							"condition": "[not(empty(parameters('principalId')))]",
+							"type": "Microsoft.Authorization/roleAssignments",
+							"apiVersion": "2020-04-01-preview",
+							"name": "[variables('roleAssignmentName')]",
+							"properties": {
+								"roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('roleDefinitionId'))]",
+								"principalId": "[parameters('principalId')]",
+								"scope": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('rgName'))]"
+							}
+						}
+					]
+				}
+			}
+		},
+		{
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2019-10-01",
+			"name": "deployFunctionApp",
+			"resourceGroup": "[parameters('rgName')]",
+			"dependsOn": [
+				"[parameters('rgName')]"
+			],
+			"properties": {
+				"expressionEvaluationOptions": {
+					"scope": "inner"
+				},
+				"parameters": {
+					"storageAccountName": {
+						"value": "[variables('storageAccountName')]"
+					},
+					"FunctionAppName": {
+						"value": "[variables('FunctionAppName')]"
+					},
+					"rgLocation": {
+						"value": "[parameters('rgLocation')]"
+					}
+				},
+				"mode": "Incremental",
+				"template": {
+					"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+					"contentVersion": "1.0.0.0",
+					"parameters": {
+						"storageAccountName": {
+							"type": "string"
+						},
+						"FunctionAppName": {
+							"type": "string"
+						},
+						"rgLocation": {
+							"type": "string"
+						}
+					},
+					"variables": {
+						"storageResouceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+					},
+					"resources": [{
 							"type": "Microsoft.Storage/storageAccounts",
 							"apiVersion": "2019-06-01",
 							"name": "[parameters('storageAccountName')]",
@@ -176,7 +170,7 @@
 								"minimumTlsVersion": "TLS1_2"
 							}
 						},
-            {
+						{
 							"type": "Microsoft.Web/serverfarms",
 							"apiVersion": "2018-02-01",
 							"name": "[parameters('FunctionAppName')]",
@@ -191,7 +185,7 @@
 							},
 							"kind": "functionapp"
 						},
-            {
+						{
 							"apiVersion": "2018-11-01",
 							"type": "Microsoft.Web/sites",
 							"name": "[parameters('FunctionAppName')]",
@@ -199,7 +193,7 @@
 							"kind": "functionapp",
 							"dependsOn": [
 								"[resourceId('Microsoft.Web/serverfarms', parameters('FunctionAppName'))]",
-                "[variables('storageResouceId')]"
+								"[variables('storageResouceId')]"
 							],
 							"properties": {
 								"serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('FunctionAppName'))]",
@@ -245,9 +239,9 @@
 								}
 							}]
 						}
-          ]
-        }
-      }
-    }
-  ]
+					]
+				}
+			}
+		}
+	]
 }
