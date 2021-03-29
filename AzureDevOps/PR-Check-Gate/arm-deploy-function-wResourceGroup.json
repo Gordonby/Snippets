@@ -123,43 +123,10 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "deployStorage",
-      "resourceGroup": "[parameters('rgName')]",
-      "dependsOn": [
-        "[parameters('rgName')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "resources": [
-           {
-							"type": "Microsoft.Storage/storageAccounts",
-							"apiVersion": "2019-06-01",
-							"name": "[variables('storageAccountName')]",
-							"location": "[parameters('rgLocation')]",
-							"sku": {
-								"name": "Standard_LRS"
-							},
-							"kind": "StorageV2",
-							"properties": {
-								"supportsHttpsTrafficOnly": true,
-								"minimumTlsVersion": "TLS1_2"
-							}
-						}
-          ]
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-10-01",
       "name": "deployFunctionApp",
       "resourceGroup": "[parameters('rgName')]",
       "dependsOn": [
-        "[parameters('rgName')]",
-        "deployStorage"
+        "[parameters('rgName')]"
       ],
       "properties": {
         "expressionEvaluationOptions": {
@@ -196,6 +163,20 @@
           },
           "resources": [
             {
+							"type": "Microsoft.Storage/storageAccounts",
+							"apiVersion": "2019-06-01",
+							"name": "[parameters('storageAccountName')]",
+							"location": "[parameters('rgLocation')]",
+							"sku": {
+								"name": "Standard_LRS"
+							},
+							"kind": "StorageV2",
+							"properties": {
+								"supportsHttpsTrafficOnly": true,
+								"minimumTlsVersion": "TLS1_2"
+							}
+						},
+            {
 							"type": "Microsoft.Web/serverfarms",
 							"apiVersion": "2018-02-01",
 							"name": "[parameters('FunctionAppName')]",
@@ -217,7 +198,8 @@
 							"location": "[parameters('rgLocation')]",
 							"kind": "functionapp",
 							"dependsOn": [
-								"[resourceId('Microsoft.Web/serverfarms', parameters('FunctionAppName'))]"
+								"[resourceId('Microsoft.Web/serverfarms', parameters('FunctionAppName'))]",
+                "[variables('storageResouceId')]"
 							],
 							"properties": {
 								"serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('FunctionAppName'))]",

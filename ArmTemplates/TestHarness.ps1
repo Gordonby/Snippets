@@ -17,3 +17,27 @@ $templateParams = @{
 
 New-AzSubscriptionDeployment -Location WestEurope -TemplateFile $path -TemplateParameterObject $templateParams -SkipTemplateParameterPrompt
 
+
+
+
+$path="C:\ReposGitHub\Snippets\AzureDevOps\PR-Check-Gate\arm-deploy-function-wResourceGroup.json"
+$templateParams = @{
+    'rgName' = "gordarmtest05"
+    'FunctionAppName' = "AdoExtens"
+}
+New-AzSubscriptionDeployment -Location WestEurope -TemplateFile $path -TemplateParameterObject $templateParams -SkipTemplateParameterPrompt
+
+
+#Cleanup.
+$rgs=Get-AzResourceGroup
+$rgs | ? {$_.ResourceGroupName -like 'gordarmtest*'} | % {
+    $rg= $_
+
+    $locks = Get-AzResourceLock -ResourceGroupName $rg.ResourceGroupName -AtScope
+    $locks | % {
+        Write-Host "Removing resouce lock on $($rg.ResourceGroupName)"
+        $_ | Remove-AzResourceLock -Force
+    }
+    Write-Host "Deleting $($rg.ResourceGroupName)"
+    $rg | Remove-AzResourceGroup -Force
+}
