@@ -26,7 +26,7 @@
     "roleDefinition": {
       "type": "string",
       "allowedValues" : ["Contributor","Reader","NetworkContributor"],
-      "defaultValue": "Contributor",
+      "defaultValue": "Reader",
       "metadata": {
         "description": "Role Definition to apply to the PrincipalId on the Resource Group"
       }
@@ -34,7 +34,7 @@
     "FunctionAppName": {
       "type": "string",
       "metadata": {
-        "description": "Name for the WebApp"
+        "description": "Name for the FunctionApp to host the code"
       },
       "minLength":3
     }
@@ -48,10 +48,8 @@
     "roleDefinitionId" :"[Variables('roleDefinitionMap')[Parameters('roleDefinition')]]",
     "roleAssignmentName":"[guid(parameters('rgName'),parameters('roleDefinition'),parameters('principalId'))]",
 
-    "storageAccountName":"[fnGeneral.storageName(parameters('rgName'),parameters('rgName'))]",
-
-    "deploynameLockRole": "[concat(parameters('rgName'),'-applyLockAndRole')]",
-    "deploynameStorage": "[concat(parameters('rgName'),'-createStorage')]"
+    "storageAccountName":"[fnGeneral.storageName(parameters('FunctionAppName'),parameters('rgName'))]",
+    "FunctionAppName" : "[concat(parameters('FunctionAppName'), uniqueString(parameters('rgName')))]"
   },
   "functions": [
   {
@@ -70,7 +68,7 @@
         ],
         "output": {
           "type": "string",
-          "value": "[substring(concat(toLower(parameters('namePrefix')), uniqueString(parameters('randSeed'))),0,23)]"
+          "value": "[substring(concat(toLower(parameters('namePrefix')), uniqueString(parameters('randSeed')), uniqueString(parameters('randSeed'))),0,23)]"
         }
       }
     }
@@ -87,7 +85,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "[variables('deploynameLockRole')]",
+      "name": "ApplyLockAndRole",
       "resourceGroup": "[parameters('rgName')]",
       "dependsOn": [
         "[parameters('rgName')]"
@@ -122,10 +120,10 @@
         }
       }
     },
-        {
+    {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
-      "name": "[variables('deploynameStorage')]",
+      "name": "deployStorage",
       "resourceGroup": "[parameters('rgName')]",
       "dependsOn": [
         "[parameters('rgName')]"
@@ -149,7 +147,54 @@
 								"supportsHttpsTrafficOnly": true,
 								"minimumTlsVersion": "TLS1_2"
 							}
-						},
+						}
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "deployFunctionApp",
+      "resourceGroup": "[parameters('rgName')]",
+      "dependsOn": [
+        "[parameters('rgName')]",
+        "deployStorage"
+      ],
+      "properties": {
+        "expressionEvaluationOptions": {
+            "scope": "inner"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[variables('storageAccountName')]"
+          },
+          "FunctionAppName": {
+            "value": "[variables('FunctionAppName')]"
+          },
+          "rgLocation": {
+            "value": "[parameters('rgLocation')]"
+          }
+        },
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters" :{    
+            "storageAccountName": {
+              "type": "string"
+            },
+            "FunctionAppName": {
+              "type": "string"
+            },
+            "rgLocation": {
+              "type": "string"
+            },
+          },
+          "variables" : {
+            "storageResouceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+          },
+          "resources": [
             {
 							"type": "Microsoft.Web/serverfarms",
 							"apiVersion": "2018-02-01",
@@ -164,6 +209,59 @@
 								"computeMode": "Dynamic"
 							},
 							"kind": "functionapp"
+						},
+            {
+							"apiVersion": "2018-11-01",
+							"type": "Microsoft.Web/sites",
+							"name": "[parameters('FunctionAppName')]",
+							"location": "[parameters('rgLocation')]",
+							"kind": "functionapp",
+							"dependsOn": [
+								"[resourceId('Microsoft.Web/serverfarms', parameters('FunctionAppName'))]"
+							],
+							"properties": {
+								"serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('FunctionAppName'))]",
+								"use32BitWorkerProcess": true,
+								"powerShellVersion": "~7",
+								"clientAffinityEnabled": false,
+								"siteConfig": {
+									"appSettings": [{
+											"name": "FUNCTIONS_EXTENSION_VERSION",
+											"value": "~3"
+										},
+										{
+											"name": "FUNCTIONS_WORKER_RUNTIME",
+											"value": "powershell"
+										},
+										{
+											"name": "AzureWebJobsStorage",
+											"value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(variables('storageResouceId'), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+										},
+										{
+											"name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+											"value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(variables('storageResouceId'), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+										},
+										{
+											"name": "WEBSITE_CONTENTSHARE",
+											"value": "[concat(toLower(parameters('FunctionAppName')), 'bf50')]"
+										}
+									]
+								}
+							},
+							"resources": [{
+								"apiVersion": "2018-11-01",
+								"name": "web",
+								"type": "sourcecontrols",
+								"dependsOn": [
+									"[resourceId('Microsoft.Web/sites/', parameters('FunctionAppName'))]"
+								],
+								"properties": {
+									"RepoUrl": "https://github.com/Gordonby/AdoGateFunctions.git",
+									"branch": "main",
+									"publishRunbook": true,
+									"IsManualIntegration": true
+								}
+							}]
 						}
           ]
         }
