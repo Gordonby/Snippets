@@ -74,15 +74,23 @@ eq(root['prstatus'], 'satisfied')
 ## Security
 
 ### ADO Access Token
+
 The Azure Function needs an ADO security access token to communicate with the Azure DevOps API.
 The token can be passed to the function by the ADO Approval gate in the HTTP request body, or retrieved from the Azure Function Application Settings, depending on your preference.
 The token itself is issued by Azure DevOps, has a limited scope, and the lifetime of the token is short. You can read more about the token here: [https://github.com/Microsoft/azure-pipelines-agent/blob/master/docs/design/auth.md#start-and-listen](https://github.com/Microsoft/azure-pipelines-agent/blob/master/docs/design/auth.md#start-and-listen)
 
 ### Azure Function Access
+
 The Azure Function uses a "function level" key to protect itself from being called anonymously. You can read more about this here: [https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#function-access-keys](https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#function-access-keys)
 
 ### Network
-As Azure DevOps is a SaaS service, it will call the Azure Function with a HTTPS request on a public endpoint.
-The Azure Function then makes outbound API calls to Azure DevOps with a HTTPS request on a public endpoint.
+
+Firstly, Azure DevOps is a SaaS service that is built on Microsoft Azure services and is hosted on the internet.
+
+As Azure DevOps calls the Azure Function with a HTTPS request on a public endpoint.
+
+The Azure Function then makes outbound API calls, back to Azure DevOps with a HTTPS request on a public endpoint.
+
+At no point are there dependencies taken on other resources which would originate on your private network, as such the Function App can be isolated from any corporate network connected services you may also run in Azure.
 
 Environment Gate Checks leverage [Agentless jobs](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml#agentless-tasks), which are Microsoft managed and cannot run on a private network.
