@@ -1,13 +1,14 @@
 # Azure DevOps Pull Request Policy Checking
 
 When you run pipelines in Azure DevOps as part of a build policy, the selected pipeline will start immediately with the Pull Request.
-Often this is the desired behaviour, you want to compile your code and run your unit tests, ready for the PR approvers to see.
+Often this is the desired behaviour as you want to compile your code and run your unit tests asap, ready for the PR approvers to see.
 
 However, sometimes you won't want to burn pipeline minutes or compute time running your build until some of the more basic Pull Request policies have been satisfied (such as Work item association, or specific approvers). Unfortunately this isn't possible for Azure DevOps to accommodate, as all Pull Request policies operate independently. We therefore need to lean on the Azure DevOps API as part of a gate for a pipeline.
 
 ## The Process
 
-You'll need to use an Environment as part of your pipeline.  On the Environment, we'll add an Approval that will run some code to verify the other Pull Request policies have been approved/met.
+You'll need to use an Environment as part of your pipeline in order to add a approval check to the pipeline flow.  
+On the Environment, we'll add an Approval that will run some code to verify the other Pull Request policies have been approved/met.
 
 ![overview.png](overview.png)
 
@@ -21,6 +22,8 @@ You'll need to use an Environment as part of your pipeline.  On the Environment,
 Environment Approval Gates can be super helpful in providing the right governance for your pipelines, however most of the available gate options are quite limited in their capability. The nature of what we're trying to achieve is a series of checks which can only take place inside an Azure Function or API call. 
 
 `We're limited in the available Azure DevOps variables from the Approval Gates, namely the absence of the PullRequest. We therefore need to begin the process with the most relevant variable that is available, the *BuildId*`
+
+Because of this limitation, we can't use a simpler approval technique to find out the Pull Request Policy adherence... We're going to need to make several API calls, parsing and filtering the responses - so an Azure Function gives us this ability.
 
 ### What the Function actually does
 
