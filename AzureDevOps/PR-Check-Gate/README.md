@@ -32,17 +32,18 @@ Environment Approval Gates can be super helpful in providing the right governanc
 
 ### Deploying the Function
 
+Use the buttons below to quickly deploy the Azure Function to your Azure Subscription.
+
 | Template  | ARM Template |
 |:----------|:-------------|
 | Function App | [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://ms.portal.azure.com/?feature.customportal=false#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FGordonby%2FSnippets%2Fmaster%2FAzureDevOps%2FPR-Check-Gate%2Farm-deploy-functionapp.json) |
 | Resource Group and Function App | [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://ms.portal.azure.com/?feature.customportal=false#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FGordonby%2FSnippets%2Fmaster%2FAzureDevOps%2FPR-Check-Gate%2Farm-deploy-functionapp-wResourceGroup.json)|
 
 The [code](https://github.com/Gordonby/AdoGateFunctions) is pulled at deploy time into the FunctionApp.
-TODO:Add Deploy to Azure button
 
 ### Invoking the Azure Function
 
-Inside the `Environment` you've defined, navigate to Approvals and Checks, and add a new `Invoke Azure Function` check. Provide the URL and Function Key from your Azure Function, use the POST method and provide these values;
+Inside the Azure DevOps `Environment` you've defined, navigate to Approvals and Checks, and add a new `Invoke Azure Function` check. Provide the URL (eg. https://fnadoextension3abg3z5bvi2p56.azurewebsites.net/api/ValidatePrFromBuildId) and Function Key from your Azure Function (eg. YwTj/W/NR9oBygyXDVlGaO3yAOyw6aEzjaayRKmRZQCUYo23tuIXOA==), select the POST method and provide these values;
 
 Headers
 ```
