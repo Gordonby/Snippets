@@ -8,7 +8,7 @@
 		},
 		"ResourceGroupName": {
 			"type": "string",
-			"defaultValue": "ADOExtensions3"
+			"defaultValue": "ADOExtensions"
 		},
 		"Location": {
 			"type": "string",
