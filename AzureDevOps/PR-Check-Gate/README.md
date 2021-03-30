@@ -86,8 +86,7 @@ The Azure Function uses a "function level" key to protect itself from being call
 ### Network
 
 Firstly, Azure DevOps is a SaaS service that is built on Microsoft Azure services and is hosted on the internet.
-
-As Azure DevOps calls the Azure Function with a HTTPS request on a public endpoint.
+Azure DevOps calls the Azure Function with a HTTPS request on a public endpoint.
 
 The Azure Function then makes outbound API calls, back to Azure DevOps with a HTTPS request on a public endpoint.
 
