@@ -2,8 +2,10 @@
 # Scripted version of the manual Azure DevOps instructions from https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/setup-azuredevops.md
 # This script is optimised for a more complex Enterprise Scale bootstrap, using a Canary (dev) and Prod Top level bootstrap deployments.
 
-#Recommendation is to run this from a BASH Azure CloudShell, Authenticated as a ADO Collection Administrator.
-#The CloudShell is located: https://shell.azure.com
+# Prerequisites
+
+# Recommendation is to run this from a BASH Azure CloudShell, Authenticated as a ADO Collection Administrator.
+# The CloudShell is located: https://shell.azure.com
 
 #Install AZ Devops Extension
 az extension add -n azure-devops
@@ -13,12 +15,12 @@ az login --use-device-code
 
 #User provided variables, definitely change these
 ADOORG="gdoggmsft"
-ADOPROJ="Ent-Scale"
+ADOPROJ="EntScaleT4"
 MGDEVNAME="dev"
 MGPRODNAME="prod"
 
 #Power variables, you can leave these as default
-IMPORTREPO=0 #If you set this to 1, we'll import the ent-scale repo
+IMPORTREPO=1 #If you set this to 1, we'll import the ent-scale repo
 MINAPPROVCOUNT=1
 #REPONAME="EntScale"
 ENTSCALEGITURL="https://github.com/Gordonby/Enterprise-Scale.git"
@@ -52,6 +54,8 @@ else
     cd $REPONAME
     mkdir ".azure-pipelines"
     cd ".azure-pipelines"
+    mkdir "devplusprod"
+    cd "devplusprod"
     curl -O https://raw.githubusercontent.com/Gordonby/Enterprise-Scale/main/.azure-pipelines/devplusprod/azops-pull.yml
     curl -O https://raw.githubusercontent.com/Gordonby/Enterprise-Scale/main/.azure-pipelines/devplusprod/azops-dev-push.yml
     curl -O https://raw.githubusercontent.com/Gordonby/Enterprise-Scale/main/.azure-pipelines/devplusprod/azops-prod-push.yml
@@ -85,6 +89,10 @@ az pipelines variable create --name REPOPATH \
                              --value $MGPRODNAME
 
 echo "Creating CREDENTIALS pipeline variables"
+az pipelines variable create --name AZURE_CREDENTIALS \
+                             --detect true \
+                             --pipeline-id $PIPEPULLID 
+
 az pipelines variable create --name AZURE_CREDENTIALS \
                              --detect true \
                              --pipeline-id $PIPEDEVPUSHID 
@@ -132,7 +140,7 @@ az repos policy required-reviewer create --blocking true \
                                          --enabled true \
                                          --message "Changes to pipelines will need additional approval" \
                                          --repository-id $REPOID \
-                                         --path-filter "/.azure-pipelines/" \
+                                         --path-filter "/.azure-pipelines/*" \
                                          --required-reviewer-ids $RANDOMUSERID
 
 
