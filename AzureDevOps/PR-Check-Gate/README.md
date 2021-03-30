@@ -27,9 +27,9 @@ Because of this limitation, we can't use a simpler approval technique to find ou
 
 ### What the Function actually does
 
-1. Take a number of parameters from the Azure DevOps request (namely the BuildId, ProjectId and OrganisationName)
+1. Take a number of parameters from the Azure DevOps request (namely the BuildId, ProjectId, OrganisationName and optionally the AccessToken)
 1. Call the Azure DevOps API to obtain the Build details from the provided BuildId, to obtain the PullRequestId
-1. Call the Azure DevOps API to obtain the Pull Request Policy details
+1. Call the Azure DevOps API to obtain the Pull Request Policy details from the PullRequestId
 1. Loop through all the PR Policies to evaluate blocking policies that are not yet approved
 1. Respond to the Azure DevOps request with an indicator to proceed, and a list of the Blocking Policies
 
@@ -75,7 +75,8 @@ eq(root['prstatus'], 'satisfied')
 
 ### ADO Access Token
 The Azure Function needs an ADO security access token to communicate with the Azure DevOps API.
-The token can be passed to the function by the ADO Approval gate in the HTTP request body, or retrieved from the Azure Function Application Settings, depending on your preference. 
+The token can be passed to the function by the ADO Approval gate in the HTTP request body, or retrieved from the Azure Function Application Settings, depending on your preference.
+The token itself is issued by Azure DevOps, has a limited scope, and the lifetime of the token is short. You can read more about the token here: [https://github.com/Microsoft/azure-pipelines-agent/blob/master/docs/design/auth.md#start-and-listen](https://github.com/Microsoft/azure-pipelines-agent/blob/master/docs/design/auth.md#start-and-listen)
 
 ### Azure Function Access
 The Azure Function uses a "function level" key to protect itself from being called anonymously. You can read more about this here: [https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#function-access-keys](https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts#function-access-keys)
