@@ -17,13 +17,13 @@ $devMgScope = "/providers/Microsoft.Management/managementGroups/$devBootstrapPre
 $prodMgScope = "/providers/Microsoft.Management/managementGroups/$prodBootstrapPrefix"
 
 #Create Service Principal and assign Owner role to the right scopes
-$readerSP = New-AzADServicePrincipal -DisplayName AzOpsReader6
+$readerSP = New-AzADServicePrincipal -DisplayName AzOpsReader
 New-AzRoleAssignment -Scope $devMgScope -RoleDefinitionName 'Reader' -ObjectId $readerSP.Id
 New-AzRoleAssignment -Scope $prodMgScope -RoleDefinitionName 'Reader' -ObjectId $readerSP.Id
 
 #$rotaterSP = New-AzADServicePrincipal -DisplayName AzOpsCredRotateHelper
-$devSP = New-AzADServicePrincipal -Role Owner -Scope $devMgScope -DisplayName AzOpsDev6
-$prodSP = New-AzADServicePrincipal -Role Owner -Scope $prodMgScope -DisplayName AzOpsProd6
+$devSP = New-AzADServicePrincipal -Role Owner -Scope $devMgScope -DisplayName AzOpsDev
+$prodSP = New-AzADServicePrincipal -Role Owner -Scope $prodMgScope -DisplayName AzOpsProd
 
 #Provide reader access to the current subscription.
 #AzOps requires Service Principals have at least some RBAC on a default subscription, the current subscription context is used for simplicity.
@@ -56,6 +56,7 @@ function GetJsonFromSP($SP, $removeCrlf=$true) {
 Write-Output "$(GetJsonFromSP $readerSP $false)"
 Write-Output "$(GetJsonFromSP $prodSP $false)"
 Write-Output "$(GetJsonFromSP $devSP $false)" 
+
 
 ###################################################
 # Update existing Azure DevOps Pipeline Variables #
