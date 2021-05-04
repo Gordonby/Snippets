@@ -1,12 +1,39 @@
-﻿#################
+﻿# Creates the Service Principals, and adds to ADO for a multi-environment Enterprise Scale deployment
+
+#################
 # Prerequisites #
 #################
 
-# 1. You need to have completed a bootstrap installation for "test"/"dev" of Enterprise-Scale
-# 2. You need to have completed a bootstrap installation for "prod" of Enterprise-Scale
+# 1. You need to have completed a Reference Implementation for "canary/dev" of Enterprise-Scale
+# 2. You need to have completed a Reference Implementation for "prod" of Enterprise-Scale
+# (ref: https://github.com/Azure/Enterprise-Scale/blob/main/docs/EnterpriseScale-Deploy-reference-implentations.md)
 
-$devBootstrapPrefix="codev"
-$prodBootstrapPrefix="coprd"
+$devBootstrapPrefix="canary"
+$prodBootstrapPrefix="prod"
+
+# 3. You need an existing Azure DevOps project created
+
+$org="https://gdoggmsft.visualstudio.com/"
+$project="EntScaleAzOps"
+
+####################
+# Login and Verify #
+####################
+
+#It's best to check that we're operating in the right tenant.
+#Set these to represent your tenantId and expected default subscriptionId
+$tenantId = "b06e8efc-739c-414e-a10b-220b51db40b1"
+$subId="3f2fc8be-dbf2-44e1-84e8-321228974d35"
+
+Connect-AzAccount -Tenant $tenantId 
+$currentContext=Get-AzContext
+If ($tenantId -eq $currentContext.Tenant -and $subId -eq $currentContext.Subscription) {
+    #All good.
+    echo "Tenant/Subscription is as expected"
+}
+else {
+    Write-Error "Operating in unexpected tenant"
+}
 
 #############################
 # Create Service Principals #
@@ -16,26 +43,20 @@ $rootscope = "/"
 $devMgScope = "/providers/Microsoft.Management/managementGroups/$devBootstrapPrefix"
 $prodMgScope = "/providers/Microsoft.Management/managementGroups/$prodBootstrapPrefix"
 
-#Create Service Principal and assign Owner role to the right scopes
-$readerSP = New-AzADServicePrincipal -DisplayName AzOpsReader
-New-AzRoleAssignment -Scope $devMgScope -RoleDefinitionName 'Reader' -ObjectId $readerSP.Id
-New-AzRoleAssignment -Scope $prodMgScope -RoleDefinitionName 'Reader' -ObjectId $readerSP.Id
-
-#$rotaterSP = New-AzADServicePrincipal -DisplayName AzOpsCredRotateHelper
-$devSP = New-AzADServicePrincipal -Role Owner -Scope $devMgScope -DisplayName AzOpsDev
+$devSP = New-AzADServicePrincipal -Role Owner -Scope $devMgScope -DisplayName AzOpsCanary
 $prodSP = New-AzADServicePrincipal -Role Owner -Scope $prodMgScope -DisplayName AzOpsProd
 
 #Provide reader access to the current subscription.
-#AzOps requires Service Principals have at least some RBAC on a default subscription, the current subscription context is used for simplicity.
-New-AzRoleAssignment -ObjectId $readerSP.Id -RoleDefinitionName Reader -Scope "/subscriptions/$((Get-AzContext).Subscription.Id)"
+#AzOps (well the PowerShell Connect-Az cmdlet) requires Service Principals have at least some RBAC on a default subscription, the current subscription context is used for simplicity. You can be explict for these ID's if required.
 New-AzRoleAssignment -ObjectId $devSP.Id -RoleDefinitionName Reader -Scope "/subscriptions/$((Get-AzContext).Subscription.Id)"
 New-AzRoleAssignment -ObjectId $prodSP.Id -RoleDefinitionName Reader -Scope "/subscriptions/$((Get-AzContext).Subscription.Id)"
 
 ###############################################################
 # Specify function to easily get Json from a ServicePrincipal #
 ###############################################################
-function GetJsonFromSP($SP, $removeCrlf=$true) {
-    #Prettify output to print in the format for AZURE_CREDENTIALS
+function GetJsonFromSP($SP, $removeCrlf=$true, $escapeCharsForAzCli=$true) {
+    #Used when storing SP creds inside a single Pipeline variable as Json
+
     $spDevJson=[ordered]@{
         clientId = $SP.ApplicationId
         displayName = $SP.DisplayName
@@ -44,7 +65,10 @@ function GetJsonFromSP($SP, $removeCrlf=$true) {
         tenantId = (Get-AzContext).Tenant.Id
         subscriptionId = (Get-AzContext).Subscription.Id
     } | ConvertTo-Json
-    $spDevJsonE = $spDevJson.Replace('"','\"')
+    $spDevJsonE = $spDevJson.Replace('"','\\\"')
+
+    if ($escapeCharsForAzCli) {$spDevJsonE = $spDevJson.Replace('"','\\\"')}
+    else {$spDevJsonE = $spDevJson.Replace('"','\"')}
     
     if($removeCrlf -eq $true) {$spDevJsonE= $spDevJsonE -replace "`t|`n|`r",""}
     return $spDevJsonE
@@ -53,30 +77,43 @@ function GetJsonFromSP($SP, $removeCrlf=$true) {
 ######################################
 # Optionally, Output SPN's to screen #
 ######################################
-Write-Output "$(GetJsonFromSP $readerSP $false)"
-Write-Output "$(GetJsonFromSP $prodSP $false)"
-Write-Output "$(GetJsonFromSP $devSP $false)" 
-
+Write-Output "$(GetJsonFromSP $prodSP $false $false)"
+Write-Output "$(GetJsonFromSP $devSP $false $false)" 
 
 ###################################################
 # Update existing Azure DevOps Pipeline Variables #
 ###################################################
-$org="https://gdoggmsft.visualstudio.com/"
-$project="EntScaleT4"
+function create-devops-variablegroup-forSP($name, $sp) {
+    #Used when storing SP creds inside a Variable Group
+
+    $clientId = $sp.ApplicationId.Guid
+    $secret=[System.Net.NetworkCredential]::new("", $sp.Secret).Password
+    $subId=(Get-AzContext).Subscription.Id
+    $tenantId = (Get-AzContext).Tenant.Id
+
+    $groupId = az pipelines variable-group create --name $name --variables "DisplayName=$($sp.DisplayName)" --query id
+    az pipelines variable-group variable create --group-id $groupId --name ARM_CLIENT_ID --value $clientId 
+    az pipelines variable-group variable create --group-id $groupId --name ARM_CLIENT_SECRET --value $secret --secret
+    az pipelines variable-group variable create --group-id $groupId --name ARM_SUBSCRIPTION_ID --value $subId 
+    az pipelines variable-group variable create --group-id $groupId --name ARM_TENANT_ID --value $tenantId 
+
+}
 
 az extension add -n "azure-devops"
-az login --use-device-code #az devops login --organization "$org" 
+az login --use-device-code #Even though we're authenticated for PowerShell, we now switch to Az so need to auth again. T
 az devops configure --defaults organization=$org project=$project
 
-az pipelines variable update --name AZURE_CREDENTIALS --pipeline-name AzOps-Pull --secret true --value "$(GetJsonFromSP($readerSP))"
-az pipelines variable update --name AZURE_CREDENTIALS --pipeline-name AzOps-Prod-Push --secret true --value "$(GetJsonFromSP($prodSP))"
-az pipelines variable update --name AZURE_CREDENTIALS --pipeline-name AzOps-Dev-Push --secret true --value "$(GetJsonFromSP($devSP))"
+Write-Output "Testing Extension can see project $project"
+$adoprojtest=az devops project show -p $project --query "[id, name]" -o tsv
+if($adoprojtest -eq $null) {Write-Output "Issue connecting to ADO"} else {Write-Output $adoprojtest}
 
-#az pipelines variable-group create --name "AZURE_CREDENTIALS" --variables "$devBootstrapPrefix=$(GetJsonFromSP($devSP)) $prodBootstrapPrefix=$(GetJsonFromSP($prodSP))"
+create-devops-variablegroup-forSP "AZURECREDENTIALS_CANARY" $devSP
+create-devops-variablegroup-forSP "AZURECREDENTIALS_PROD" $prodSP
 
-########################################
-# Configure the AzureAD directory role #
-########################################
+#############################################################
+# Configure the AzureAD directory role                      #
+# (This is used to resolve AAD object names from their Ids) #
+#############################################################
 
 $azAADmod = Get-InstalledModule -Name AzureAD
 If ($azAADmod -eq $NULL) {
@@ -86,15 +123,16 @@ If ($azAADmod -eq $NULL) {
 }
 
 #Connect to Azure Active Directory
-$AzureAdCred = Get-Credential
+$AzureAdCred = Get-Credential #Even though we're authenticated for Azure-PowerShell, AzureAd is a different module and we require another auth.
 Connect-AzureAD -Credential $AzureAdCred
 
 #Get AzOps Service Principal from Azure AD
-$aadServicePrincipal = Get-AzureADServicePrincipal -Filter "DisplayName eq 'AzOpsReader'"
+$devServicePrincipal = Get-AzureADServicePrincipal -Filter "DisplayName eq '$($devSP.DisplayName)'"
+$prodServicePrincipal = Get-AzureADServicePrincipal -Filter "DisplayName eq '$($prodSP.DisplayName)'"
 
 #Get Azure AD Directory Role
-$DirectoryRole = Get-AzureADDirectoryRole -Filter "DisplayName eq 'Directory Readers'"
-#$DirectoryRole = Get-AzureADDirectoryRole | Where-Object {$_.DisplayName -eq "Directory Readers"} #If the line above doesn't work with the Filter param, then do this.
+#$DirectoryRole = Get-AzureADDirectoryRole -Filter "DisplayName eq 'Directory Readers'" #The filter option does not seem to work in CloudShell.  Using an alternate approach
+$DirectoryRole = Get-AzureADDirectoryRole | Where-Object {$_.DisplayName -eq "Directory Readers"}
 
 if ($DirectoryRole -eq $NULL) {
     Write-Output "Directory Reader role not found. This usually occurs when the role has not yet been used in your directory"
@@ -102,8 +140,6 @@ if ($DirectoryRole -eq $NULL) {
 }
 else {
     #Add service principal to Directory Role
-    Add-AzureADDirectoryRoleMember -ObjectId $DirectoryRole.ObjectId -RefObjectId $aadServicePrincipal.ObjectId
+    Add-AzureADDirectoryRoleMember -ObjectId $DirectoryRole.ObjectId -RefObjectId $devServicePrincipal.ObjectId
+    Add-AzureADDirectoryRoleMember -ObjectId $DirectoryRole.ObjectId -RefObjectId $prodServicePrincipal.ObjectId
 }
-
-
-

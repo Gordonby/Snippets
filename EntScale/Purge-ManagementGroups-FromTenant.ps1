@@ -80,9 +80,9 @@ If ($tenantId -eq $currentContext.Tenant -and $subId -eq $currentContext.Subscri
         Write-Output "Remove-AzADApplication -ObjectId $($_.ObjectId) -force;  `#$($_.DisplayName) "  
     }
 
-
-    #TODO: Go delete/disable your pipelines.
-    #TODO: Archive your repo.
+    Write-Output "REMEMBER: Azure Active Directory is global infrastructure.  Delete's are propogated, and can take a couple of minutes before you can add Service Principals with the same Name"
+    Write-Output "TODO: Go delete/disable your existing AzOps pipelines/actions."
+    Write-Output "TODO: Archive your GitHub/Ado code repo."
 }
 else {
     echo "Mismatch verifying subscription and tenant"
