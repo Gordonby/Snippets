@@ -1,4 +1,4 @@
-# Azure DevOps - Enterprise Scale project onboarding [v0.6]
+# Azure DevOps - Enterprise Scale project onboarding [v0.8]
 # Scripted version of the manual Azure DevOps instructions from https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/setup-azuredevops.md
 # This script is optimised for a more complex Enterprise Scale bootstrap, using a Canary (dev) and Prod Top level bootstrap deployments.
 
@@ -14,16 +14,16 @@ az extension add -n azure-devops
 az login --use-device-code
 
 #User provided variables, definitely change these
-ADOORG="gdoggmsft"
-ADOPROJ="EntScaleT4"
-MGDEVNAME="dev"
+ADOORG="mscet"
+ADOPROJ="CAE-AzOps-MultiEnv"
+MGDEVNAME="canary"
 MGPRODNAME="prod"
 
 #Power variables, you can leave these as default
 IMPORTREPO=1 #If you set this to 1, we'll import the ent-scale repo
 MINAPPROVCOUNT=1
 #REPONAME="EntScale"
-ENTSCALEGITURL="https://github.com/Gordonby/Enterprise-Scale.git"
+ENTSCALEGITURL="https://github.com/Gordonby/AzOps-Accelerator"
 
 #Internal variables - Don't tweak these.
 ADOURL="https://dev.azure.com/$ADOORG/"
@@ -65,41 +65,13 @@ else
 fi
 
 echo "Creating AzOps-Pull pipeline"
-PIPEPULL=$(az pipelines create --name 'AzOps-Pull' --description 'Pipeline for AzOps Pull' \
---repository $REPONAME --repository-type tfsgit --branch main --yml-path .azure-pipelines/devplusprod/azops-pull.yml)
-PIPEPULLID=$(az pipelines show --name 'AzOps-Pull' --query "id" -o tsv)
+PIPEDEVPULL=$(az pipelines create --name 'AzOps-Dev-Pull' --description 'Pipeline for AzOps Pull' \
+--repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines//multienv/dev-pull.yml)
+PIPEDEVPULLID=$(az pipelines show --name 'AzOps-Dev-Pull' --query "id" -o tsv)
 
 PIPEDEVPUSH=$(az pipelines create --name 'AzOps-Dev-Push' --description 'Pipeline for AzOps Dev Push' \
---repository $REPONAME --repository-type tfsgit --branch main --yml-path .azure-pipelines/devplusprod/azops-dev-push.yml)
+--repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/dev-push.yml)
 PIPEDEVPUSHID=$(az pipelines show --name 'AzOps-Dev-Push' --query "id" -o tsv)
-
-PIPEPRODPUSH=$(az pipelines create --name 'AzOps-Prod-Push' --description 'Pipeline for AzOps Prod Push' \
---repository $REPONAME --repository-type tfsgit --branch main --yml-path .azure-pipelines/devplusprod/azops-prod-push.yml)
-PIPEPRODPUSHID=$(az pipelines show --name 'AzOps-Prod-Push' --query "id" -o tsv)
-
-echo "Creating RepoPath pipeline variables"
-az pipelines variable create --name REPOPATH \
-                             --detect true \
-                             --pipeline-id $PIPEDEVPUSHID \
-                             --value $MGDEVNAME
-
-az pipelines variable create --name REPOPATH \
-                             --detect true \
-                             --pipeline-id $PIPEPRODPUSHID \
-                             --value $MGPRODNAME
-
-echo "Creating CREDENTIALS pipeline variables"
-az pipelines variable create --name AZURE_CREDENTIALS \
-                             --detect true \
-                             --pipeline-id $PIPEPULLID 
-
-az pipelines variable create --name AZURE_CREDENTIALS \
-                             --detect true \
-                             --pipeline-id $PIPEDEVPUSHID 
-
-az pipelines variable create --name AZURE_CREDENTIALS \
-                             --detect true \
-                             --pipeline-id $PIPEPRODPUSHID 
 
 echo "Creating Main branch policy - Approver Count"
 az repos policy approver-count create --allow-downvotes true \
@@ -140,9 +112,8 @@ az repos policy required-reviewer create --blocking true \
                                          --enabled true \
                                          --message "Changes to pipelines will need additional approval" \
                                          --repository-id $REPOID \
-                                         --path-filter "/.azure-pipelines/*" \
+                                         --path-filter "/.pipelines/*" \
                                          --required-reviewer-ids $RANDOMUSERID
-
 
 echo "Creating Main branch build policy - AzOps Dev Push"
 az repos policy build create --blocking true \
