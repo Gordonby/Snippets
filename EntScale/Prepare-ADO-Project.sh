@@ -1,4 +1,4 @@
-# Azure DevOps - Enterprise Scale project onboarding [v0.9]
+# Azure DevOps - Enterprise Scale project onboarding [v0.91]
 # Scripted version of the manual Azure DevOps instructions from https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/setup-azuredevops.md
 # This script is optimised for a more complex Enterprise Scale bootstrap, using a Canary (dev) and Prod Top level bootstrap deployments.
 # To see the running implementation : https://dev.azure.com/mscet/CAE-AzOps-MultiEnv/_git/CAE-AzOps-MultiEnv
@@ -136,11 +136,11 @@ az repos policy required-reviewer create --blocking true \
                                          --path-filter "/.pipelines/*" \
                                          --required-reviewer-ids $RANDOMUSERID
 
-echo "Creating Main branch build policy - AzOps Dev Push"
+echo "Creating Main branch build policy - AzOps Canary Push"
 az repos policy build create --blocking true \
                              --branch main \
                              --build-definition-id $PIPEDEVPUSHID \
-                             --display-name "AzOpsDevPush" \
+                             --display-name "AzOpsCanaryPush" \
                              --enabled true \
                              --manual-queue-only false \
                              --queue-on-source-update-only true \
