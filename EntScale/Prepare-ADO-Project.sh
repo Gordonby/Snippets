@@ -1,29 +1,29 @@
-# Azure DevOps - Enterprise Scale project onboarding [v0.8]
+# Azure DevOps - Enterprise Scale project onboarding [v0.9]
 # Scripted version of the manual Azure DevOps instructions from https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/setup-azuredevops.md
 # This script is optimised for a more complex Enterprise Scale bootstrap, using a Canary (dev) and Prod Top level bootstrap deployments.
+# To see the running implementation : https://dev.azure.com/mscet/CAE-AzOps-MultiEnv/_git/CAE-AzOps-MultiEnv
+# Also refer to the Readme : https://github.com/Azure/AzOps-Accelerator/tree/main/.pipelines/samples#multi-environment
 
-# Prerequisites
-
-# Recommendation is to run this from a BASH Azure CloudShell, Authenticated as a ADO Collection Administrator.
+# Recommendation is to run this from a BASH Azure CloudShell, Authenticated as a ADO Collection Administrator. Although, WSL/Linux is also suitable.
 # The CloudShell is located: https://shell.azure.com
 
 #Install AZ Devops Extension
 az extension add -n azure-devops
 
-#Need to explicitly login again in order for the azure-devops extension to work.
+#Need to explicitly login AGAIN in order for the azure-devops extension to work.
 az login --use-device-code
 
 #User provided variables, definitely change these
-ADOORG="mscet"
-ADOPROJ="CAE-AzOps-MultiEnv"
+ADOORG="gdoggmsft"
+ADOPROJ="EntScaleT6"
 MGDEVNAME="canary"
 MGPRODNAME="prod"
 
 #Power variables, you can leave these as default
-IMPORTREPO=1 #If you set this to 1, we'll import the ent-scale repo
+IMPORTREPO=0 #If you set this to 1, we'll import the ent-scale repo
 MINAPPROVCOUNT=1
-#REPONAME="EntScale"
-ENTSCALEGITURL="https://github.com/Gordonby/AzOps-Accelerator"
+ENTSCALEGITURL="https://github.com/Azure/AzOps-Accelerator.git"
+
 
 #Internal variables - Don't tweak these.
 ADOURL="https://dev.azure.com/$ADOORG/"
@@ -49,29 +49,50 @@ echo "Importing repo"
 if (( $IMPORTREPO == 1 )); then
     az repos import create --git-source-url $ENTSCALEGITURL -r $REPONAME
 else
+    echo "Cloning from $ENTSCALEGITURL to temp dir"
+    git clone $ENTSCALEGITURL temp/acceleratorrepo
+
     GITURL=$(az repos show -r $REPONAME --query remoteUrl -o tsv)
+    echo "Cloning from  $GITURL"
+    echo "You'll need to get a GIT PAT token from https://dev.azure.com/$ADOORG/_git/$ADOPROJ - Click 'Generate Git Credentials' and paste the credentials when prompted"
     git clone $GITURL
     cd $REPONAME
-    mkdir ".azure-pipelines"
-    cd ".azure-pipelines"
-    mkdir "devplusprod"
-    cd "devplusprod"
-    curl -O https://raw.githubusercontent.com/Gordonby/Enterprise-Scale/main/.azure-pipelines/devplusprod/azops-pull.yml
-    curl -O https://raw.githubusercontent.com/Gordonby/Enterprise-Scale/main/.azure-pipelines/devplusprod/azops-dev-push.yml
-    curl -O https://raw.githubusercontent.com/Gordonby/Enterprise-Scale/main/.azure-pipelines/devplusprod/azops-prod-push.yml
+
+    git checkout -b main
+
+    cp ../temp/acceleratorrepo/.pipelines/samples/Multiple-Environment/*.json .
+
+    mkdir ".pipelines"
+
+    cp ../temp/acceleratorrepo/.pipelines/samples/Multiple-Environment/templates .pipelines/ -r
+    cp ../temp/acceleratorrepo/.pipelines/samples/Multiple-Environment/multienv .pipelines/ -r
+
     git add *
-    git commit -m "Adding pipelines"
-    git push 
+    git add .pipelines/*
+    git commit -m "Adding pipeline files"
+    git push --set-upstream origin main
+
+    az repos update -r $REPONAME --default-branch main
 fi
 
 echo "Creating AzOps-Pull pipeline"
-PIPEDEVPULL=$(az pipelines create --name 'AzOps-Dev-Pull' --description 'Pipeline for AzOps Pull' \
---repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines//multienv/dev-pull.yml)
-PIPEDEVPULLID=$(az pipelines show --name 'AzOps-Dev-Pull' --query "id" -o tsv)
+PIPEDEVPULL=$(az pipelines create --name 'AzOps-Canary-Pull' --description 'Pipeline for AzOps Canary Pull' \
+--repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/canary-pull.yml)
+PIPEDEVPULLID=$(az pipelines show --name 'AzOps-Canary-Pull' --query "id" -o tsv)
 
-PIPEDEVPUSH=$(az pipelines create --name 'AzOps-Dev-Push' --description 'Pipeline for AzOps Dev Push' \
---repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/dev-push.yml)
-PIPEDEVPUSHID=$(az pipelines show --name 'AzOps-Dev-Push' --query "id" -o tsv)
+PIPEDEVPUSH=$(az pipelines create --name 'AzOps-Canary-Push' --description 'Pipeline for AzOps Canary Push' \
+--repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/canary-push.yml)
+PIPEDEVPUSHID=$(az pipelines show --name 'AzOps-Canary-Push' --query "id" -o tsv)
+
+echo "Creating AzOps-Pull pipeline"
+PIPEPRODPULL=$(az pipelines create --name 'AzOps-Prod-Pull' --description 'Pipeline for AzOps Prod Pull' \
+--repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/prod-pull.yml)
+PIPEPRODPULLID=$(az pipelines show --name 'AzOps-Prod-Pull' --query "id" -o tsv)
+
+PIPEPRODPUSH=$(az pipelines create --name 'AzOps-Prod-Push' --description 'Pipeline for AzOps Prod Push' \
+--repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/prod-push.yml)
+PIPEPRODPUSHID=$(az pipelines show --name 'AzOps-Prod-Push' --query "id" -o tsv)
+
 
 echo "Creating Main branch policy - Approver Count"
 az repos policy approver-count create --allow-downvotes true \
@@ -124,7 +145,7 @@ az repos policy build create --blocking true \
                              --manual-queue-only false \
                              --queue-on-source-update-only true \
                              --repository-id $REPOID \
-                             --path-filter "/azops/$MGDEVNAME ($MGDEVNAME)/*" \
+                             --path-filter "/azops-$MGDEVNAME/$MGDEVNAME ($MGDEVNAME)/*" \
                              --valid-duration 720
 
 echo "Creating Main branch build policy - AzOps Prod Push"
@@ -136,7 +157,7 @@ az repos policy build create --blocking true \
                              --manual-queue-only false \
                              --queue-on-source-update-only true \
                              --repository-id $REPOID \
-                             --path-filter "/azops/$MGPRODNAME ($MGPRODNAME)/*" \
+                             --path-filter "/azops-$MGPRODNAME/$MGPRODNAME ($MGPRODNAME)/*" \
                              --valid-duration 720
 
 
