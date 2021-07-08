@@ -1,9 +1,12 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: azure-vote-back
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: azure-vote-back
   template:
     metadata:
       labels:
@@ -12,7 +15,10 @@ spec:
     spec:
       containers:
       - name: azure-vote-back
-        image: redis
+        image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
+        env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "yes"
         ports:
         - containerPort: 6379
           name: redis
@@ -27,12 +33,15 @@ spec:
   selector:
     app: azure-vote-back
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: azure-vote-front
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: azure-vote-front
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -46,7 +55,7 @@ spec:
     spec:
       containers:
       - name: azure-vote-front
-        image: microsoft/azure-vote-front:v1
+        image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
         ports:
         - containerPort: 80
         resources:
