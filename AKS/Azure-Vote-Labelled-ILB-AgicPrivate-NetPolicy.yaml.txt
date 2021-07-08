@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-vote-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-vote-back
+  template:
+    metadata:
+      labels:
+        app: azure-vote-back
+        role: backend
+    spec:
+      containers:
+      - name: azure-vote-back
+        image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
+        env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        ports:
+        - containerPort: 6379
+          name: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azure-vote-back
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: azure-vote-back
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-vote-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-vote-front
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: azure-vote-front
+        role: frontend
+    spec:
+      containers:
+      - name: azure-vote-front
+        image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+        env:
+        - name: REDIS
+          value: "azure-vote-back"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azure-vote-front
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: azure-vote-front
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: azure-vote-ing
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: azure-vote-front
+          servicePort: 80
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external
+spec:
+  podSelector:
+    matchLabels:
+      role: frontend
+  ingress:
+  - ports:
+    - port: 80
+    from: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: azure-vote-back-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: azure-vote-back
+      role: backend
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: azure-vote-front
