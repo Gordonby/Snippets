@@ -22,3 +22,9 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 
 sudo docker run hello-world
+
+
+#Docker post-install
+$USER = "" #Enter your linux username.  You can use whoami to find out.
+sudo groupadd docker
+sudo usermod -aG docker $USER
