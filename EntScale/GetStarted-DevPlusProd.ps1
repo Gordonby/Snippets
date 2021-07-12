@@ -14,7 +14,7 @@ $prodBootstrapPrefix="prod"
 # 3. You need an existing Azure DevOps project created
 
 $org="https://gdoggmsft.visualstudio.com/"
-$project="EntScaleT7"
+$project="EntScaleT9"
 #$org="https://dev.azure.com/mscet"
 #$project="CAE-AzOps-MultiEnv"
 
@@ -45,14 +45,14 @@ else {
 $devMgScope = "/providers/Microsoft.Management/managementGroups/$devBootstrapPrefix"
 $prodMgScope = "/providers/Microsoft.Management/managementGroups/$prodBootstrapPrefix"
 
-$devSP = New-AzADServicePrincipal -Role Owner -Scope $devMgScope -DisplayName AzOpsCanary2
-$prodSP = New-AzADServicePrincipal -Role Owner -Scope $prodMgScope -DisplayName AzOpsProd2
+$devSP = New-AzADServicePrincipal -Role Owner -Scope $devMgScope -DisplayName AzOpsCanary4
+$prodSP = New-AzADServicePrincipal -Role Owner -Scope $prodMgScope -DisplayName AzOpsProd4
 
 # Provide reader access to the current subscription.
 # AzOps (well the PowerShell Connect-Az cmdlet) requires Service Principals have at least some RBAC on a default subscription, the current subscription context is used for simplicity. You can be explict for these ID's if required.
 # It's   hopeful this requirement will go away soon
-New-AzRoleAssignment -ObjectId $devSP.Id -RoleDefinitionName Reader -Scope "/subscriptions/$((Get-AzContext).Subscription.Id)"
-New-AzRoleAssignment -ObjectId $prodSP.Id -RoleDefinitionName Reader -Scope "/subscriptions/$((Get-AzContext).Subscription.Id)"
+#New-AzRoleAssignment -ObjectId $devSP.Id -RoleDefinitionName Reader -Scope "/subscriptions/$((Get-AzContext).Subscription.Id)"
+#New-AzRoleAssignment -ObjectId $prodSP.Id -RoleDefinitionName Reader -Scope "/subscriptions/$((Get-AzContext).Subscription.Id)"
 
 ###############################################################
 # Specify function to easily get Json from a ServicePrincipal #
@@ -66,7 +66,6 @@ function GetJsonFromSP($SP, $removeCrlf=$true, $escapeCharsForAzCli=$true) {
         name = $SP.ServicePrincipalNames[1]
         clientSecret = [System.Net.NetworkCredential]::new("", $SP.Secret).Password
         tenantId = (Get-AzContext).Tenant.Id
-        subscriptionId = (Get-AzContext).Subscription.Id
     } | ConvertTo-Json
     $spDevJsonE = $spDevJson.Replace('"','\\\"')
 
@@ -91,7 +90,6 @@ function create-devops-variablegroup-forSP($name, $sp, $secretOverride) {
 
     $clientId = $sp.ApplicationId.Guid
     
-    $subId=(Get-AzContext).Subscription.Id
     $tenantId = (Get-AzContext).Tenant.Id
 
     if ($secretOverride) {
@@ -105,7 +103,6 @@ function create-devops-variablegroup-forSP($name, $sp, $secretOverride) {
     $groupId = az pipelines variable-group create --name $name --variables "DisplayName=$($sp.DisplayName)" --query id
     az pipelines variable-group variable create --group-id $groupId --name ARM_CLIENT_ID --value $clientId 
     az pipelines variable-group variable create --group-id $groupId --name ARM_CLIENT_SECRET --value $secret --secret
-    az pipelines variable-group variable create --group-id $groupId --name ARM_SUBSCRIPTION_ID --value $subId 
     az pipelines variable-group variable create --group-id $groupId --name ARM_TENANT_ID --value $tenantId 
 }
 
