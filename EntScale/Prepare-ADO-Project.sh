@@ -1,4 +1,4 @@
-# Azure DevOps - Enterprise Scale project onboarding [v0.92]
+# Azure DevOps - Enterprise Scale project onboarding [v0.93]
 # Scripted version of the manual Azure DevOps instructions from https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/setup-azuredevops.md
 # This script is optimised for a more complex Enterprise Scale bootstrap, using a Canary (dev) and Prod Top level bootstrap deployments.
 # To see the running implementation : https://dev.azure.com/mscet/CAE-AzOps-MultiEnv/_git/CAE-AzOps-MultiEnv
@@ -28,8 +28,8 @@ MGPRODNAME="prod"
 #Power variables, you can leave these as default
 IMPORTREPO=0 #If you set this to 1, we'll import the ent-scale repo
 MINAPPROVCOUNT=1
-ENTSCALEGITURL="https://github.com/gordonby/AzOps-Accelerator.git" #"https://github.com/Azure/AzOps-Accelerator.git"
-ENTSCALEGITBRANCH="verifyloopchecks"
+ENTSCALEGITURL="https://github.com/Azure/AzOps-Accelerator.git"
+ENTSCALEGITBRANCH=""
 
 
 #Internal variables - Don't tweak these.
@@ -176,7 +176,7 @@ echo "Creating Main branch build policy - AzOps Prod Push"
 az repos policy build create --blocking true \
                              --branch main \
                              --build-definition-id $PIPEPRODVALIDATEID \
-                             --display-name "AzOpsProdPush" \
+                             --display-name "AzOpsProdValidate" \
                              --enabled true \
                              --manual-queue-only false \
                              --queue-on-source-update-only true \
