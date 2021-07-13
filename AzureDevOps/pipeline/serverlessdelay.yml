@@ -1,0 +1,7 @@
+    - job: Delay
+      pool: Server #Serverlessdelay
+      dependsOn: Something
+      steps:
+      - task: Delay@1
+        inputs:
+          delayForMinutes: '5'
