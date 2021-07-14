@@ -1,6 +1,11 @@
 # Jmespath sample snippets
 
 ## Azure DevOps
+```bash
+az devops user list --top 1 --query members[0].id -o tsv
+
+
+```
 
 ## AKS
 
