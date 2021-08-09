@@ -34,7 +34,25 @@ ENTSCALEGITBRANCH="main" #"verifyloopchecks"
 #Internal variables - Don't tweak these.
 ADOURL="https://dev.azure.com/$ADOORG/"
 
+#Pre-req checks
+echo "PREREQ: Checking GIT Config"
 
+gitconfigname=$(git config --global user.name)
+gitconfigemail=$(git config --global user.email)
+
+if [ -z "$gitconfignam" ] || [ -z "$gitconfigemail" ]
+then
+      echo "Your Global Git Config is imcomplete"
+      echo "Ensure you run git config --global user.name <yourname>"
+      echo "and git config --global user.email <youremail>"
+      echo "Which are both required to use the GIT cmd line functions"
+else
+      echo "Using Global Git name/email"
+      echo "$gitconfigname"
+      echo "$gitconfigemail"
+fi
+
+#Meat of the script
 echo "Using $ADOURL"
 az devops configure --defaults organization=$ADOURL
 
