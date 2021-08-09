@@ -40,7 +40,7 @@ echo "PREREQ: Checking GIT Config"
 gitconfigname=$(git config --global user.name)
 gitconfigemail=$(git config --global user.email)
 
-if [ -z "$gitconfignam" ] || [ -z "$gitconfigemail" ]
+if [ -z "$gitconfigname" ] || [ -z "$gitconfigemail" ]
 then
       echo "Your Global Git Config is imcomplete"
       echo "Ensure you run git config --global user.name <yourname>"
