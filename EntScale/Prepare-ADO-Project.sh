@@ -15,6 +15,7 @@
 
 #TODO, v1.1
 # AzOps to work with Dynamictree settings json
+# Isolate Canary by creating a seperate repo for it
 
 
 #-----------------------------------------
