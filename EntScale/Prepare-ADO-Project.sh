@@ -1,4 +1,4 @@
-# Azure DevOps - Enterprise Scale project onboarding [v0.93]
+# Azure DevOps - Enterprise Scale project onboarding [v0.94]
 # Scripted version of the manual Azure DevOps instructions from https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/setup-azuredevops.md
 # This script is optimised for a more complex Enterprise Scale bootstrap, using a Canary (dev) and Prod Top level bootstrap deployments.
 # To see the running implementation : https://dev.azure.com/mscet/CAE-AzOps-MultiEnv/_git/CAE-AzOps-MultiEnv
@@ -9,9 +9,9 @@
 
 #TODO, to get to v1.0
 # Replace in the repo the name of the MG's MGPRODNAME in the JSON settings, and the folder path of the respective pipelines
-# Cope with just 1 (PROD) environment.
+# [needs-qa] Cope with just 1 (PROD) environment.
 # [done] Remove the subscriptionId from the Multi-env AzLoginSp yaml
-# Add a work item to create service principals, and variable group(s) for credentials
+# [done] Add a work item to create service principals, and variable group(s) for credentials
 
 #TODO, v1.1
 # AzOps to work with Dynamictree settings json
@@ -218,7 +218,7 @@ az repos policy build create --blocking true \
 USERSTORYID=$(az boards work-item create --title "Ent-Scale Setup" --type 'User Story' --description "Manual tasks needed to complete ADO Enterprise-Scale setup" --query "id" -o tsv)
 echo "USERSTORYID" $USERSTORYID
 # 1. SPN variables set in the Pipelines
-TASKID=$(az boards work-item create --title "Ent-Scale Setup : Set AzOps SPN Variable group in Pipelines" --type 'Task' --description "3 Service Principal Credentials need to be created, and JSON representation added to the pipeline variables" --query "id" -o tsv)
+TASKID=$(az boards work-item create --title "Ent-Scale Setup : Set AzOps SPN Variable group in Pipelines" --type 'Task' --description "3 Service Principal Credentials need to be created, and JSON representation added to the pipeline variables. https://github.com/Gordonby/Snippets/blob/master/EntScale/GetStarted-DevPlusProd.ps1" --query "id" -o tsv)
 echo $TASKID
 az boards work-item relation add --id $TASKID --relation-type 'parent' --target-id $USERSTORYID
 # 2. Permissions assigned for security groups.
