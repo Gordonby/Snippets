@@ -8,10 +8,16 @@
 # The CloudShell is located: https://shell.azure.com
 
 #TODO, to get to v1.0
-# AzOps to work with Dynamictree
 # Replace in the repo the name of the MG's MGPRODNAME in the JSON settings, and the folder path of the respective pipelines
+# Cope with just 1 (PROD) environment.
 # [done] Remove the subscriptionId from the Multi-env AzLoginSp yaml
+# Add a work item to create service principals, and variable group(s) for credentials
 
+#TODO, v1.1
+# AzOps to work with Dynamictree settings json
+
+
+#-----------------------------------------
 
 #Install AZ Devops Extension
 az extension add -n azure-devops
@@ -22,7 +28,7 @@ az login --use-device-code
 #User provided variables, definitely change these
 ADOORG="gdoggmsft"
 ADOPROJ="EntScaleT9"
-MGDEVNAME="canary"
+MGDEVNAME="canary" #Make this an empty string if you just want to cater for 1 environment not 2.
 MGPRODNAME="prod"
 
 #Power variables, you can leave these as default
@@ -107,19 +113,21 @@ else
     az repos update -r $REPONAME --default-branch main
 fi
 
-echo "Creating AzOps-Pull pipeline"
-PIPEDEVPULL=$(az pipelines create --name 'AzOps-Canary-Pull' --description 'Pipeline for AzOps Canary Pull' \
---repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/canary-pull.yml)
-PIPEDEVPULLID=$(az pipelines show --name 'AzOps-Canary-Pull' --query "id" -o tsv)
+if [ -z "$MGDEVNAME" ]
+then
+      echo "Creating Canary pipelines"
+      PIPEDEVPULL=$(az pipelines create --name 'AzOps-Canary-Pull' --description 'Pipeline for AzOps Canary Pull' \
+      --repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/canary-pull.yml)
+      PIPEDEVPULLID=$(az pipelines show --name 'AzOps-Canary-Pull' --query "id" -o tsv)
 
-PIPEDEVPUSH=$(az pipelines create --name 'AzOps-Canary-Push' --description 'Pipeline for AzOps Canary Push' \
---repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/canary-push.yml)
-PIPEDEVPUSHID=$(az pipelines show --name 'AzOps-Canary-Push' --query "id" -o tsv)
+      PIPEDEVPUSH=$(az pipelines create --name 'AzOps-Canary-Push' --description 'Pipeline for AzOps Canary Push' \
+      --repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/canary-push.yml)
+      PIPEDEVPUSHID=$(az pipelines show --name 'AzOps-Canary-Push' --query "id" -o tsv)
 
-PIPEDEVVALIDATE=$(az pipelines create --name 'AzOps-Canary-Validate' --description 'Pipeline for AzOps Canary Validate' \
---repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/canary-validate.yml)
-PIPEDEVVALIDATEID=$(az pipelines show --name 'AzOps-Canary-Validate' --query "id" -o tsv)
-
+      PIPEDEVVALIDATE=$(az pipelines create --name 'AzOps-Canary-Validate' --description 'Pipeline for AzOps Canary Validate' \
+      --repository $REPONAME --repository-type tfsgit --branch main --yml-path .pipelines/multienv/canary-validate.yml)
+      PIPEDEVVALIDATEID=$(az pipelines show --name 'AzOps-Canary-Validate' --query "id" -o tsv)
+fi
 
 echo "Creating AzOps-Pull pipeline"
 PIPEPRODPULL=$(az pipelines create --name 'AzOps-Prod-Pull' --description 'Pipeline for AzOps Prod Pull' \
@@ -177,23 +185,26 @@ az repos policy required-reviewer create --blocking true \
                                          --path-filter "/.pipelines/*" \
                                          --required-reviewer-ids $RANDOMUSERID
 
-echo "Creating Main branch build policy - AzOps Canary Push"
-az repos policy build create --blocking true \
-                             --branch main \
-                             --build-definition-id $PIPEDEVVALIDATEID \
-                             --display-name "AzOpsCanaryValidate" \
-                             --enabled true \
-                             --manual-queue-only false \
-                             --queue-on-source-update-only true \
-                             --repository-id $REPOID \
-                             --path-filter "/azops-$MGDEVNAME/$MGDEVNAME ($MGDEVNAME)/*" \
-                             --valid-duration 720
+if [ -z "$MGDEVNAME" ]
+then
+      echo "Creating Main branch build policy - AzOps Canary"
+      az repos policy build create --blocking true \
+                                   --branch main \
+                                   --build-definition-id $PIPEDEVVALIDATEID \
+                                   --display-name "AzOpsCanaryValidate" \
+                                   --enabled true \
+                                   --manual-queue-only false \
+                                   --queue-on-source-update-only true \
+                                   --repository-id $REPOID \
+                                   --path-filter "/azops-$MGDEVNAME/$MGDEVNAME ($MGDEVNAME)/*" \
+                                   --valid-duration 720
+fi
 
-echo "Creating Main branch build policy - AzOps Prod Push"
+echo "Creating Main branch build policy - AzOps Prod"
 az repos policy build create --blocking true \
                              --branch main \
                              --build-definition-id $PIPEPRODVALIDATEID \
-                             --display-name "AzOpsProdPush" \
+                             --display-name "AzOpsProdValidate" \
                              --enabled true \
                              --manual-queue-only false \
                              --queue-on-source-update-only true \
