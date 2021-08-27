@@ -48,7 +48,7 @@ sudo apt install certbot
 sudo certbot certonly --manual --preferred-challenges dns -d *.private.azdemo.co.uk
 ```
 
-Convert and capture the pfx string, and use in the Parameters to be loaded into KeyVault
+Convert and capture the pfx string, i'm using openssl on [Ubuntu in the Windows 10 Subsystem for Linux](https://ubuntu.com/wsl).
 
 ```bash
 domain="private.azdemo.co.uk"
