@@ -4,7 +4,7 @@
 
 This is the steps that i've taken to stand up a new APIM instance in bicep code. Verbosity is deliberate.
 
-- Taken from [Quick start Templates](https://github.com/Azure/azure-quickstart-templates/blob/master/quickstarts/microsoft.apimanagement/api-management-create-with-internal-vnet-publicip/azuredeploy.json)
+- Start with identifying a good base template, from [Quick start Templates](https://github.com/Azure/azure-quickstart-templates/blob/master/quickstarts/microsoft.apimanagement/api-management-create-with-internal-vnet-publicip/azuredeploy.json)
 - Decompiled to bicep (15 warnings about bool->string property conversion)
 - Fixed the warnings (bool->string property conversion)
 - Removed vnet/subnet creation, instead expecting an existing vnet/subnet (added a new Vnet RGName parameter to facilitate)
@@ -26,6 +26,7 @@ This is the steps that i've taken to stand up a new APIM instance in bicep code.
 
 ### TODO
 
+- Test contacting the built-in API in APIM
 - Add optional log analytics workspace creation
 - Add developer portal (and other) custom hostname
 
