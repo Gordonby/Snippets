@@ -41,11 +41,11 @@ Azure External and Private DNS can both be leveraged, configuration thereof is o
 
 #### SSL certificate string
 
-Get a SSL Certificate for your domain
+Get a SSL Certificate for your domain, this script sample shows using [certbot](https://certbot.eff.org/)
 
 ```bash
 sudo apt install certbot
-sudo certbot certonly --manual --preferred-challenges dns
+sudo certbot certonly --manual --preferred-challenges dns -d *.private.azdemo.co.uk
 ```
 
 Convert and capture the pfx string, and use in the Parameters to be loaded into KeyVault
