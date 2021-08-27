@@ -1,4 +1,4 @@
-# Azure DevOps - Enterprise Scale project onboarding [v0.93]
+# Azure DevOps - Enterprise Scale project onboarding [v0.94]
 # Scripted version of the manual Azure DevOps instructions from https://github.com/Azure/Enterprise-Scale/blob/main/docs/Deploy/setup-azuredevops.md
 # This script is optimised for a more complex Enterprise Scale bootstrap, using a Canary (dev) and Prod Top level bootstrap deployments.
 # To see the running implementation : https://dev.azure.com/mscet/CAE-AzOps-MultiEnv/_git/CAE-AzOps-MultiEnv
@@ -11,7 +11,9 @@
 # AzOps to work with Dynamictree
 # Replace in the repo the name of the MG's MGPRODNAME in the JSON settings, and the folder path of the respective pipelines
 # [done] Remove the subscriptionId from the Multi-env AzLoginSp yaml
-
+# work with 2 repos
+# skip creating project if already exists
+# convert to powershell
 
 #Install AZ Devops Extension
 az extension add -n azure-devops
@@ -30,7 +32,8 @@ IMPORTREPO=0 #If you set this to 1, we'll import the ent-scale repo
 MINAPPROVCOUNT=1
 ENTSCALEGITURL="https://github.com/Azure/AzOps-Accelerator.git"
 ENTSCALEGITBRANCH=""
-
+DODEVDEPLOY=1
+DOPRODDEPLOY=1
 
 #Internal variables - Don't tweak these.
 ADOURL="https://dev.azure.com/$ADOORG/"
@@ -67,7 +70,7 @@ else
 
     GITURL=$(az repos show -r $REPONAME --query remoteUrl -o tsv)
     echo "Cloning from  $GITURL"
-    echo "You'll need to get a GIT PAT token from https://dev.azure.com/$ADOORG/_git/$ADOPROJ - Click 'Generate Git Credentials' and paste the credentials when prompted"
+    echo "You'll need to get a GIT PAT token from https://dev.azure.com/$ADOORG/_git/$REPONAME - Click 'Generate Git Credentials' and paste the credentials when prompted"
     
     git clone $GITURL
     cd $REPONAME

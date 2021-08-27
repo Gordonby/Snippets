@@ -21,7 +21,8 @@ This is the steps that i've taken to stand up a new APIM instance in bicep code.
 - Use a [UAI](https://github.com/Azure/azure-quickstart-templates/blob/master/quickstarts/microsoft.apimanagement/api-management-key-vault-create/azuredeploy.json#L140)
 - Add [Hostname config](https://github.com/Azure/azure-quickstart-templates/blob/master/quickstarts/microsoft.apimanagement/api-management-key-vault-create/azuredeploy.json#L151)
 - Prefixed the module deployment name with the parent deployment name (avoids conflicts)
-- Test deployment with KeyVault and hostname config
+- Test updating existing deployment with KeyVault and hostname config (25 minutes)
+- Test new, full deployment (1 hour 14mins to West Europe)
 
 ### TODO
 
