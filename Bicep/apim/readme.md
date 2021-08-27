@@ -54,7 +54,7 @@ Convert and capture the pfx string, i'm using openssl on [Ubuntu in the Windows 
 domain="private.azdemo.co.uk"
 sudo openssl pkcs12 -inkey /etc/letsencrypt/live/$domain/privkey.pem -in /etc/letsencrypt/live/$domain/cert.pem -export -out /etc/letsencrypt/live/$domain/pkcs12.pfx -passout pass:
 GW=$(cat /etc/letsencrypt/live/$domain/pkcs12.pfx | base64 | tr -d '\n')
-$GW>apimgwkey.txt
+echo $GW>apimgwkey.txt
 ```
 
 ### Prep your parameter defaults (or parameter file)
