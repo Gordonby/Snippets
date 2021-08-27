@@ -51,9 +51,10 @@ sudo certbot certonly --manual --preferred-challenges dns
 Convert and capture the pfx string, and use in the Parameters to be loaded into KeyVault
 
 ```bash
-sudo openssl pkcs12 -inkey /etc/letsencrypt/live/apimgw.azdemo.co.uk/privkey.pem -in /etc/letsencrypt/live/apimgw.azdemo.co.uk/cert.pem -export -out /etc/letsencrypt/live/apimgw.azdemo.co.uk/pkcs12.pfx -passout pass:
-GW=$(cat pkcs12.pfx | base64 | tr -d '\n')
-$GW>appgwkey.txt
+domain="private.azdemo.co.uk"
+sudo openssl pkcs12 -inkey /etc/letsencrypt/live/$domain/privkey.pem -in /etc/letsencrypt/live/$domain/cert.pem -export -out /etc/letsencrypt/live/$domain/pkcs12.pfx -passout pass:
+GW=$(cat /etc/letsencrypt/live/$domain/pkcs12.pfx | base64 | tr -d '\n')
+$GW>apimgwkey.txt
 ```
 
 ### Prep your parameter defaults (or parameter file)
