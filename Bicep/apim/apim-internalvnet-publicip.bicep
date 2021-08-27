@@ -45,10 +45,19 @@ param availabilityZones array = [
 @description('Deploy a PublicIp')
 param publicIp bool = true
 
+@description('Name of the gateway custom hostname')
+param gatewayCustomHostname string = 'apimgw.azdemo.co.uk'
+
+@description('The base64 encoded SSL certificate for the APIM gateway')
+param gwSslCert string = 'test'
+
+
 var publicIpName = 'pip-${nameSeed}'
 var publicIPAllocationMethod  = 'Static'
 var publicIpSku = 'Standard'
 var dnsLabelPrefix = toLower('${nameSeed}-${uniqueString(nameSeed, resourceGroup().id)}')
+
+var keyvaultName = 'kv--${nameSeed}'
 
 var apiManagementServiceName_var = 'apim-${nameSeed}'
 
@@ -78,6 +87,48 @@ resource apimPip 'Microsoft.Network/publicIPAddresses@2021-02-01' = if(publicIp)
   }
 }
 
+resource apiUai 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
+  name: 'id-${nameSeed}'
+  location: location
+}
+
+resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
+  name: keyvaultName
+  location: location
+  properties: {
+    sku: {
+      name: 'standard'
+      family: 'A'
+    }
+    tenantId: reference(apiUai.id).tenantId
+    accessPolicies: [
+      {
+        tenantId: reference(apiUai.id).tenantId
+        objectId: reference(apiUai.id).principalId
+        permissions: {
+          secrets: [
+            'get'
+          ]
+        }
+      }
+    ]
+    enableSoftDelete: true
+  }
+}
+
+resource kvGwSSLSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: '${keyVault.name}/gwsslcert'
+  properties: {
+    value: gwSslCert
+    contentType: 'application/x-pkcs12'
+    attributes: {
+      enabled: true
+      nbf: 1585206000
+      exp: 1679814000
+    }
+  }
+}
+
 resource apiManagementServiceName 'Microsoft.ApiManagement/service@2021-01-01-preview' = {
   name: apiManagementServiceName_var
   location: location
@@ -86,7 +137,22 @@ resource apiManagementServiceName 'Microsoft.ApiManagement/service@2021-01-01-pr
     capacity: skuCount
   }
   zones: ((length(availabilityZones) == 0 || sku=='Developer') ? json('null') : availabilityZones)
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${apiUai.id}': {}
+    }
+  }
   properties: {
+    hostnameConfigurations: [
+      {
+        type: 'Proxy'
+        hostName: gatewayCustomHostname
+        keyVaultId: kvGwSSLSecret.id //'${keyVault.properties.vaultUri}secrets/gwsslcert'
+        identityClientId: reference(apiUai.id).clientId
+        defaultSslBinding: true
+      }
+    ]
     publisherEmail: publisherEmail
     publisherName: publisherName
     virtualNetworkType: 'Internal'
