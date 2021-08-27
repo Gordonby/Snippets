@@ -23,12 +23,15 @@ This is the steps that i've taken to stand up a new APIM instance in bicep code.
 - Prefixed the module deployment name with the parent deployment name (avoids conflicts)
 - Test updating existing deployment with KeyVault and hostname config (25 minutes)
 - Test new, full deployment (1 hour 14mins to West Europe)
+- Add developer portal and management endpoint to custom hostnames & ssl certs
+- Create a VM jumpbox in the same vnet to test with
+- Test the developer portal works from the jumpbox
+- Add a test api
+- Test consuming the API from the jumpbox
 
 ### TODO
 
-- Test contacting the built-in API in APIM
 - Add optional log analytics workspace creation
-- Add developer portal (and other) custom hostname
 
 ## Instructions
 
