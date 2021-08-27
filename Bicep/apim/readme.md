@@ -42,6 +42,7 @@ Azure External and Private DNS can both be leveraged, configuration thereof is o
 #### SSL certificate string
 
 Get a SSL Certificate for your domain, this script sample shows using [certbot](https://certbot.eff.org/)
+For ease, i'm obtaining a wildcard certificate that i can use for all 3 of the API Management endpoints. You could use 3 separate certificates, if required.
 
 ```bash
 sudo apt install certbot
@@ -59,7 +60,9 @@ echo $GW>apimgwkey.txt
 
 ### Prep your parameter defaults (or parameter file)
 
-All parameter values should be reviewed and tweaked for your environment. Your DNS name and SSL certificate are the ones that need a little more planning.
+All parameter values should be reviewed and tweaked for your environment.
+
+Your DNS parameters will need to be updated in your DNS system (usually Azure Private DNS Zones), after APIM deployment to the private IP assigned to APIM..
 
 ### Running the bicep file
 
@@ -77,3 +80,8 @@ Deploy the template
 ```bash
 az deployment group create -n innerloop1 -f .\apim-internalvnet-publicip.bicep -g $RG -p nameSeed=$NameSeed
 ```
+
+### Testing your deployment
+
+Internal mode APIM requires a little more effort to test. You need to have connectivity into the virtual network, and have configured private dns.
+I tend to have another subnet that i can use to create a Virtual Machine in, and then connect into for this purpose.
