@@ -1,0 +1,19 @@
+{
+  "generatedBy": "Microsoft.NET.Sdk.Functions-3.0.7",
+  "configurationSource": "attributes",
+  "bindings": [
+    {
+      "type": "httpTrigger",
+      "route": "api/{adapterRoute}",
+      "methods": [
+        "get",
+        "post"
+      ],
+      "authLevel": "anonymous",
+      "name": "req"
+    }
+  ],
+  "disabled": false,
+  "scriptFile": "../bin/SimpsonsBot.dll",
+  "entryPoint": "SimpsonsBot.Triggers.MessagesTrigger.RunAsync"
+}
