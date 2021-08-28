@@ -21,4 +21,5 @@ $results = $learnHistory.Certifications.privacySnapshots |
         @{N='PassPercent';E={$_.snapshotScore.passingPercent}},
         @{N='CorrectPercent';E={$_.snapshotScore.correctPercent}}
 
-$results | Where-Object Passed -eq $true | ft
+Write-Output "Recertifications of MS Exams through the Microsoft.com/learn process"
+$results | Where-Object Passed -eq $true | Format-Table
