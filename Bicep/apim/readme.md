@@ -45,7 +45,7 @@ You need to decide on the DNS custom domain that will be used to access the vari
 Azure External and Private DNS can both be leveraged, configuration thereof is outside the scope of the template.
 
 Here's what my DNS config looks like.
-![private dns screengrab](assets\privatedns.png)
+![private dns screengrab](assets/privatedns.png)
 
 #### SSL certificate string
 
