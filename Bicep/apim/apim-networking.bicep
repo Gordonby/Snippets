@@ -18,6 +18,7 @@ var nsgName = 'nsg-${subnetName}-${nameSeed}'
 resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing = {
   name: virtualNetworkName
 }
+output vnetId string = vnet.id
 
 resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' = {
   name: subnetName
