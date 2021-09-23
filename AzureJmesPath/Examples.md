@@ -26,3 +26,14 @@ az aks show -n $AKSNAME -g $RG -o json --query "{clusterId:identity.userAssigned
 ```bash
 az account list --all --query "[].{name:name,id:id}"
 ```
+
+## Application Gateway
+
+```bash
+az network application-gateway show -n $appgwname -g $appgwrg --query "frontendIpConfigurations[]"
+az network application-gateway show -n $appgwname -g $appgwrg --query "[frontendIpConfigurations[].name]"
+az network application-gateway show -n $appgwname -g $appgwrg --query "frontendIpConfigurations[].{id:id, privateIp:privateIpAddress}"
+az network application-gateway show -n $appgwname -g $appgwrg --query "frontendIpConfigurations[].{id:id, name:name, privateIp:privateIpAddress}"
+az network application-gateway show -n $appgwname -g $appgwrg --query "frontendIpConfigurations[?privateIpAddress==null].{id:id, name:name, privateIp:privateIpAddress}"
+
+```bash
