@@ -38,7 +38,7 @@ kind: Deployment
 metadata:
   name: azure-vote-front
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: azure-vote-front
@@ -53,6 +53,18 @@ spec:
         app: azure-vote-front
         role: frontend
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - azure-vote-front
+              topologyKey: kubernetes.io/hostname
+            weight: 100
       containers:
       - name: azure-vote-front
         image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
