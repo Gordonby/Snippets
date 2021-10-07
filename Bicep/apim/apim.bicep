@@ -26,6 +26,8 @@ param virtualNetworkRGName string = 'Automation-Actions-AksDeployVnet'
 @description('Existing Virtual Network name')
 param virtualNetworkName string = 'aksdeployvnet1'
 
+param existingPrivateDnsZone string = ''
+
 @description('Subnet Name')
 param subnetName string = 'apim'
 
@@ -51,20 +53,17 @@ param gatewayCustomHostname string = ''
 @description('The base64 encoded SSL certificate for the APIM gateway')
 param gwSslCert string = ''
 
-
 @description('Fqdn of the Developer Portal custom hostname')
 param devPortalCustomHostname string = ''
 
 @description('The base64 encoded SSL certificate for the APIM developer portal')
 param devPortalSslCert string = ''
 
-
 @description('Fqdn of the Management endpoint')
 param managementCustomHostname string = ''
 
 @description('The base64 encoded SSL certificate for the management endpoint')
 param managementSslCert string = ''
-
 
 var publicIpName = 'pip-${nameSeed}'
 var publicIPAllocationMethod  = 'Static'
@@ -122,6 +121,7 @@ resource kvGwSSLSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = if (!emp
     }
   }
 }
+output kvGwSSLSecretId string = kvGwSSLSecret.id
 
 resource kvDpSSLSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = if (!empty(devPortalSslCert)) {
   name: '${keyVault.name}/dpsslcert'
@@ -154,6 +154,12 @@ resource kvMgmtSSLSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = if (!e
 //   //    / /     // |  / /        \\      
 //  //    / /     //  | / /           ) )   
 // //____/ /     //   |/ /     ((___ / /    
+
+// resource privDns 'Microsoft.Network/privateDnsZones@2020-06-01' existing = if (!empty(existingPrivateDnsZone)) {
+//   name: existingPrivateDnsZone
+// }
+
+
 
 var createDefaultDns = empty(gatewayCustomHostname)
 
@@ -292,6 +298,7 @@ resource apim 'Microsoft.ApiManagement/service@2021-01-01-preview' = {
     }
   }
 }
+output ApimName string = apim.name
 
 resource apimPip 'Microsoft.Network/publicIPAddresses@2021-02-01' = if(publicIp) {
   name: publicIpName
