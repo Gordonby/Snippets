@@ -36,7 +36,7 @@ az network application-gateway show -n $appgwname -g $appgwrg --query "frontendI
 az network application-gateway show -n $appgwname -g $appgwrg --query "frontendIpConfigurations[].{id:id, name:name, privateIp:privateIpAddress}"
 az network application-gateway show -n $appgwname -g $appgwrg --query "frontendIpConfigurations[?privateIpAddress==null].{id:id, name:name, privateIp:privateIpAddress}"
 
-```bash
+```
 
 
 ## Features
