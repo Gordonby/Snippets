@@ -37,3 +37,11 @@ az network application-gateway show -n $appgwname -g $appgwrg --query "frontendI
 az network application-gateway show -n $appgwname -g $appgwrg --query "frontendIpConfigurations[?privateIpAddress==null].{id:id, name:name, privateIp:privateIpAddress}"
 
 ```bash
+
+
+## Features
+
+```bash
+az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService')].{Name:name,State:properties.state}"
+az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService') && properties.state=='Registering'].{Name:name,State:properties.state}"
+```
