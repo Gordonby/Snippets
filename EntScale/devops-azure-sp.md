@@ -1,4 +1,19 @@
-## Equipping Azure DevOps with a Service Principal
+# AZ AD CLI
+
+These code snippets show how to create a service principal, that is able to be used in Azure DevOps which can query it's own attributes such as Application ObjectID. It's also able to reset its own secrets, which can be very useful in an autonomous key rotation scenario.
+
+## The API's
+
+There are 2 API's to interact with Azure Active Directory.
+1. Microsoft Graph
+2. Azure Active Directory Graph
+
+The Azure Active Directory Graph is on a depreacation path, but is still leveraged in some of the AZ CLI commands as well as some of the other Microsoft libararies for AAD.
+This means both API's should be granted permission in order to avoid future disruption.
+
+At time of writing, the AZ CLI version *2.28.0* is not using the Microsoft Graph for the `az ad app show` command (amongst others). Therefore if you do not grant the AAD Graph API permission, an error will be encountered. `Insufficient privileges to complete the operation.`
+
+## The scripts
 
 1. Create a Service Principal with no RBAC
 ```powershell
