@@ -25,8 +25,14 @@ az ad app owner add --id $AppId --owner-object-id $SpObjId
 az ad app permission add --id $AppId --api $MsGraphApi --api-permissions "$MsGraphApiRoleId=Role"
 az ad app permission grant --id $AppId --api $MsGraphApi
 az ad app permission add --id $AppId --api $AadGraphApi --api-permissions "$AadGraphApiRoleId=Role"
-az ad app permission grant --id $AppId --api $AadGraphApi
 az ad app permission list --id $AppId
+```
+
+3. Grant admin consent for the Application API Permissions
+
+```powershell
+az ad app permission grant --id $AppId --api $MsGraphApi
+az ad app permission grant --id $AppId --api $AadGraphApi
 ```
 
 3. Create a Service Connection in Azure DevOps (as per this [post](https://gordon.byers.me/azure/create-empty-azure-azuredevops-serviceconnections.html) as a `Azure Resource Manager` `Service Principal (Manual)`
