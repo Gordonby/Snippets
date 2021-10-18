@@ -24,7 +24,6 @@ $AppId= $Sp | select -expandproperty appId
 $SpObjId=az ad sp show --id $AppId --query objectId -o tsv
 az ad app owner add --id $AppId --owner-object-id $SpObjId
 az ad app permission add --id $AppId --api $MsGraphApi --api-permissions "$MsGraphApiRoleId=Role"
-az ad app permission grant --id $AppId --api $MsGraphApi
 az ad app permission add --id $AppId --api $AadGraphApi --api-permissions "$AadGraphApiRoleId=Role"
 az ad app permission list --id $AppId
 ```
