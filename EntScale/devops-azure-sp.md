@@ -43,12 +43,8 @@ az ad app permission add --id $AppId --api $AadGraphApi --api-permissions "$AadG
 az ad app permission list --id $AppId
 ```
 
-3. Grant admin consent for the Application API Permissions
-
-```powershell
-az ad app permission grant --id $AppId --api $MsGraphApi
-az ad app permission grant --id $AppId --api $AadGraphApi
-```
+3. Grant admin consent for the Application API Permissions in the Azure Portal.
+https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/grant-admin-consent#grant-admin-consent-from-the-azure-portal
 
 4. Create a Service Connection in Azure DevOps (as per this [post](https://gordon.byers.me/azure/create-empty-azure-azuredevops-serviceconnections.html)) as an `Azure Resource Manager` `Service Principal (Manual)`
 5. Create a Pipeline in Azure DevOps, adding a Azure CLI task
