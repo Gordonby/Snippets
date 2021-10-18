@@ -9,11 +9,12 @@ $Sp=az ad sp create-for-rbac -n $SpName --skip-assignment -o json | ConvertFrom-
 2. Make the SP an owner of it's App counterpart (otherwise it won't be able to read the Application ObjectId later)
 
 ```powershell
+#Microsoft Graph API
 $MsGraphApi="00000003-0000-0000-c000-000000000000"
 $MSGraphRoles=az ad sp show --id $MsGraphApi -o json | ConvertFrom-Json
 $MsGraphApiRoleId=$MsGraphRoles.appRoles | select value, id | Sort-Object value | where-object value -eq "Application.ReadWrite.OwnedBy" | select -expandproperty id 
-#$MsGraphApiRoleId="18a4783c-866b-4cc7-a460-3d5e5662c884" #Application.ReadWriteOwnedBy
 
+#Azure Active Directory Graph API (being deprecated, but still used by some official Microsoft libraries)
 $AadGraphApi="00000002-0000-0000-c000-000000000000"
 $AadGraphRoles=az ad sp show --id $AadGraphApi -o json | ConvertFrom-Json
 $AadGraphApiRoleId=$AadGraphRoles.appRoles | select value, id | Sort-Object value | where-object value -eq "Application.ReadWrite.OwnedBy" | select -expandproperty id 
