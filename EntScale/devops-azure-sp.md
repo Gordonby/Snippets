@@ -36,8 +36,8 @@ az ad app permission grant --id $AppId --api $MsGraphApi
 az ad app permission grant --id $AppId --api $AadGraphApi
 ```
 
-3. Create a Service Connection in Azure DevOps (as per this [post](https://gordon.byers.me/azure/create-empty-azure-azuredevops-serviceconnections.html) as a `Azure Resource Manager` `Service Principal (Manual)`
-4. Create a Pipeline in Azure DevOps, adding a Azure CLI task
+4. Create a Service Connection in Azure DevOps (as per this [post](https://gordon.byers.me/azure/create-empty-azure-azuredevops-serviceconnections.html)) as an `Azure Resource Manager` `Service Principal (Manual)`
+5. Create a Pipeline in Azure DevOps, adding a Azure CLI task
 
 ```yaml
 trigger: none
