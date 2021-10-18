@@ -1,23 +1,26 @@
 ## Equipping Azure DevOps with a Service Principal
 
 1. Create a Service Principal with no RBAC
-```bash
-Sp=$(az ad sp create-for-rbac -n "spbootstrap" --skip-assignment -o json)
+```powershell
+$SpName="spbootstrap"
+$Sp=az ad sp create-for-rbac -n $SpName --skip-assignment -o json | ConvertFrom-Json
 ```
 
 2. [Option 1] Make the SP an owner of it's App counterpart (otherwise it won't be able to read the Application ObjectId later)
 
-```bash
-AppId=$(echo $Sp | jq -r '.appId')
-SpObjId=$(az ad sp show --id $AppId --query objectId -o tsv)
+```powershell
+$MsGraphApi="00000003-0000-0000-c000-000000000000"
+$MSGraphRoles=az ad sp show --id $MsGraphApi -o json | ConvertFrom-Json
+$MsGraphRoles.appRoles | select value, id | Sort-Object value | where-object value -eq "Application.ReadWrite.OwnedBy" | select -expandproperty id
+$MsGraphApiRoleId=$MsGraphRoles.appRoles | select value, id | Sort-Object value | where-object value -eq "Application.ReadWrite.OwnedBy" | select -expandproperty id 
+#$MsGraphApiRoleId="18a4783c-866b-4cc7-a460-3d5e5662c884" #Application.ReadWriteOwnedBy
+
+$AppId= $Sp | select -expandproperty appId
+$SpObjId=az ad sp show --id $AppId --query objectId -o tsv
 az ad app owner add --id $AppId --owner-object-id $SpObjId
-#need to add permission too
-```
-
-2. [Option2] Give the SP permission to Sign in and read user profile
-
-```bash
-az ad app permission add --id $AppId --api 00000003-0000-0000-c000-000000000000 --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope
+az ad app permission add --id $AppId --api $MsGraphApi --api-permissions "$MsGraphApiRoleId=Scope"
+az ad app permission grant --id $AppId --api $MsGraphApi
+az ad app permission list --id $AppId
 ```
 
 3. Create a Service Connection in Azure DevOps (as per this [post](https://gordon.byers.me/azure/create-empty-azure-azuredevops-serviceconnections.html) as a `Azure Resource Manager` `Service Principal (Manual)`
