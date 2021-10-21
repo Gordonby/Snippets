@@ -1,6 +1,15 @@
-ref:https://github.com/containers/buildah/blob/main/install.md#ubuntu
+#Buildah
+
+Leveraging Buildah instead of docker to build OCI docker images
+
+## Reference 
+
+https://github.com/containers/buildah/blob/main/install.md#ubuntu
+
+## Script
 
 Working script for building and pushing to dockerhub.
+
 ```bash
 . /etc/os-release
 sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/x${ID^}_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
