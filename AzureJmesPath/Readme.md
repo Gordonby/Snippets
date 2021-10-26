@@ -38,6 +38,11 @@ az network application-gateway show -n $appgwname -g $appgwrg --query "frontendI
 
 ```
 
+##DNS
+
+```bash
+az network dns record-set list -g $RG -z $domain --query "[?name=='$app'][{type:type,fqdn:fqdn,aRecords:aRecords,txtRecords:txtRecords}]"
+```
 
 ## Features
 
