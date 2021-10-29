@@ -56,4 +56,45 @@ PowerShell for working with AKV
             $cert = Get-AzKeyVaultCertificate -VaultName $AKVNAME -Name $CERTNAME
             $secret = Get-AzKeyVaultSecret -VaultName $AKVNAME -Name $cert.Name -AsPlainText
             $secretByte = [Convert]::FromBase64String($secret)
+            
+     - name: Create a self signed cert in Key Vault for a FE sample app
+        env:
+          CERTNAME: "aspnetapp"
+        shell: pwsh
+        run: |
+            $RG='${{ env.RG }}'
+            $AKVNAME='${{ needs.Deploy.outputs.AKVNAME}}'
+            $CERTNAME='${{ env.CERTNAME }}'
+            Write-Output "Creating Certificate $CERTNAME in $AKVNAME"
+            $policy = New-AzKeyVaultCertificatePolicy -CertificateTransparency $null -IssuerName 'Self' -KeySize 2048 -KeyType RSA -RenewAtNumberOfDaysBeforeExpiry 28 -SecretContentType "application/x-pkcs12" -SubjectName "CN=$CERTNAME" -ValidityInMonths 2
+            $CertRequest = Add-AzKeyVaultCertificate -VaultName $AKVNAME -Name $CERTNAME -CertificatePolicy $policy
+            
+            Write-Output $CertRequest.Id
+            
+      - name: Create Cert reference in AppGW for FE Sample App
+        env:
+          CERTNAME: "aspnetapp"
+          APPGWSSELCERTNAME: "mykvsslcert"
+        run: |
+          AGNAME='${{ needs.Deploy.outputs.AGNAME}}'
+          RG='${{ env.RG }}'
+          KVNAME='${{ needs.Deploy.outputs.AKVNAME}}'
+          CERTNAME='${{ env.CERTNAME }}'
+          APPGWSSELCERTNAME='${{ env.APPGWSSELCERTNAME }}'
+          
+          echo "Waiting for cert"
+          sleep 1m
+                    
+          versionedSecretId=$(az keyvault certificate show -n $CERTNAME --vault-name $KVNAME --query "sid" -o tsv)
+          echo $versionedSecretId
+          
+          unversionedSecretId=$(echo $versionedSecretId | cut -d'/' -f-5) # remove the version from the url
+          echo $unversionedSecretId
+          
+          ## Create Cert reference in AppGW
+          az network application-gateway ssl-cert create \
+            -n $APPGWSSELCERTNAME \
+            --gateway-name  $AGNAME \
+            --resource-group $RG  \
+            --key-vault-secret-id $unversionedSecretId 
 ```
