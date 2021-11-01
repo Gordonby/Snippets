@@ -1,4 +1,63 @@
 
+Using ZAP security scanning
+
+```yaml
+WorkloadTests:
+    runs-on: ubuntu-latest
+    needs: [Deploy,WorkloadAdd]
+    environment: azurecirgs
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Param check
+        run: |
+          RG='${{ env.RG }}'
+          echo "RG is: $RG"
+          
+          #echo "SIMWORKLOADIP name is ${{ needs.Deploy.outputs.AKSNAME}}"
+          echo "SIMWORKLOADIP name is ${{ needs.WorkloadAdd.outputs.SIMWORKLOADIP}}"
+          echo "AKS name is ${{ needs.Deploy.outputs.AKSNAME}}"
+          
+      
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.3.0
+        with:
+          target: 'http://${{ needs.WorkloadAdd.outputs.SIMWORKLOADIP}}'
+          allow_issue_writing: false
+
+      - name: Check for High Priority Zap Alerts
+        shell: pwsh
+        run: |
+          Write-Output "Check for Zap Json file"
+          Test-Path report_json.json
+          
+          $zap = get-content report_json.json | ConvertFrom-Json
+          Write-Output $zap
+          
+          $highAlerts = $zap.site.alerts | Where-Object {$_.riskcode -eq 3}
+          $mediumAlerts = $zap.site.alerts | Where-Object {$_.riskcode -eq 2}
+
+          #Define to suit your business.
+          #I'm going high, so my CI tests pass, but usually you'd set this to 0
+          $HighThreshold = 5
+          $MediumThreshold = 10
+
+          #raise error if high alerts are over threshold
+          if ($highAlerts.count -gt $HighThreshold) {
+              Write-Output "High Alerts Found"
+              $highAlerts | Where-Object { Write-Output $_.alert }
+              throw "High Alerts Found"
+          }
+
+          #raise error if medium alerts are over threshold
+          if ($mediumAlerts.count -gt $MediumThreshold) {
+            Write-Output "Medium Alerts Found"
+            $highAlerts | Where-Object { Write-Output $_.alert }
+            throw "Medium Alerts Found"
+          }
+
+```
+
 PowerShell for working with AKV
 
 ```yaml
