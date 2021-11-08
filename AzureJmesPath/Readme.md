@@ -50,3 +50,9 @@ az network dns record-set list -g $RG -z $domain --query "[?name=='$app'][{type:
 az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService')].{Name:name,State:properties.state}"
 az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService') && properties.state=='Registering'].{Name:name,State:properties.state}"
 ```
+
+## Role Assignments
+
+```bash
+az role assignment list --scope $subnetResourceId --query "[?principalName=='']" --include-inherited
+```
