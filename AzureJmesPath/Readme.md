@@ -56,3 +56,9 @@ az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService')
 ```bash
 az role assignment list --scope $subnetResourceId --query "[?principalName=='']" --include-inherited
 ```
+
+```powershell
+$subnetResourceId=''
+$roleAssignments=az role assignment list --scope $subnetResourceId --query "[?principalName==''].id" --include-inherited -o json | ConvertFrom-Json
+$roleAssignments | % {write-output "deleting $_"; az role assignment delete --ids $_}
+```
