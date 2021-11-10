@@ -62,3 +62,10 @@ $subnetResourceId=''
 $roleAssignments=az role assignment list --scope $subnetResourceId --query "[?principalName==''].id" --include-inherited -o json | ConvertFrom-Json
 $roleAssignments | % {write-output "deleting $_"; az role assignment delete --ids $_}
 ```
+
+## Resources
+
+```bash
+az resource list --query "[?type=='Microsoft.Network/virtualNetworks'].name | length(@)"
+az resource list --query "[?type=='Microsoft.Network/virtualNetworks'&&provisioningState=='Succeeded'].name | length(@)"
+```
