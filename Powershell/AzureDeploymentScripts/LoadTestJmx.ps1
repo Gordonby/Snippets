@@ -6,8 +6,8 @@ Write-Output "Injecting URL into XML"
 Write-Output "Persisting Jmeter XML file to local runspace"
 Write-Output "Adding new Test $TestName to $LoadTestResourceName"
 $DeploymentScriptOutputs = @{}
-$DeploymentScriptOutputs['text'] = $output
+$DeploymentScriptOutputs['debug'] = $output
 $DeploymentScriptOutputs['loadtest'] = $LoadTestResourceName
 $DeploymentScriptOutputs['rg'] = $ResourceGroup
 $DeploymentScriptOutputs['method'] = $TestMethod
-
+$DeploymentScriptOutputs['testurl'] = $TestUrl
