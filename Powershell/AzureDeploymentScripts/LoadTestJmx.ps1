@@ -1,4 +1,4 @@
-param([string] $LoadTestResourceName, [string] $ResourceGroup, [string] $TestName, [string] $TestUrl, [string] $TestMethod="Get")
+param([string] $LoadTestResourceName, [string] $ResourceGroup, [string] $TestName, [string] $TestUrl, [string] $JmxBaseFileUrl, [string] $TestMethod="Get")
 $debug = 'Hello {0}' -f $TestUrl
 Write-Output $output
 Write-Output "Getting Base Jmeter XML"
