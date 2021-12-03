@@ -6,3 +6,4 @@ $DeploymentScriptOutputs = @{}
 $DeploymentScriptOutputs['text'] = $output
 $DeploymentScriptOutputs['loganalyticsname'] = $logAnalyticsName
 $DeploymentScriptOutputs['rg'] = $resourceGroupName
+$DeploymentScriptOutputs['resourceId'] = $resource.ResourceId
