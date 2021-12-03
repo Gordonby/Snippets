@@ -1,4 +1,5 @@
 param([string] $logAnalyticsName, [string] $resourceGroupName)
-Write-Output "Searching for $logAnalyticsName in $resourceGroupName"
+$output = 'Hello {0}' -f $logAnalyticsName
+Write-Output $output
 $DeploymentScriptOutputs = @{}
-$DeploymentScriptOutputs['text'] = $logAnalyticsName
+$DeploymentScriptOutputs['text'] = $output
