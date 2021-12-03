@@ -3,3 +3,5 @@ $output = 'Hello {0}' -f $logAnalyticsName
 Write-Output $output
 $DeploymentScriptOutputs = @{}
 $DeploymentScriptOutputs['text'] = $output
+$DeploymentScriptOutputs['loganalyticsname'] = $logAnalyticsName
+$DeploymentScriptOutputs['rg'] = $resourceGroupName
