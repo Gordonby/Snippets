@@ -36,4 +36,36 @@ az network application-gateway show -n $appgwname -g $appgwrg --query "frontendI
 az network application-gateway show -n $appgwname -g $appgwrg --query "frontendIpConfigurations[].{id:id, name:name, privateIp:privateIpAddress}"
 az network application-gateway show -n $appgwname -g $appgwrg --query "frontendIpConfigurations[?privateIpAddress==null].{id:id, name:name, privateIp:privateIpAddress}"
 
+```
+
+## DNS
+
 ```bash
+az network dns record-set list -g $RG -z $domain --query "[?name=='$app'][{type:type,fqdn:fqdn,aRecords:aRecords,txtRecords:txtRecords}]"
+```
+
+## Features
+
+```bash
+az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService')].{Name:name,State:properties.state}"
+az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService') && properties.state=='Registering'].{Name:name,State:properties.state}"
+```
+
+## Role Assignments
+
+```bash
+az role assignment list --scope $subnetResourceId --query "[?principalName=='']" --include-inherited
+```
+
+```powershell
+$subnetResourceId=''
+$roleAssignments=az role assignment list --scope $subnetResourceId --query "[?principalName==''].id" --include-inherited -o json | ConvertFrom-Json
+$roleAssignments | % {write-output "deleting $_"; az role assignment delete --ids $_}
+```
+
+## Resources
+
+```bash
+az resource list --query "[?type=='Microsoft.Network/virtualNetworks'].name | length(@)"
+az resource list --query "[?type=='Microsoft.Network/virtualNetworks'&&provisioningState=='Succeeded'].name | length(@)"
+```
