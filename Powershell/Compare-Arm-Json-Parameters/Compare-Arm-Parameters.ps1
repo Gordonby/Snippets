@@ -1,15 +1,16 @@
+
 $arm1params = get-content "main.json" | ConvertFrom-Json -AsHashtable | Select -expandProperty parameters
 $arm2params = get-content "main2.json" | ConvertFrom-Json -AsHashtable | Select -expandProperty parameters
 
 $arm1paramList = @()
-$arm1params.keys | % {$arm1paramList += New-Object PSObject -Property ([Ordered]@{Name=$_; DefaultValue=$arm1params.Get_Item($_).defaultValue | ConvertTo-Json -Compress })}
+$arm1params.keys | % {$arm1paramList += New-Object PSObject -Property ([Ordered]@{Parameter=$_; DefaultValue=$arm1params.Get_Item($_).defaultValue | ConvertTo-Json -Compress })}
 
 $arm2paramList = @()
-$arm2params.keys | % {$arm2paramList+= New-Object PSObject -Property ([Ordered]@{Name=$_; DefaultValue=$arm2params.Get_Item($_).defaultValue | ConvertTo-Json -Compress })}
+$arm2params.keys | % {$arm2paramList+= New-Object PSObject -Property ([Ordered]@{Parameter=$_; DefaultValue=$arm2params.Get_Item($_).defaultValue | ConvertTo-Json -Compress })}
 
 $comparison = Compare-Object $arm1paramList $arm2paramList -Property Name, DefaultValue -PassThru | Sort-Object Name, SideIndicator
 
-[string]$html = $comparison | ConvertTo-Html | Out-String
+[string]$html = $comparison | ConvertTo-Html -Fragment | Out-String
 $html | Out-File "ghpr.html"
 
 if ($comparison.length -gt 0) {
@@ -19,6 +20,6 @@ if ($comparison.length -gt 0) {
     #gh pr comment 3 -b $html
 
     #Why do markdown, when you can do HTML :D
-
+    #GitHub uses a markdown rendering tool called Glamour. It copes with HTML pretty well, and pwsh loves html not markdown.
     gh pr comment 3 -F "ghpr.html"
 }
