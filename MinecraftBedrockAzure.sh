@@ -2,8 +2,9 @@ SUB="PseudoProd"
 RG="MinecraftBedrock"
 LOC="uksouth"
 STOR="minecaftbedrock555"
-CONT="minecraftbedrockaci"
-WORLD="byers-mine-world"
+SHARE="minecraftmodworlddata"
+CONT="minecraftmodbedrockaci"
+WORLD="byers-mod-world"
 
 az account set -s $SUB
 
@@ -21,7 +22,7 @@ KEY=$(az storage account keys list -g $RG -n $STOR --query [0].value -o tsv)
 
 az storage share create \
     --account-name $STOR \
-    --name minecraftdata \
+    --name $SHARE \
     --account-key $KEY \
     --quota 1024 \
     --output none
@@ -35,12 +36,15 @@ az container create \
     --protocol UDP \
     --azure-file-volume-account-name $STOR \
     --azure-file-volume-account-key $KEY \
-    --azure-file-volume-share-name minecraftdata \
+    --azure-file-volume-share-name $SHARE \
     --azure-file-volume-mount-path /data \
     --environment-variables \
         'EULA'='TRUE' \
-        'GAMEMODE'='survival' \
-        'DIFFICULTY'='peaceful'
+        'GAMEMODE'='creative' \
+        'ALLOW_CHEATS'='true' \
+        'LEVEL_NAME'='byers modworld' \
+        'LEVEL_SEED'='-78688046' \
+        'DIFFICULTY'='easy'
 
 FQDN=$(az container show -n $CONT -g $RG --query ipAddress.fqdn -o tsv)
 
