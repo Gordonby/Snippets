@@ -1,7 +1,7 @@
 <policies>
     <inbound>
         <choose>
-            <when condition="@(new System.Random().Next(0,100) < {{trafficWeight}})">
+            <when condition="@(new System.Random().Next(0,100) &lt; {{trafficWeight}})">
                 <!-- Instead of setting for each, lets start with just overriding when not the default -->
                 <!-- <set-variable name="apiBaseUrl" value="{{app1}}" /> -->
             </when>
