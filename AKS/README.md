@@ -1,3 +1,11 @@
+# Cheatsheet
+
+## secret value (when there's only 1 secret data in the k8s secret
+
+```bash
+kubectl get secret mysecretname -o jsonpath='{.data.*}' | base64 --decode
+```
+
 ## change service type
 
 ```bash
