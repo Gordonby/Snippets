@@ -64,7 +64,7 @@ spec:
           command:
             - "/bin/bash"
             - "-c"
-            - set -euo pipefail; while true; do echo $(date) >> /mnt/smb/outfile; sleep 1; done
+            - set -euo pipefail; while true; do echo $(date) >> /mnt/smb/outfile-$MY_NODE_NAME; sleep 1; done
           volumeMounts:
             - name: smb
               mountPath: "/mnt/smb"
