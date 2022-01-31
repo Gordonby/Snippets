@@ -9,7 +9,8 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: smb
+  volumeName: pv-smb-gord-demo
+  storageClassName: ""
 ---
 apiVersion: apps/v1
 kind: Deployment
