@@ -1,6 +1,11 @@
-$dirName ="SmbShare2"
+# Creating a SMB Share on Windows, with PowerShell
+
+### Creation script
+
+```powershell
+$dirName ="SmbShare4"
 $dirPath = "c:\$dirName"
-$username = "user3"
+$username = "user4"
 
 Write-Output "Creating user account"
 $Password = "zeP4ssW0RD%%" | ConvertTo-SecureString -AsPlainText -Force
@@ -16,3 +21,13 @@ Grant-SmbShareAccess -Name $dirName -AccountName $username -AccessRight Full -fo
 
 #Anonymous share creation
 New-SmbShare -Name 'anon' -path 'c:\anon' -FullAccess 'ANONYMOUS LOGON','Everyone'
+```
+
+### Output 
+
+```text
+Name      ScopeName AccountName    AccessControlType AccessRight
+----      --------- -----------    ----------------- -----------
+SmbShare4 *         Everyone       Allow             Read
+SmbShare4 *         winjump2\user4 Allow             Full
+```text
