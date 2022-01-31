@@ -1,3 +1,10 @@
+#This adds the SMB driver, and 3x Persistent Volumes.
+
+#Prerequisites
+#2 secrets.
+#1. proper - kubectl create secret generic smbcreds --from-literal username=USERNAME --from-literal password="PASSWORD"
+#2. arbitary/anon - https://github.com/Gordonby/Snippets/blob/master/AKS/CreateOpaqueSecret.yaml
+
 #Specify SMB share info
 smbServerAddress="172.21.1.37"
 shareName="SmbShare"
@@ -7,7 +14,7 @@ anonShareName="anon"
 helm repo add csi-driver-smb https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/charts
 helm install csi-driver-smb csi-driver-smb/csi-driver-smb --namespace kube-system --version v1.5.0
 
-#Create PV
+#Create PV for authenticated share
 echo "
 apiVersion: v1
 kind: PersistentVolume
@@ -34,7 +41,7 @@ spec:
       namespace: default
 " | kubectl apply -f -
 
-share
+#Create PV for unauthenticated share (no secretRef)
 echo "
 apiVersion: v1
 kind: PersistentVolume
@@ -58,7 +65,7 @@ spec:
       source: "//$smbServerAddress/$anonShareName"
 " | kubectl apply -f -
 
-share
+#Create PV for unauthenticated share (arbitary secretRef)
 echo "
 apiVersion: v1
 kind: PersistentVolume
@@ -86,3 +93,4 @@ spec:
 " | kubectl apply -f -
 
 kubectl get pv
+kubectl get secrets
