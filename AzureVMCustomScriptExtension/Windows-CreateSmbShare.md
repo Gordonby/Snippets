@@ -30,4 +30,4 @@ Name      ScopeName AccountName    AccessControlType AccessRight
 ----      --------- -----------    ----------------- -----------
 SmbShare4 *         Everyone       Allow             Read
 SmbShare4 *         winjump2\user4 Allow             Full
-```text
+```
