@@ -28,6 +28,9 @@ spec:
     volumeHandle: gord-smb-demo1
     volumeAttributes:
       source: "//$smbServerAddress/$shareName"
+    nodeStageSecretRef:
+      name: smbcreds
+      namespace: default
 " | kubectl apply -f -
 
 kubectl get pv
