@@ -30,3 +30,4 @@ spec:
       source: "//$smbServerAddress/$shareName"
 " | kubectl apply -f -
 
+kubectl get pv
