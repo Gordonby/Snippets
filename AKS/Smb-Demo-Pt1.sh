@@ -81,7 +81,7 @@ spec:
     volumeAttributes:
       source: "//$smbServerAddress/$anonShareName"
     nodeStageSecretRef:
-      name: smbcreds
+      name: smbcredsanon
       namespace: default
 " | kubectl apply -f -
 
