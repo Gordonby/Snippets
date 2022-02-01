@@ -1,4 +1,5 @@
 #This adds the SMB driver, and 3x Persistent Volumes.
+#TODO: Make this into a helm chart.
 
 #Prerequisites
 #2 secrets.
