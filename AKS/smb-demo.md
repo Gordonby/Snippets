@@ -41,4 +41,10 @@ kubectl apply -f https://raw.githubusercontent.com/Gordonby/Snippets/master/AKS/
 
 ## Verify
 
-Look at th VM share to ensure the files have been created from the container
+Verify the deployed smb pod is running. It will be creating files in the smb share
+
+```bash
+kubectl get po
+```
+
+Look at the VM share to ensure the files have been created from the container
