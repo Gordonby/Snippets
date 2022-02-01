@@ -14,7 +14,7 @@ An easy way is to use the [AKS Construction project](https://github.com/Azure/Ak
 
 ## Add AKS secret for SMB credentials
 
-Using the same user/password, as you gave permissions on the share;
+Using the same user/password, as you gave permissions on the share; Create a Kubernetes Secret to be leveraged by the Persistent Volume.
 
 ```bash
 kubectl create secret generic smbcreds --from-literal username=user4 --from-literal password="zeP4ssW0RD%%"
