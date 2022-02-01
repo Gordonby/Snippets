@@ -50,3 +50,15 @@ kubectl get po
 Look at the VM share to ensure the files have been created from the container. 
 The file name will contain the pod name
 ![image](https://user-images.githubusercontent.com/17914476/151969003-3b49356b-25cc-4032-8d3e-e22aad3940fa.png)
+
+## Scale up
+
+Scale the number of replicas
+
+```bash
+kubectl scale --replicas=4 deployment deployment-smb
+```
+
+You'll see the replicas created and new files also
+
+![image](https://user-images.githubusercontent.com/17914476/151969793-a0634200-04c8-4b75-b77f-d6874ec0d12a.png)
