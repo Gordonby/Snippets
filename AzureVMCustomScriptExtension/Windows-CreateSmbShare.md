@@ -20,7 +20,10 @@ Grant-SmbShareAccess -Name $dirName -AccountName $username -AccessRight Full -fo
 
 
 #Anonymous share creation
-New-SmbShare -Name 'anon' -path 'c:\anon' -FullAccess 'ANONYMOUS LOGON','Everyone'
+$anonShareName="anon"
+$anonDirPath="c:\$anonShareName"
+New-Item $anonDirPath -type directory
+New-SmbShare -Name $anonShareName -path $anonDirPath -FullAccess 'ANONYMOUS LOGON','Everyone'
 ```
 
 ### Output 
