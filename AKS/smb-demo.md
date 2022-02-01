@@ -12,6 +12,14 @@ Modify the variables in this [powershell script file](https://github.com/Gordonb
 
 An easy way is to use the [AKS Construction project](https://github.com/Azure/Aks-Construction).
 
+## Add AKS secret for SMB credentials
+
+Using the same user/password, as you gave permissions on the share;
+
+```bash
+kubectl create secret generic smbcreds --from-literal username=user4 --from-literal password="zeP4ssW0RD%%"
+```
+
 ## Configure the cluster - SMB
 
 Install the SMB CSI driver, and create the Persistent Volume.
