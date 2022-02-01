@@ -63,6 +63,11 @@ $roleAssignments=az role assignment list --scope $subnetResourceId --query "[?pr
 $roleAssignments | % {write-output "deleting $_"; az role assignment delete --ids $_}
 ```
 
+```powershell
+$roleAssignments=az role assignment list --resource-group $rg --query "[?principalName==''].id" --include-inherited -o json | ConvertFrom-Json
+$roleAssignments | % {write-output "Deleting Invalid Role Assignment $_"; az role assignment delete --ids $_}
+```
+
 ## Resources
 
 ```bash
