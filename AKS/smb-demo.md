@@ -48,3 +48,4 @@ kubectl get po
 ```
 
 Look at the VM share to ensure the files have been created from the container
+![image](https://user-images.githubusercontent.com/17914476/151969003-3b49356b-25cc-4032-8d3e-e22aad3940fa.png)
