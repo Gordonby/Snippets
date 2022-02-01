@@ -36,7 +36,7 @@ kubectl get secrets
 ## Deploy the workload
 
 ```bash
-kubectl apply -f https://github.com/Gordonby/Snippets/blob/master/AKS/Smb-Demo-Pt2.yaml
+kubectl apply -f https://raw.githubusercontent.com/Gordonby/Snippets/master/AKS/Smb-Demo-Pt2.yaml
 ```
 
 ## Verify
