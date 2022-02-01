@@ -26,6 +26,13 @@ Install the SMB CSI driver, and create the Persistent Volume.
 
 https://github.com/Gordonby/Snippets/blob/master/AKS/Smb-Demo-Pt1.sh
 
+## Inspect the Persistent Volume and Secret
+
+```bash
+kubectl get pv
+kubectl get secrets
+```
+
 ## Deploy the workload
 
 https://github.com/Gordonby/Snippets/blob/master/AKS/Smb-Demo-Pt2.yaml
