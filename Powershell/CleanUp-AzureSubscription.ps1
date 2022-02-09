@@ -96,9 +96,9 @@ if($moveLonelyStorageAccounts -eq $true)
     }
 }
 
-#Finally, do another loop round for empty resource groups.
+#Finally, do another loop round for empty resource groups without tags.
 $rgs= Get-AzResourceGroup
-$rgs | % {
+$rgs | ? {$_.Tags.count -eq 0} | % {
     $resources = Get-AzResource -ResourceGroupName $_.ResourceGroupName
 
     if ($resources.count -eq 0) {
