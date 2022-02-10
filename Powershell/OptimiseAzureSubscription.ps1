@@ -1,6 +1,9 @@
 Write-Output "Tag Subscription with Environment"
 $context=Get-AzContext
 $sub=Get-AzSubscription -SubscriptionId $context.Subscription -TenantId $context.Tenant
+if ($sub.Tags["Environment"] -eq $null) {
+  Update-AzTag -ResourceId "/subscriptions/$($sub.id)" -Tag @{"Environment"="Self-Learning"} -Operation Merge
+}
 
 Write-Output "Storage Accounts"
 $storageAccounts=Get-AzStorageAccount
