@@ -1,3 +1,6 @@
+Write-Output "Tag Subscription with Environment"
+$context=Get-AzContext
+$sub=Get-AzSubscription -SubscriptionId $context.Subscription -TenantId $context.Tenant
 
 Write-Output "Storage Accounts"
 $storageAccounts=Get-AzStorageAccount
