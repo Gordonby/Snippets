@@ -7,3 +7,5 @@ choco install azure-cli -y
 choco install kubernetes-cli -y
 choco install git -y
 choco install kubernetes-helm -y
+
+new-alias k kubectl

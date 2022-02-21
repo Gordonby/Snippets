@@ -63,6 +63,12 @@ $roleAssignments=az role assignment list --scope $subnetResourceId --query "[?pr
 $roleAssignments | % {write-output "deleting $_"; az role assignment delete --ids $_}
 ```
 
+```powershell
+#Remove invalid RG role assignments. These can occur when deleting resource from a Resource Group.
+$roleAssignments=az role assignment list --resource-group $rg --query "[?principalName==''].id" --include-inherited -o json | ConvertFrom-Json
+$roleAssignments | forEach-Object {write-output "Deleting Invalid Role Assignment $_"; az role assignment delete --ids $_}
+```
+
 ## Resources
 
 ```bash
