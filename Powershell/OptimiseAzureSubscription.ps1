@@ -19,3 +19,7 @@ $badPorts="22","3389","*", "445", "5985", "5986"
 $nsgs=Get-AzNetworkSecurityGroup
 $nsgSecurityRulesToRemove = $nsgs | % {$nsgName=$_.Name; $nsg=$_ ;$_.SecurityRules | ? {$_.Direction -eq "Inbound" -and $_.Access -eq "Allow" -and $_.Description -cnotlike "CSS Governance Security Rule*" -and $badPorts -contains $_.DestinationAddressPrefix} | select Name,DestinationAddressPrefix, @{Name="NetworkSecurityGroup"; Expression={$nsg}}}
 if($nsgSecurityRulesToRemove.length > 0){$nsgSecurityRulesToRemove | %{Write-Output "Removing *bad nsg* rule $($_.Name) from $($_.NetworkSecurityGroup.Name)"; Remove-AzNetworkSecurityRuleConfig -Name $_.Name -NetworkSecurityGroup $_.NetworkSecurityGroup}} else {Write-Output "--No bad rules found"}
+
+Write-Output "Verifying Subnet NSG Association"
+$vnets=Get-AzVirtualNetwork
+$vnets | %{Write-Output "Checking vnet $($_.Name)"; $_ | Get-AzVirtualNetworkSubnetConfig | %{ Write-Output "-- Subnet $($_.Name) NSG count=$($_.NetworkSecurityGroup.length)"}}
