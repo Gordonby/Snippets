@@ -1,16 +1,23 @@
-More info here:
+# PiPi Gherkin
 
+> Clone of the GIT repo over on 40percentclub.
+
+Screengrab of the guide saved [here](https://github.com/Gordonby/Snippets/blob/master/PiPiGherkin/screencapture-www-40percent-club-2021-02-pipi-gherkin-html-1645476357774.png) (just in case 💣).
+
+## Info
+
+More info here:
 http://www.40percent.club/2021/02/pipi-gherkin.html
 
 [How to order PCBs from gerber files](http://www.40percent.club/2017/03/ordering-pcb.html)
 
-EasyEDA ordering info:
-
-PCB
+## PCB
 
 ![PiPi_Gherkin](PiPi-Gherkin.png)
 
-Gerber: PiPi_Gherkin.zip
+## Gerber
+
+[PiPi_Gherkin.zip](PiPi_Gherkin.zip)
 	
 	Dimension: 55mm*192mm
 	
