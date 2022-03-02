@@ -1,5 +1,12 @@
 # Cheatsheet
 
+## connect to the last aks cluster in the list
+
+```bash
+akslist=$(az aks list --query "[].{name:name,resourceGroup:resourceGroup}" -o json);read AKSNAME RG < <(echo $(echo $akslist | jq -r ".[-1].name, .[-1].resourceGroup"))
+az aks get-credentials -n $AKSNAME -g $RG --overwrite-existing
+```
+
 ## secret value (when there's only 1 secret data in the k8s secret
 
 ```bash
