@@ -1,6 +1,6 @@
 # CARML ACR
 
-The CARML bicep modules can be added to your enterprises Azure Container Registry to facilitate ease of authoring.
+The [CARML bicep modules](https://github.com/azure/resourcemodules) can be added to your enterprises Azure Container Registry to facilitate ease of authoring.
 
 ## Pre-requisites
 
