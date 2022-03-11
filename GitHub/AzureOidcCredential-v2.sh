@@ -33,7 +33,7 @@ az role assignment create --role contributor --resource-group $RG  --assignee-ob
 az role assignment create --role "Azure Kubernetes Service RBAC Cluster Admin" --resource-group $RG  --assignee-object-id  $assigneeObjectId --assignee-principal-type ServicePrincipal
 
 #Create federated identity credentials for use from a GitHub Branch
-fedReqUrl="https://graph.microsoft.com/beta/applications/$applicationObjectId/federatedIdentityCredentials"
+fedReqUrl="https://graph.microsoft.com/beta/applications/$applicationObjectId/federatedIdentityCredentials"; echo $fedReqUrl
 fedReqBody=$(jq -n --arg n "$APPNAME-branch-$GHBRANCH" \
                    --arg r "repo:$GHORG/$GHREPO:ref:refs/heads/$GHBRANCH" \
                    --arg d "Access for GitHub branch $GHBRANCH" \
