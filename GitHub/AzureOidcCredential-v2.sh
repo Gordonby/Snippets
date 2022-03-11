@@ -14,6 +14,7 @@ if [ $EXISTS == true ]; then
     echo "Getting existing APP $APPNAME"
 
     appId=$(az ad app list --display-name $APPNAME --query "[].appId" -o tsv)
+    APP=$(az ad app show --id $appId)
     SP=$(az ad sp show --id $appId)
 else
     echo "Creating new APP $APPNAME"
