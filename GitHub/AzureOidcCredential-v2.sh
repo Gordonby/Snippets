@@ -25,6 +25,7 @@ fi
 echo $SP
 
 assigneeObjectId=$(echo $SP | jq -r ".objectId"); echo $assigneeObjectId
+applicationObjectId=$(echo $APP | jq -r ".objectId")
 
 #Create Role Assignment (Azure RG RBAC)
 az role assignment create --role contributor --resource-group $RG  --assignee-object-id  $assigneeObjectId --assignee-principal-type ServicePrincipal
@@ -50,7 +51,6 @@ az rest --method POST --uri $fedReqUrl --body "$fedReqBody"
 
 #Retrieving values needed for GitHub secret creation
 subscriptionId=$(az account show --query id -o tsv)
-applicationObjectId=$(echo $APP | jq -r ".objectId")
 clientId=$appId
 tenantId=$(az account show --query tenantId -o tsv)
 
