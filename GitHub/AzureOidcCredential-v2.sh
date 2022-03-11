@@ -8,7 +8,7 @@ RG=AksBicepAcc-Ci-BasicCluster
 GHORG=Azure
 GHREPO=aks-baseline-automation
 GHBRANCH=main
-//GHENV=gord
+#GHENV=gord
 
 if [ $EXISTS == true ]; then
     echo "Getting existing APP $APPNAME"
