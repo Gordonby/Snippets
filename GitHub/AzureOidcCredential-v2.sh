@@ -22,6 +22,8 @@ else
     appId=$(echo $APP | jq -r ".appId"); echo $appId
     SP=$(az ad sp create --id $appId)
 fi
+echo $SP
+
 assigneeObjectId=$(echo $SP | jq -r ".objectId"); echo $assigneeObjectId
 
 #Create Role Assignment (Azure RG RBAC)
