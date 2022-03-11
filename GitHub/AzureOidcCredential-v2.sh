@@ -26,7 +26,7 @@ fi
 echo $SP
 
 assigneeObjectId=$(echo $SP | jq -r ".objectId"); echo $assigneeObjectId
-applicationObjectId=$(echo $APP | jq -r ".objectId")
+applicationObjectId=$(echo $APP | jq -r ".objectId"); echo $applicationObjectId
 
 #Create Role Assignment (Azure RG RBAC)
 az role assignment create --role contributor --resource-group $RG  --assignee-object-id  $assigneeObjectId --assignee-principal-type ServicePrincipal
