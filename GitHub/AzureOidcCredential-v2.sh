@@ -2,7 +2,7 @@
 # Based on the steps outlined here: https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
 
 #Set up user specific variables
-EXISTS=false
+EXISTS=true
 APPNAME=AksBaselineFedCred
 RG=AksBicepAcc-Ci-BasicCluster
 GHORG=Azure
