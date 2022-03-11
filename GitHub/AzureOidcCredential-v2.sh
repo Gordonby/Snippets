@@ -7,8 +7,8 @@ APPNAME=AksBaselineFedCred
 RG=AksBicepAcc-Ci-BasicCluster
 GHORG=Azure
 GHREPO=aks-baseline-automation
-GHBRANCH=gb-docs
-GHENV=gord
+GHBRANCH=main
+//GHENV=gord
 
 if [ $EXISTS == true ]; then
     echo "Getting existing APP $APPNAME"
