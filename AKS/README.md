@@ -6,6 +6,16 @@
 akslist=$(az aks list --query "[].{name:name,resourceGroup:resourceGroup}" -o json);read AKSNAME RG < <(echo $(echo $akslist | jq -r ".[-1].name, .[-1].resourceGroup"))
 az aks get-credentials -n $AKSNAME -g $RG --overwrite-existing
 ```
+# grabbing a service ip address with jsonpath and jq
+
+```bash
+> kubectl get svc -l app=selenium-hub -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'
+20.103.140.69
+
+> kubectl get svc -l app=selenium-hub -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip'
+20.103.140.69
+```
+
 
 ## secret value (when there's only 1 secret data in the k8s secret
 
