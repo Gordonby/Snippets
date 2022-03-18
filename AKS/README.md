@@ -6,7 +6,7 @@
 akslist=$(az aks list --query "[].{name:name,resourceGroup:resourceGroup}" -o json);read AKSNAME RG < <(echo $(echo $akslist | jq -r ".[-1].name, .[-1].resourceGroup"))
 az aks get-credentials -n $AKSNAME -g $RG --overwrite-existing
 ```
-# grabbing a service ip address with jsonpath and jq
+## grabbing a service ip address with jsonpath and jq
 
 ```bash
 > kubectl get svc -l app=selenium-hub -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'
