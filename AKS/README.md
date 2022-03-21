@@ -6,6 +6,13 @@
 akslist=$(az aks list --query "[].{name:name,resourceGroup:resourceGroup}" -o json);read AKSNAME RG < <(echo $(echo $akslist | jq -r ".[-1].name, .[-1].resourceGroup"))
 az aks get-credentials -n $AKSNAME -g $RG --overwrite-existing
 ```
+
+## getting pod->node scheduling info
+
+```bash
+kubectl get pods -o=json | jq -r '.items[] | [.metadata.name,.spec.tolerations,.status.containerStatuses[].name]'
+```
+
 ## grabbing a service ip address with jsonpath and jq
 
 ```bash
