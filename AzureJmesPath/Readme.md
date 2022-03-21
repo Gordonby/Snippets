@@ -17,8 +17,12 @@ az devops user list --top 1 --query members[0].id -o tsv
 RG=""
 AKSNAME=""
 
+#Checking Identity meta
 az aks show -n $AKSNAME -g $RG -o json --query "{clusterId:identity.userAssignedIdentities ,kubeletId:identityProfile.kubeletidentity.clientId}"
 az aks show -n $AKSNAME -g $RG -o json --query "{clusterId:identity.userAssignedIdentities.*.principalId ,kubeletId:identityProfile.kubeletidentity.clientId}"
+
+#Checking Node taints on Node Pools
+az aks show -n $AKSNAME -g $RG --query "agentPoolProfiles[].{poolName:name, taints:nodeTaints}"
 ```
 
 ## Az Accounts
