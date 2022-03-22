@@ -7,6 +7,13 @@ akslist=$(az aks list --query "[].{name:name,resourceGroup:resourceGroup}" -o js
 az aks get-credentials -n $AKSNAME -g $RG --overwrite-existing
 ```
 
+## get events by timestamp
+
+```bash
+kubectl get events --sort-by='.metadata.creationTimestamp' -A
+```
+
+
 ## getting pod->node scheduling info
 
 ```bash
