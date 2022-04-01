@@ -1,11 +1,20 @@
 #variables.tf
  
 variable resourceName {
-  default="az-k8s-eiwl"
+  default="az-k8s-jvc6"
 } 
 variable JustUseSystemPool {
-  default="true"
+  default=true
 } 
 variable agentCountMax {
-  default="0"
+  default=0
+} 
+variable registries_sku {
+  default="Premium"
+} 
+variable omsagent {
+  default=true
+} 
+variable retentionInDays {
+  default=30
 }
