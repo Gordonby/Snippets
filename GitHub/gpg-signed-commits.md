@@ -17,5 +17,5 @@ git config --global commit.gpgsign true
   
 ## ref
 
-https://community.chocolatey.org/packages/gnupg
-https://dev.to/devmount/signed-git-commits-in-vs-code-36do
+- https://community.chocolatey.org/packages/gnupg
+- https://dev.to/devmount/signed-git-commits-in-vs-code-36do
