@@ -7,6 +7,30 @@ akslist=$(az aks list --query "[].{name:name,resourceGroup:resourceGroup}" -o js
 az aks get-credentials -n $AKSNAME -g $RG --overwrite-existing
 ```
 
+## get events by timestamp
+
+```bash
+kubectl get events --sort-by='.metadata.creationTimestamp' -A
+```
+
+
+## getting pod->node scheduling info
+
+```bash
+kubectl get pods -o=json | jq -r '.items[] | [.metadata.name,.spec.tolerations,.status.containerStatuses[].name]'
+```
+
+## grabbing a service ip address with jsonpath and jq
+
+```bash
+> kubectl get svc -l app=selenium-hub -o=jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'
+20.103.140.69
+
+> kubectl get svc -l app=selenium-hub -o json | jq -r '.items[0].status.loadBalancer.ingress[0].ip'
+20.103.140.69
+```
+
+
 ## secret value (when there's only 1 secret data in the k8s secret
 
 ```bash

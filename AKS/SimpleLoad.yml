@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-infinite-calls
+  labels:
+    app: simple-infinite-calls
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-infinite-calls
+  template
+    metadata:
+      name: simple-infinite-calls
+      labels:
+        app: simple-infinite-calls
+spec:
+      containers:
+      - name: simple-infinite-calls
+        image: busybox
+        command:
+        - /bin/sh
+        - -c
+        - "while true; do wget -q -O- http://your-service-name; done"
