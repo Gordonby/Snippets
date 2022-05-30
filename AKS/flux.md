@@ -52,16 +52,6 @@ mic-74df7dcbc5-tlcgb   0/1     Pending   0          118m
                                kubernetes.io/os=linux
 ```
 
-```bash
-kubectl get po -n flux-system
-```
+Looks like i'm missing the node pool 😄
 
-```text
-NAME                                       READY   STATUS    RESTARTS   AGE
-fluxconfig-agent-6476794446-94ph5          2/2     Running   0          108m
-fluxconfig-controller-856d755dc9-vgv9t     2/2     Running   0          108m
-helm-controller-649dbbb9cb-85k85           1/1     Running   0          108m
-kustomize-controller-6485647d5d-nq6nn      1/1     Running   0          108m
-notification-controller-54d46947f5-4mg8b   1/1     Running   0          108m
-source-controller-696bbfc9f8-mdvkb         1/1     Running   0          108m
-```
+![image](https://user-images.githubusercontent.com/17914476/170987440-4d090336-6123-4eb8-b10d-59c9fb999453.png)
