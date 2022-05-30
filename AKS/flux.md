@@ -37,6 +37,16 @@ flux-system                 4m58s       Normal    ArtifactUpToDate    gitreposit
 ```
 
 ```bash
+get po -n cluster-baseline-settings
+
+NAME                   READY   STATUS    RESTARTS   AGE
+kured-29xtk            1/1     Running   0          118m
+mic-74df7dcbc5-2kdk5   0/1     Pending   0          118m
+mic-74df7dcbc5-tlcgb   0/1     Pending   0          118m
+```
+
+
+```bash
 kubectl get po -n flux-system
 ```
 
