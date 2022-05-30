@@ -20,6 +20,10 @@ After deploying the AKS Baseline Flux Configuration, kustomization is left in a 
 
 ![image](https://user-images.githubusercontent.com/17914476/170984481-d4189456-fbcd-49af-a08b-71990246fcc7.png)
 
+```bash
+flux logs -A
+✗ a container name must be specified for pod fluxconfig-agent-6476794446-94ph5, choose one of: [fluxconfig-agent fluent-bit]
+```
 
 ```bash
 kubectl get po -n flux-system
