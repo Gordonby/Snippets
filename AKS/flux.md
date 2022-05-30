@@ -4,13 +4,13 @@
 
 List flux configurations
 
-```bash
+```powershell
 az k8s-configuration flux list -c $AKSNAME -g $RG -t managedClusters -o table
 az k8s-configuration flux show -n bootstrap -c $AKSNAME -g $RG -t managedClusters -o table
 ```
 
 
-```bash
+```powershell
 az k8s-configuration flux kustomization list -g $RG -c $AKSNAME -n bootstrap -t managedClusters
 ```
 
@@ -20,13 +20,13 @@ After deploying the AKS Baseline Flux Configuration, kustomization is left in a 
 
 ![image](https://user-images.githubusercontent.com/17914476/170984481-d4189456-fbcd-49af-a08b-71990246fcc7.png)
 
-```bash
+```powershell
 flux logs -A
 
 ✗ a container name must be specified for pod fluxconfig-agent-6476794446-94ph5, choose one of: [fluxconfig-agent fluent-bit]
 ```
 
-```bash
+```powershell
 kubectl get events -A
 
 NAMESPACE                   LAST SEEN   TYPE      REASON              OBJECT                            MESSAGE
@@ -36,7 +36,7 @@ flux-system                 4m37s       Warning   HealthCheckFailed   kustomizat
 flux-system                 4m58s       Normal    ArtifactUpToDate    gitrepository/bootstrap           artifact up-to-date with remote revision: 'main/ed6277fa843567c90d912b9a13771a29e0175936'
 ```
 
-```bash
+```powershell
 get po -n cluster-baseline-settings
 
 NAME                   READY   STATUS    RESTARTS   AGE
@@ -45,6 +45,12 @@ mic-74df7dcbc5-2kdk5   0/1     Pending   0          118m
 mic-74df7dcbc5-tlcgb   0/1     Pending   0          118m
 ```
 
+```powershell
+ kubectl describe po mic-74df7dcbc5-2kdk5 -n cluster-baseline-settings | sls "Node-Selectors" -context 1
+ 
+ > Node-Selectors:              agentpool=npuser01
+                               kubernetes.io/os=linux
+```
 
 ```bash
 kubectl get po -n flux-system
