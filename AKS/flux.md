@@ -22,10 +22,13 @@ After deploying the AKS Baseline Flux Configuration, kustomization is left in a 
 
 ```bash
 flux logs -A
+
 ✗ a container name must be specified for pod fluxconfig-agent-6476794446-94ph5, choose one of: [fluxconfig-agent fluent-bit]
 ```
 
 ```bash
+kubectl get events -A
+
 NAMESPACE                   LAST SEEN   TYPE      REASON              OBJECT                            MESSAGE
 cluster-baseline-settings   29m         Warning   FailedScheduling    pod/mic-74df7dcbc5-2kdk5          0/1 nodes are available: 1 node(s) didn't match Pod's node affinity/selector.
 cluster-baseline-settings   28m         Warning   FailedScheduling    pod/mic-74df7dcbc5-tlcgb          0/1 nodes are available: 1 node(s) didn't match Pod's node affinity/selector.
