@@ -26,6 +26,14 @@ flux logs -A
 ```
 
 ```bash
+NAMESPACE                   LAST SEEN   TYPE      REASON              OBJECT                            MESSAGE
+cluster-baseline-settings   29m         Warning   FailedScheduling    pod/mic-74df7dcbc5-2kdk5          0/1 nodes are available: 1 node(s) didn't match Pod's node affinity/selector.
+cluster-baseline-settings   28m         Warning   FailedScheduling    pod/mic-74df7dcbc5-tlcgb          0/1 nodes are available: 1 node(s) didn't match Pod's node affinity/selector.
+flux-system                 4m37s       Warning   HealthCheckFailed   kustomization/bootstrap-unified   (combined from similar events): Health check failed after 5m0.015112257s, timeout waiting for: [Deployment/cluster-baseline-settings/mic status: 'Failed']
+flux-system                 4m58s       Normal    ArtifactUpToDate    gitrepository/bootstrap           artifact up-to-date with remote revision: 'main/ed6277fa843567c90d912b9a13771a29e0175936'
+```
+
+```bash
 kubectl get po -n flux-system
 ```
 
