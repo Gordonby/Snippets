@@ -10,6 +10,11 @@ git config --global gpg.program "C:\Program Files (x86)\gnupg\bin\gpg.exe"
 git config --global commit.gpgsign true
 ```
 
+```bash
+#WSL
+git config --global gpg.program "/mnt/c/Program Files (x86)/gnupg/bin/gpg.exe"
+```
+
 ## vscode settings
   
 - Git: Enable Commit Signing
