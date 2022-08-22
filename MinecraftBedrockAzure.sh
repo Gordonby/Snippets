@@ -2,9 +2,9 @@ SUB="PseudoProd"
 RG="MinecraftBedrock"
 LOC="uksouth"
 STOR="minecaftbedrock555"
-SHARE="minecraftmodworlddata"
-CONT="minecraftmodbedrockaci"
-WORLD="byers-mod-world"
+SHARE="bworldu"
+CONT="bworldu"
+WORLD="byers-ultimate-world"
 
 az account set -s $SUB
 
@@ -40,10 +40,9 @@ az container create \
     --azure-file-volume-mount-path /data \
     --environment-variables \
         'EULA'='TRUE' \
-        'GAMEMODE'='creative' \
-        'ALLOW_CHEATS'='true' \
-        'LEVEL_NAME'='byers modworld' \
-        'LEVEL_SEED'='-78688046' \
+        'GAMEMODE'='survival' \
+        'LEVEL_NAME'=$WORLD \
+        'LEVEL_SEED'='8486214866965744170' \
         'DIFFICULTY'='easy'
 
 FQDN=$(az container show -n $CONT -g $RG --query ipAddress.fqdn -o tsv)
