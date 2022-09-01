@@ -1,5 +1,13 @@
 # Cheatsheet
 
+## scale up the nodepools
+
+```powershell
+$pools = az aks show -n $AKSNAME -g $RG --query "agentPoolProfiles[].{name:name, count:count}" -o json | ConvertFrom-Json
+$pools | % { echo "scaling $($_.name)"; az aks scale --resource-group $RG --name $AKSNAME --node-count $($_.pool + 1) --nodepool-name $_.name }
+
+```
+
 ## connect to the last aks cluster in the list
 
 ```bash
