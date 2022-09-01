@@ -3,8 +3,11 @@
 ## scale up the nodepools
 
 ```powershell
-$pools = az aks show -n $AKSNAME -g $RG --query "agentPoolProfiles[].{name:name, count:count}" -o json | ConvertFrom-Json
-$pools | % { echo "scaling $($_.name)"; az aks scale --resource-group $RG --name $AKSNAME --node-count $($_.pool + 1) --nodepool-name $_.name }
+$manualScalePools = az aks show -n $AKSNAME -g $RG --query "agentPoolProfiles[?maxCount==null].{name:name, count:count}" -o json | ConvertFrom-Json
+$manualScalePools | % { echo "scaling $($_.name)"; az aks scale --resource-group $RG --name $AKSNAME --node-count $($_.pool + 1) --nodepool-name $_.name }
+
+$autoScalePools = az aks show -n $AKSNAME -g $RG --query "agentPoolProfiles[?maxCount!=null].{name:name, minCount:minCount, maxCount:maxCount}" -o json | ConvertFrom-Json
+$autoScalePools | % { echo "scaling $($_.name)"; az aks nodepool update -g $RG -n $AKSNAME --name $_.name --min-count $($_.minCount + 1) --maxCount $($_.maxCount + 1)
 
 ```
 
