@@ -31,6 +31,7 @@ az container create \
     --resource-group $RG \
     --name $CONT \
     --image itzg/minecraft-bedrock-server:latest \
+    --cpu 2 --memory 1 \
     --dns-name-label $WORLD \
     --ports 19132 \
     --protocol UDP \
