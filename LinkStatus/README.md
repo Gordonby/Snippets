@@ -15,9 +15,10 @@ Teleport repo | https://github.com/Azure/acr/tree/main/docs/teleport
 
 ## Azure Container Apps with Dapr
 
-Category | Name | Link
--------- | ---- | ---- 
-azd template | c# pub sub | https://github.com/Azure-Samples/pubsub-dapr-csharp-servicebus
-azd template | python pub sub | https://github.com/Azure-Samples/pubsub-dapr-python-servicebus
-azd template | node pub sub | https://github.com/Azure-Samples/pubsub-dapr-nodejs-servicebus
-video guide | Microservices with ACA and Dapr | [youtube video](https://www.youtube.com/watch?v=s96io88CM6A), [code repo](https://github.com/gbaeke/super-api)
+Category | Name | Link | Note
+-------- | ---- | ---- | ----
+azd template | c# pub sub | https://github.com/Azure-Samples/pubsub-dapr-csharp-servicebus |
+azd template | python pub sub | https://github.com/Azure-Samples/pubsub-dapr-python-servicebus |
+azd template | node pub sub | https://github.com/Azure-Samples/pubsub-dapr-nodejs-servicebus |
+video guide | Microservices with ACA and Dapr | [youtube video](https://www.youtube.com/watch?v=s96io88CM6A), [code repo](https://github.com/gbaeke/super-api) |
+sample | Microservices sample | https://github.com/Azure-Samples/container-apps-store-api-microservice | Uses GitHub Actions to build and host the container image in the GitHub registry (private access)
