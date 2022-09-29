@@ -1,3 +1,5 @@
+#For creating a minecraft server that runs on an ACI Instance
+
 SUB="PseudoProd"
 RG="MinecraftBedrock"
 LOC="uksouth"
