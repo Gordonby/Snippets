@@ -55,6 +55,7 @@ az container create \
         'GAMEMODE'='survival' \
         'LEVEL_NAME'=$WORLD \
         'LEVEL_SEED'='8486214866965744170' \
+        'TICK_DISTANCE'='6' \
         'DIFFICULTY'='easy'
 
 FQDN=$(az container show -n $CONT -g $RG --query ipAddress.fqdn -o tsv)
