@@ -6,11 +6,17 @@
 Write-Output "Scaling $AKSNAME in $RG"
 
 $manualScalePools = az aks show -n $AKSNAME -g $RG --query "agentPoolProfiles[?maxCount==null].{name:name, count:count}" -o json | ConvertFrom-Json
-$manualScalePools | ForEach-Object { Write-Output "scaling $($_.name)"; az aks scale --resource-group $RG --name $AKSNAME --node-count $($_.pool + 1) --nodepool-name $_.name }
+$manualScalePools | ForEach-Object { 
+    Write-Output "scaling [m] pool $($_.name)"
+    az aks scale -g $RG -n $AKSNAME --node-count $($_.pool + 1) --nodepool-name $_.name 
+}
 
 $autoScalePools = az aks show -n $AKSNAME -g $RG --query "agentPoolProfiles[?maxCount!=null].{name:name, minCount:minCount, maxCount:maxCount}" -o json | ConvertFrom-Json
-$autoScalePools | ForEach-Object { Write-Output "scaling $($_.name)"; az aks nodepool update -g $RG -n $AKSNAME --name $_.name --min-count $($_.minCount + 1) --maxCount $($_.maxCount + 1) }
-
+$autoScalePools | ForEach-Object {
+    Write-Output "scaling [a] pool $($_.name)"
+    az aks nodepool update -g $RG --cluster-name $AKSNAME --name $_.name --min-count $($_.minCount + 1) --max-count $($_.maxCount + 1) --update-cluster-autoscaler
+    az aks nodepool update --update-cluster-autoscaler --min-count 1 --max-count 10 --resource-group MyResourceGroup --name nodepool1 --cluster-name MyManagedCluster
+}
 ```
 
 ## connect to the last aks cluster in the list
