@@ -15,7 +15,6 @@ $autoScalePools = az aks show -n $AKSNAME -g $RG --query "agentPoolProfiles[?max
 $autoScalePools | ForEach-Object {
     Write-Output "scaling [a] pool $($_.name)"
     az aks nodepool update -g $RG --cluster-name $AKSNAME --name $_.name --min-count $($_.minCount + 1) --max-count $($_.maxCount + 1) --update-cluster-autoscaler
-    az aks nodepool update --update-cluster-autoscaler --min-count 1 --max-count 10 --resource-group MyResourceGroup --name nodepool1 --cluster-name MyManagedCluster
 }
 ```
 
