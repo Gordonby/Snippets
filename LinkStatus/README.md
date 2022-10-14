@@ -15,11 +15,11 @@ Teleport repo | https://github.com/Azure/acr/tree/main/docs/teleport
 
 ## Azure Container Apps with Dapr
 
-Category | Name | Link | Note
--------- | ---- | ---- | ----
-azd template | C# pub sub | https://github.com/Azure-Samples/pubsub-dapr-csharp-servicebus |
-azd template | Python pub sub | https://github.com/Azure-Samples/pubsub-dapr-python-servicebus |
-azd template | Node pub sub | https://github.com/Azure-Samples/pubsub-dapr-nodejs-servicebus |
+Category | Name | Link | Note | Azure Quickstart template
+-------- | ---- | ---- | ---- | -------------------------
+azd template | C# pub sub | https://github.com/Azure-Samples/pubsub-dapr-csharp-servicebus | |
+azd template | Python pub sub | https://github.com/Azure-Samples/pubsub-dapr-python-servicebus | |
+azd template | Node pub sub | https://github.com/Azure-Samples/pubsub-dapr-nodejs-servicebus | |
 video guide | Microservices with ACA and Dapr | [youtube video](https://www.youtube.com/watch?v=s96io88CM6A), [code repo](https://github.com/gbaeke/super-api) |
-sample | Microservices sample | https://github.com/Azure-Samples/container-apps-store-api-microservice | Uses GitHub Actions to build and host the container image in the GitHub registry (private access)
-sample | Azure Docs ACA Dapr | https://learn.microsoft.com/en-us/azure/container-apps/microservices-dapr-azure-resource-manager?tabs=bash&pivots=container-apps-bicep
+sample | Microservices sample | https://github.com/Azure-Samples/container-apps-store-api-microservice | Uses GitHub Actions to build and host the container image in the GitHub registry (private access) |
+sample | Azure Docs ACA Dapr | https://learn.microsoft.com/en-us/azure/container-apps/microservices-dapr-azure-resource-manager?tabs=bash&pivots=container-apps-bicep | | [bicep template](https://github.com/Azure/azure-quickstart-templates/tree/master/quickstarts/microsoft.app/container-app-dapr-blob)
