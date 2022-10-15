@@ -51,11 +51,12 @@ az container create \
     --azure-file-volume-mount-path /data \
     --environment-variables \
         'EULA'='TRUE' \
+        'DEBUG'='TRUE' \
         'VERSION'=$VERSION \
         'GAMEMODE'='survival' \
         'LEVEL_NAME'=$WORLD \
         'LEVEL_SEED'='8486214866965744170' \
-        'TICK_DISTANCE'='6' \
+        'TICK_DISTANCE'='4' \
         'DIFFICULTY'='easy'
 
 FQDN=$(az container show -n $CONT -g $RG --query ipAddress.fqdn -o tsv)
