@@ -1,0 +1,102 @@
+[
+  {
+    "name": "datadog/agent",
+    "star_count": 98
+  },
+  {
+    "name": "grafana/grafana",
+    "star_count": 2366
+  },
+  {
+    "name": "bitnami/postgresql",
+    "star_count": 154
+  },
+  {
+    "name": "bitnami/redis",
+    "star_count": 229
+  },
+  {
+    "name": "portainer/portainer",
+    "star_count": 2270
+  },
+  {
+    "name": "rancher/rancher-agent",
+    "star_count": 34
+  },
+  {
+    "name": "bitnami/kubectl",
+    "star_count": 71
+  },
+  {
+    "name": "google/cadvisor",
+    "star_count": 463
+  },
+  {
+    "name": "percona/percona-xtradb-cluster-operator",
+    "star_count": 15
+  },
+  {
+    "name": "bitnami/mongodb",
+    "star_count": 189
+  },
+  {
+    "name": "wallarm/api-firewall",
+    "star_count": 26
+  },
+  {
+    "name": "grafana/promtail",
+    "star_count": 67
+  },
+  {
+    "name": "amazon/amazon-ecs-agent",
+    "star_count": 94
+  },
+  {
+    "name": "portainer/portainer-ce",
+    "star_count": 1373
+  },
+  {
+    "name": "grafana/loki",
+    "star_count": 149
+  },
+  {
+    "name": "docker/ucp-agent",
+    "star_count": 5
+  },
+  {
+    "name": "bitnami/external-dns",
+    "star_count": 11
+  },
+  {
+    "name": "amazon/cloudwatch-agent",
+    "star_count": 25
+  },
+  {
+    "name": "dynatrace/oneagent",
+    "star_count": 23
+  },
+  {
+    "name": "amazon/aws-xray-daemon",
+    "star_count": 25
+  },
+  {
+    "name": "amazon/aws-for-fluent-bit",
+    "star_count": 16
+  },
+  {
+    "name": "docker/ucp-auth",
+    "star_count": 3
+  },
+  {
+    "name": "portainer/agent",
+    "star_count": 168
+  },
+  {
+    "name": "bitnami/mariadb",
+    "star_count": 167
+  },
+  {
+    "name": "bitnami/rabbitmq",
+    "star_count": 90
+  }
+]

@@ -1,0 +1,127 @@
+[
+  {
+    "name": "datadog/agent",
+    "star_count": 98,
+    "LatestTagSize": 307125851
+  },
+  {
+    "name": "grafana/grafana",
+    "star_count": 2366,
+    "LatestTagSize": 108405653
+  },
+  {
+    "name": "bitnami/postgresql",
+    "star_count": 154,
+    "LatestTagSize": 92446869
+  },
+  {
+    "name": "bitnami/redis",
+    "star_count": 229,
+    "LatestTagSize": 38547239
+  },
+  {
+    "name": "portainer/portainer",
+    "star_count": 2270,
+    "LatestTagSize": 159925890
+  },
+  {
+    "name": "rancher/rancher-agent",
+    "star_count": 34,
+    "LatestTagSize": null
+  },
+  {
+    "name": "bitnami/kubectl",
+    "star_count": 71,
+    "LatestTagSize": 80760427
+  },
+  {
+    "name": "google/cadvisor",
+    "star_count": 463,
+    "LatestTagSize": 30525033
+  },
+  {
+    "name": "percona/percona-xtradb-cluster-operator",
+    "star_count": 15,
+    "LatestTagSize": null
+  },
+  {
+    "name": "bitnami/mongodb",
+    "star_count": 189,
+    "LatestTagSize": 217858469
+  },
+  {
+    "name": "wallarm/api-firewall",
+    "star_count": 26,
+    "LatestTagSize": 6788765
+  },
+  {
+    "name": "grafana/promtail",
+    "star_count": 67,
+    "LatestTagSize": null
+  },
+  {
+    "name": "amazon/amazon-ecs-agent",
+    "star_count": 94,
+    "LatestTagSize": 21588967
+  },
+  {
+    "name": "portainer/portainer-ce",
+    "star_count": 1373,
+    "LatestTagSize": 85815234
+  },
+  {
+    "name": "grafana/loki",
+    "star_count": 149,
+    "LatestTagSize": null
+  },
+  {
+    "name": "docker/ucp-agent",
+    "star_count": 5,
+    "LatestTagSize": null
+  },
+  {
+    "name": "bitnami/external-dns",
+    "star_count": 11,
+    "LatestTagSize": 55009204
+  },
+  {
+    "name": "amazon/cloudwatch-agent",
+    "star_count": 25,
+    "LatestTagSize": 33435909
+  },
+  {
+    "name": "dynatrace/oneagent",
+    "star_count": 23,
+    "LatestTagSize": 45085065
+  },
+  {
+    "name": "amazon/aws-xray-daemon",
+    "star_count": 25,
+    "LatestTagSize": 66144418
+  },
+  {
+    "name": "amazon/aws-for-fluent-bit",
+    "star_count": 16,
+    "LatestTagSize": 130168480
+  },
+  {
+    "name": "docker/ucp-auth",
+    "star_count": 3,
+    "LatestTagSize": null
+  },
+  {
+    "name": "portainer/agent",
+    "star_count": 168,
+    "LatestTagSize": 51203629
+  },
+  {
+    "name": "bitnami/mariadb",
+    "star_count": 167,
+    "LatestTagSize": 114218189
+  },
+  {
+    "name": "bitnami/rabbitmq",
+    "star_count": 90,
+    "LatestTagSize": 104045640
+  }
+]

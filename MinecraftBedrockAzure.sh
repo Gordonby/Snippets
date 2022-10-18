@@ -1,10 +1,14 @@
+#For creating a minecraft server that runs on an ACI Instance
+
 SUB="PseudoProd"
 RG="MinecraftBedrock"
 LOC="uksouth"
 STOR="minecaftbedrock555"
-SHARE="minecraftmodworlddata"
-CONT="minecraftmodbedrockaci"
-WORLD="byers-mod-world"
+SHARE="bworldu"
+CONT="bworldu"
+WORLD="byers-ultimate-world"
+VERSION="1.19.30.04"
+ACRNAME="gbpseudoprod"
 
 az account set -s $SUB
 
@@ -27,10 +31,17 @@ az storage share create \
     --quota 1024 \
     --output none
 
+ACRPW=$(az acr credential show -n $ACRNAME --query "passwords[0].value" -o tsv)
+ACRSERVER=$(az acr show -n $ACRNAME -g $RG --query loginServer -o tsv)
+az acr import -n $ACRNAME --source docker.io/itzg/minecraft-bedrock-server:latest --image itzg/minecraft-bedrock-server:latest
+
 az container create \
     --resource-group $RG \
     --name $CONT \
-    --image itzg/minecraft-bedrock-server:latest \
+    --image $ACRSERVER/itzg/minecraft-bedrock-server:latest \
+    --registry-username $ACRNAME \
+    --registry-password $ACRPW \
+    --cpu 2 --memory 2 \
     --dns-name-label $WORLD \
     --ports 19132 \
     --protocol UDP \
@@ -40,10 +51,12 @@ az container create \
     --azure-file-volume-mount-path /data \
     --environment-variables \
         'EULA'='TRUE' \
-        'GAMEMODE'='creative' \
-        'ALLOW_CHEATS'='true' \
-        'LEVEL_NAME'='byers modworld' \
-        'LEVEL_SEED'='-78688046' \
+        'DEBUG'='TRUE' \
+        'VERSION'=$VERSION \
+        'GAMEMODE'='survival' \
+        'LEVEL_NAME'=$WORLD \
+        'LEVEL_SEED'='8486214866965744170' \
+        'TICK_DISTANCE'='4' \
         'DIFFICULTY'='easy'
 
 FQDN=$(az container show -n $CONT -g $RG --query ipAddress.fqdn -o tsv)

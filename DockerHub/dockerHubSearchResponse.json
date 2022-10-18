@@ -1,0 +1,1101 @@
+{
+    "page_size": 25,
+    "next": "https://hub.docker.com/api/content/v1/products/search/?image_filter=store\u0026operating_system=linux\u0026architecture=amd64\u0026page=2\u0026page_size=25",
+    "previous": "",
+    "page": 1,
+    "count": 7859,
+    "summaries": [
+        {
+            "id": "",
+            "name": "datadog/agent",
+            "slug": "datadog/agent",
+            "type": "image",
+            "publisher": {
+                "id": "59aa8ccc74c011e4bea40242ac11001b",
+                "name": "Datadog"
+            },
+            "created_at": "2017-05-30T12:31:33.772903Z",
+            "updated_at": "2022-09-22T10:33:51.913714Z",
+            "short_description": "Docker container for the new Datadog Agent",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                },
+                {
+                    "name": "windows",
+                    "label": "Windows"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/812de840123feefac39f85428fd7744a.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/812de840123feefac39f85428fd7744a.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 98,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "grafana/grafana",
+            "slug": "grafana/grafana",
+            "type": "image",
+            "publisher": {
+                "id": "75dd122074c011e4bea40242ac11001b",
+                "name": "Grafana Labs"
+            },
+            "created_at": "2015-02-06T09:29:43.405876Z",
+            "updated_at": "2022-09-26T20:44:11.916093Z",
+            "short_description": "The official Grafana docker container",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                },
+                {
+                    "name": "",
+                    "label": ""
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm",
+                    "label": "arm"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/31cea69afa424609b2d83621b4d47f1d.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/31cea69afa424609b2d83621b4d47f1d.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 2366,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "bitnami/postgresql",
+            "slug": "bitnami/postgresql",
+            "type": "image",
+            "publisher": {
+                "id": "d028386af9cc44c28214360d7c682d8a",
+                "name": "Bitnami"
+            },
+            "created_at": "2016-01-19T17:43:15.151391Z",
+            "updated_at": "2022-09-24T07:54:53.199452Z",
+            "short_description": "Bitnami PostgreSQL Docker Image",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "",
+                    "label": ""
+                },
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 154,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "bitnami/redis",
+            "slug": "bitnami/redis",
+            "type": "image",
+            "publisher": {
+                "id": "d028386af9cc44c28214360d7c682d8a",
+                "name": "Bitnami"
+            },
+            "created_at": "2015-06-16T00:39:13.718406Z",
+            "updated_at": "2022-09-26T14:06:13.125651Z",
+            "short_description": "Bitnami Redis Docker Image",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "",
+                    "label": ""
+                },
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "ppc64le",
+                    "label": "ppc64le"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 229,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "portainer/portainer",
+            "slug": "portainer/portainer",
+            "type": "image",
+            "publisher": {
+                "id": "8b6549c4fb614fe8bbc7897eefbbe20d",
+                "name": "Portainer.io"
+            },
+            "created_at": "2016-09-15T21:09:26.858217Z",
+            "updated_at": "2022-06-28T21:41:42.934935Z",
+            "short_description": "This Repo is now deprecated, use portainer/portainer-ce instead.",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                },
+                {
+                    "name": "windows",
+                    "label": "Windows"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm",
+                    "label": "arm"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                },
+                {
+                    "name": "ppc64le",
+                    "label": "ppc64le"
+                },
+                {
+                    "name": "s390x",
+                    "label": "IBM Z"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/681edab450c1ebab7d83e7266b1d0fbb.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/681edab450c1ebab7d83e7266b1d0fbb.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 2270,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "rancher/rancher-agent",
+            "slug": "rancher/rancher-agent",
+            "type": "image",
+            "publisher": {
+                "id": "2180c25274c111e4bea40242ac11001b",
+                "name": "Rancher Labs"
+            },
+            "created_at": "2018-04-26T04:33:08.270216Z",
+            "updated_at": "2022-09-27T00:15:52.090277Z",
+            "short_description": "",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                },
+                {
+                    "name": "windows",
+                    "label": "Windows"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                },
+                {
+                    "name": "s390x",
+                    "label": "IBM Z"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/00000000000000000000000000000000.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/00000000000000000000000000000000.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 34,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "bitnami/kubectl",
+            "slug": "bitnami/kubectl",
+            "type": "image",
+            "publisher": {
+                "id": "d028386af9cc44c28214360d7c682d8a",
+                "name": "Bitnami"
+            },
+            "created_at": "2018-11-08T11:22:31.526501Z",
+            "updated_at": "2022-09-25T02:39:25.275636Z",
+            "short_description": "Bitnami Docker Image for Kubectl",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "",
+                    "label": ""
+                },
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 71,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "google/cadvisor",
+            "slug": "google/cadvisor",
+            "type": "image",
+            "publisher": {
+                "id": "2af7764c74c011e4bea40242ac11001b",
+                "name": "Google"
+            },
+            "created_at": "2014-06-10T17:06:34Z",
+            "updated_at": "2021-08-16T02:57:04.047192Z",
+            "short_description": "DEPRECATED: New images will NOT be pushed.\n\nPlease use gcr.io/cadvisor/cadvisor instead.",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "",
+                    "label": ""
+                },
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/24ba30616d2a20673f54c2aee36d159e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/24ba30616d2a20673f54c2aee36d159e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 463,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "percona/percona-xtradb-cluster-operator",
+            "slug": "percona/percona-xtradb-cluster-operator",
+            "type": "image",
+            "publisher": {
+                "id": "98ad7a3186d648f4af9ff2a0d1bc3cd2",
+                "name": "Percona"
+            },
+            "created_at": "2018-11-29T16:16:56.335617Z",
+            "updated_at": "2022-06-01T19:29:37.851805Z",
+            "short_description": "Percona XtraDB Cluster Operator",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/5f02b19a52725a3dc324baf483b584d7.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/5f02b19a52725a3dc324baf483b584d7.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 15,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "bitnami/mongodb",
+            "slug": "bitnami/mongodb",
+            "type": "image",
+            "publisher": {
+                "id": "d028386af9cc44c28214360d7c682d8a",
+                "name": "Bitnami"
+            },
+            "created_at": "2015-08-19T17:55:56.569199Z",
+            "updated_at": "2022-09-24T02:10:44.586625Z",
+            "short_description": "Bitnami MongoDB Docker Image",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "",
+                    "label": ""
+                },
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 189,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "wallarm/api-firewall",
+            "slug": "wallarm/api-firewall",
+            "type": "image",
+            "publisher": {
+                "id": "4f1f0f3172b54dcba35f5d8fd0192d40",
+                "name": "Wallarm, Inc."
+            },
+            "created_at": "2021-05-19T18:21:45.751318Z",
+            "updated_at": "2022-09-13T17:10:04.081106Z",
+            "short_description": "Fast and light-weight API proxy firewall for request and response validation by OpenAPI specs.",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "386",
+                    "label": "386"
+                },
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm",
+                    "label": "arm"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/143ff37fb5628d8564ac86da87bbf4b3.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/143ff37fb5628d8564ac86da87bbf4b3.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 26,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "grafana/promtail",
+            "slug": "grafana/promtail",
+            "type": "image",
+            "publisher": {
+                "id": "75dd122074c011e4bea40242ac11001b",
+                "name": "Grafana Labs"
+            },
+            "created_at": "2018-11-20T12:11:26.074216Z",
+            "updated_at": "2022-09-26T21:00:37.500234Z",
+            "short_description": "",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm",
+                    "label": "arm"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/31cea69afa424609b2d83621b4d47f1d.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/31cea69afa424609b2d83621b4d47f1d.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 67,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "amazon/amazon-ecs-agent",
+            "slug": "amazon/amazon-ecs-agent",
+            "type": "image",
+            "publisher": {
+                "id": "596057a674c011e4bea40242ac11001b",
+                "name": "Amazon Web Services"
+            },
+            "created_at": "2014-12-12T00:40:49.227212Z",
+            "updated_at": "2022-09-21T02:47:19.74993Z",
+            "short_description": "Amazon Elastic Container Service Agent",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "",
+                    "label": ""
+                },
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                },
+                {
+                    "name": "",
+                    "label": ""
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/264aef86d4435f02e3b80a9b14eaa140.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/264aef86d4435f02e3b80a9b14eaa140.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 94,
+            "pull_count": "1B+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "portainer/portainer-ce",
+            "slug": "portainer/portainer-ce",
+            "type": "image",
+            "publisher": {
+                "id": "8b6549c4fb614fe8bbc7897eefbbe20d",
+                "name": "Portainer.io"
+            },
+            "created_at": "2020-08-27T05:42:34.203113Z",
+            "updated_at": "2022-09-15T23:02:13.784451Z",
+            "short_description": "Portainer CE - a lightweight service delivery platform for containerized applications ",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                },
+                {
+                    "name": "windows",
+                    "label": "Windows"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm",
+                    "label": "arm"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                },
+                {
+                    "name": "ppc64le",
+                    "label": "ppc64le"
+                },
+                {
+                    "name": "s390x",
+                    "label": "IBM Z"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/681edab450c1ebab7d83e7266b1d0fbb.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/681edab450c1ebab7d83e7266b1d0fbb.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 1373,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "grafana/loki",
+            "slug": "grafana/loki",
+            "type": "image",
+            "publisher": {
+                "id": "75dd122074c011e4bea40242ac11001b",
+                "name": "Grafana Labs"
+            },
+            "created_at": "2018-12-05T13:04:02.646419Z",
+            "updated_at": "2022-09-26T21:00:39.816256Z",
+            "short_description": "Loki - Cloud Native Log Aggregation by Grafana",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm",
+                    "label": "arm"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/31cea69afa424609b2d83621b4d47f1d.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/31cea69afa424609b2d83621b4d47f1d.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 149,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "docker/ucp-agent",
+            "slug": "docker/ucp-agent",
+            "type": "image",
+            "publisher": {
+                "id": "57b4593474c011e4bea40242ac11001b",
+                "name": "Docker, Inc."
+            },
+            "created_at": "2016-10-10T19:52:51.944861Z",
+            "updated_at": "2020-06-26T17:31:48.963797Z",
+            "short_description": "",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/56b6e15d486f6407690a6cb56e3fa68e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/56b6e15d486f6407690a6cb56e3fa68e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 5,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "bitnami/external-dns",
+            "slug": "bitnami/external-dns",
+            "type": "image",
+            "publisher": {
+                "id": "d028386af9cc44c28214360d7c682d8a",
+                "name": "Bitnami"
+            },
+            "created_at": "2018-07-17T15:01:39.354342Z",
+            "updated_at": "2022-09-26T14:21:54.231826Z",
+            "short_description": "",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 11,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "amazon/cloudwatch-agent",
+            "slug": "amazon/cloudwatch-agent",
+            "type": "image",
+            "publisher": {
+                "id": "596057a674c011e4bea40242ac11001b",
+                "name": "Amazon Web Services"
+            },
+            "created_at": "2019-05-15T17:17:22.684516Z",
+            "updated_at": "2022-09-22T18:49:19.422525Z",
+            "short_description": "Amazon CloudWatch Agent",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/264aef86d4435f02e3b80a9b14eaa140.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/264aef86d4435f02e3b80a9b14eaa140.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 25,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "dynatrace/oneagent",
+            "slug": "dynatrace/oneagent",
+            "type": "image",
+            "publisher": {
+                "id": "28bd20e874c011e4bea40242ac11001b",
+                "name": "Dynatrace"
+            },
+            "created_at": "2016-07-29T14:11:31.665422Z",
+            "updated_at": "2022-09-26T13:23:36.54034Z",
+            "short_description": "Dynatrace OneAgent",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                },
+                {
+                    "name": "ppc64le",
+                    "label": "ppc64le"
+                },
+                {
+                    "name": "s390x",
+                    "label": "IBM Z"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/319d860fe37b23b21cd49536f825a481.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/319d860fe37b23b21cd49536f825a481.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 23,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "amazon/aws-xray-daemon",
+            "slug": "amazon/aws-xray-daemon",
+            "type": "image",
+            "publisher": {
+                "id": "596057a674c011e4bea40242ac11001b",
+                "name": "Amazon Web Services"
+            },
+            "created_at": "2018-11-24T03:52:25.230245Z",
+            "updated_at": "2022-09-22T21:28:44.915285Z",
+            "short_description": "The AWS X-Ray daemon gathers raw segment data and relays it to the AWS X-Ray API.",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/264aef86d4435f02e3b80a9b14eaa140.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/264aef86d4435f02e3b80a9b14eaa140.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 25,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "amazon/aws-for-fluent-bit",
+            "slug": "amazon/aws-for-fluent-bit",
+            "type": "image",
+            "publisher": {
+                "id": "596057a674c011e4bea40242ac11001b",
+                "name": "Amazon Web Services"
+            },
+            "created_at": "2019-07-09T21:44:37.024186Z",
+            "updated_at": "2022-09-13T02:28:51.694681Z",
+            "short_description": "Fluent Bit image with plugins for AWS",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/264aef86d4435f02e3b80a9b14eaa140.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/264aef86d4435f02e3b80a9b14eaa140.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 16,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "docker/ucp-auth",
+            "slug": "docker/ucp-auth",
+            "type": "image",
+            "publisher": {
+                "id": "57b4593474c011e4bea40242ac11001b",
+                "name": "Docker, Inc."
+            },
+            "created_at": "2016-05-05T03:12:31.746569Z",
+            "updated_at": "2020-06-26T17:31:52.784737Z",
+            "short_description": "Please refer to the docker/ucp image for more information",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "",
+                    "label": ""
+                },
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/56b6e15d486f6407690a6cb56e3fa68e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/56b6e15d486f6407690a6cb56e3fa68e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 3,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "portainer/agent",
+            "slug": "portainer/agent",
+            "type": "image",
+            "publisher": {
+                "id": "8b6549c4fb614fe8bbc7897eefbbe20d",
+                "name": "Portainer.io"
+            },
+            "created_at": "2018-03-28T10:48:35.330584Z",
+            "updated_at": "2022-09-15T22:59:06.160757Z",
+            "short_description": "An agent used to manage all the resources in a Swarm cluster.",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                },
+                {
+                    "name": "windows",
+                    "label": "Windows"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                },
+                {
+                    "name": "arm",
+                    "label": "arm"
+                },
+                {
+                    "name": "arm64",
+                    "label": "arm64"
+                },
+                {
+                    "name": "ppc64le",
+                    "label": "ppc64le"
+                },
+                {
+                    "name": "s390x",
+                    "label": "IBM Z"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/681edab450c1ebab7d83e7266b1d0fbb.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/681edab450c1ebab7d83e7266b1d0fbb.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 168,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "bitnami/mariadb",
+            "slug": "bitnami/mariadb",
+            "type": "image",
+            "publisher": {
+                "id": "d028386af9cc44c28214360d7c682d8a",
+                "name": "Bitnami"
+            },
+            "created_at": "2015-06-16T00:45:42.528103Z",
+            "updated_at": "2022-09-26T18:00:26.142363Z",
+            "short_description": "Bitnami MariaDB Docker Image",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "",
+                    "label": ""
+                },
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 167,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        },
+        {
+            "id": "",
+            "name": "bitnami/rabbitmq",
+            "slug": "bitnami/rabbitmq",
+            "type": "image",
+            "publisher": {
+                "id": "d028386af9cc44c28214360d7c682d8a",
+                "name": "Bitnami"
+            },
+            "created_at": "2016-06-23T16:02:44.564491Z",
+            "updated_at": "2022-09-26T15:14:31.928532Z",
+            "short_description": "Bitnami Docker Image for RabbitMQ",
+            "source": "verified_publisher",
+            "popularity": 0,
+            "categories": null,
+            "operating_systems": [
+                {
+                    "name": "",
+                    "label": ""
+                },
+                {
+                    "name": "linux",
+                    "label": "Linux"
+                }
+            ],
+            "architectures": [
+                {
+                    "name": "amd64",
+                    "label": "x86-64"
+                }
+            ],
+            "logo_url": {
+                "large": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm",
+                "small": "https://secure.gravatar.com/avatar/85bcf547a6bf62b855df2c682af81a4e.jpg?s=80\u0026r=g\u0026d=mm"
+            },
+            "certification_status": "not_certified",
+            "star_count": 90,
+            "pull_count": "500M+",
+            "filter_type": "verified_publisher"
+        }
+    ]
+}

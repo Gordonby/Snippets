@@ -1,6 +1,15 @@
 # Jmespath sample snippets
 
+## Azure CLI - properties with hypens
+
+```bash
+RGNODE="someRG"
+az vmss list -g $RGNODE --query "[?tags.\"aks-managed-poolName\" == 'npuser01'].{name:name,tags:tags.\"aks-managed-poolName\"}" -o json
+az vmss list -g $RGNODE --query "[?tags.\"aks-managed-poolName\" == 'npuser01'].name" -o tsv
+```
+
 ## Azure DevOps
+
 ```bash
 az devops project show -p $project --query "[id, name]" -o tsv
 

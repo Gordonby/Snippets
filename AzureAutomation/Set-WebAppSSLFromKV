@@ -1,0 +1,55 @@
+param(
+    [parameter(Mandatory=$true)]
+	[String] $webappname,
+    [parameter(Mandatory=$true)]
+	[String] $resourcegroupname,
+    [parameter(Mandatory=$true)]
+    [String]$vaultName,
+    [parameter(Mandatory=$true)]
+	[String] $domain = "Eg westeurope4.azdemo.co.uk"
+)
+
+$connectionName = "AzureRunAsConnection"
+try
+{
+    # Get the connection "AzureRunAsConnection "
+    $servicePrincipalConnection=Get-AutomationConnection -Name $connectionName         
+
+    "Logging in to Azure..."
+    Add-AzureRmAccount `
+        -ServicePrincipal `
+        -TenantId $servicePrincipalConnection.TenantId `
+        -ApplicationId $servicePrincipalConnection.ApplicationId `
+        -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint 
+}
+catch {
+    if (!$servicePrincipalConnection)
+    {
+        $ErrorMessage = "Connection $connectionName not found."
+        throw $ErrorMessage
+    } else{
+        Write-Error -Message $_.Exception
+        throw $_.Exception
+    }
+}
+
+    $certificateName=$domain.replace(".","")
+    
+    $webapp = Get-AzureRmWebApp -ResourceGroupName $resourcegroupname -Name $webappname
+
+    $kvSecret = Get-AzureKeyVaultSecret -VaultName $vaultName -Name $certificateName
+    Write-Output "Certificate last updated : $($kvSecret.Updated)"
+    
+    $kvSecretBytes = [System.Convert]::FromBase64String($kvSecret.SecretValueText)
+    $certCollection = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2Collection
+    $certCollection.Import($kvSecretBytes,$null,[System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable)
+    $password = 'temppasswordnomatter'
+    $protectedCertificateBytes = $certCollection.Export([System.Security.Cryptography.X509Certificates.X509ContentType]::Pkcs12, $password)
+    $pfxPath = "$certificateName.pfx"
+    [System.IO.File]::WriteAllBytes($pfxPath, $protectedCertificateBytes)
+
+    New-AzureRmWebAppSSLBinding -WebApp $webapp -Name $domain -certificatefilepath $pfxPath -certificatepassword $password -SslState SniEnabled
+    Write-Output "WebApp Certificate SSL binding updated"
+
+    #cleanup
+    [System.IO.File]::Delete($pfxPath)
