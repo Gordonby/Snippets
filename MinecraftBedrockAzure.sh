@@ -7,7 +7,7 @@ STOR="minecaftbedrock555"
 SHARE="bworldu"
 CONT="bworldu"
 WORLD="byers-ultimate-world"
-VERSION="1.19.40"
+VERSION="1.19.40.02"
 ACRNAME="gbpseudoprod"
 
 az account set -s $SUB
