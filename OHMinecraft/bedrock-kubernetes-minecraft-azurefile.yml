@@ -47,8 +47,6 @@ spec:
           value: "4"
         - name: difficulty
           value: "easy"
-        - name: LEVEL_NAME
-          value: "bworldu"
         volumeMounts:
         - name: azurefileshare
           mountPath: "/data"
@@ -57,7 +55,7 @@ spec:
       - name: azurefileshare
         azureFile:
           secretName: minecraft-storage-secret
-          shareName: bworldu
+          shareName: bworldaks
           readOnly: false
 ---
 apiVersion: v1
@@ -65,6 +63,8 @@ kind: Service
 metadata:
   name: minecraftg
   namespace: minecraft
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: minecraftb
 spec:
   type: LoadBalancer
   ports:
