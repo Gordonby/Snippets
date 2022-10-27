@@ -15,6 +15,9 @@ metadata:
   namespace: minecraft
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: minecraftg
   strategy:
     rollingUpdate:
       maxSurge: 1
