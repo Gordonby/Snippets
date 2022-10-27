@@ -46,7 +46,7 @@ spec:
         - name: TICK_DISTANCE
           value: 4
         - name: difficulty
-          value: easy
+          value: "easy"
         - name: LEVEL_NAME
           value: "bworldu"
         volumeMounts:
