@@ -44,14 +44,15 @@ spec:
         - name: LEVEL_SEED
           value: "8486214866965744170"
         - name: TICK_DISTANCE
-          value: 4
+          value: "4"
         - name: difficulty
           value: "easy"
         - name: LEVEL_NAME
           value: "bworldu"
         volumeMounts:
-        - mountPath: "/data"
-          name: volumemine
+        - name: azurefileshare
+          mountPath: "/data"
+
       volumes:
       - name: azurefileshare
         azureFile:
@@ -76,4 +77,4 @@ spec:
     protocol: UDP
     name: mine6
   selector:
-    app: minecraftg    
+    app: minecraftg 
