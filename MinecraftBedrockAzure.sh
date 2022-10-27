@@ -62,3 +62,5 @@ az container create \
 FQDN=$(az container show -n $CONT -g $RG --query ipAddress.fqdn -o tsv)
 
 echo $FQDN
+
+az container logs -g $RG -n $CONT --follow
