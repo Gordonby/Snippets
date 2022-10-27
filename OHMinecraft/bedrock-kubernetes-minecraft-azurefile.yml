@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minecraft-storage-secret
+  namespace: minecraft
+type: Opaque
+data:
+  azurestorageaccountname: Base64_REDACTED_VALUE
+  azurestorageaccountkey: Base64_REDACTED_VALUE
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraftg
+  namespace: minecraft
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: minecraftg
+    spec:
+      containers:
+      - name: minecraft
+        image: docker.io/itzg/minecraft-bedrock-server:latest
+        ports:
+        - containerPort: 25565
+        - containerPort: 25575
+        env:
+        - name: EULA
+          value: "TRUE"
+        - name: VERSION
+          value: "1.19.40.02"
+        - name: GAMEMODE
+          value: "survival"
+        - name: LEVEL_SEED
+          value: "8486214866965744170"
+        - name: TICK_DISTANCE
+          value: 4
+        - name: difficulty
+          value: easy
+        - name: LEVEL_NAME
+          value: "bworldu"
+        volumeMounts:
+        - mountPath: "/data"
+          name: volumemine
+      volumes:
+      - name: azurefileshare
+        azureFile:
+          secretName: minecraft-storage-secret
+          shareName: bworldu
+          readOnly: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraftg
+  namespace: minecraft
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 25565
+    targetPort: 25565
+    protocol: TCP
+    name: mine
+  - port: 25575
+    targetPort: 25575
+    protocol: TCP
+    name: rcon
+  selector:
+    app: minecraftg    
