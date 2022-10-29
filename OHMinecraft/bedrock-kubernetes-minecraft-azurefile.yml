@@ -8,6 +8,21 @@ data:
   azurestorageaccountname: Base64_REDACTED_VALUE
   azurestorageaccountkey: Base64_REDACTED_VALUE
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minecraft-bedrock-env
+  labels:
+    role: service-config
+    app: minecraftg
+data:
+  EULA: "TRUE"
+  VERSION: "1.19.40.02"
+  GAMEMODE: "survival"
+  LEVEL_SEED: "8486214866965744170"
+  TICK_DISTANCE: "4"
+  DIFFICULTY: "easy"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -34,19 +49,9 @@ spec:
         ports:
         - containerPort: 19132
         - containerPort: 19133
-        env:
-        - name: EULA
-          value: "TRUE"
-        - name: VERSION
-          value: "1.19.40.02"
-        - name: GAMEMODE
-          value: "survival"
-        - name: LEVEL_SEED
-          value: "8486214866965744170"
-        - name: TICK_DISTANCE
-          value: "4"
-        - name: difficulty
-          value: "easy"
+        envFrom:
+          - configMapRef:
+              name: minecraft-bedrock-env
         volumeMounts:
         - name: azurefileshare
           mountPath: "/data"
