@@ -19,7 +19,7 @@ resource automationRunbook 'Microsoft.Automation/automationAccounts/runbooks@201
     logProgress: true
     runbookType: 'Script'
     publishContentLink: {
-      uri: 'uri'
+      uri: 'https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureSubscriptionBootstrap/cleanRgResources.ps1'
       version: '1.0.0.0'
     }
     description: 'Deletes the resources in tagged resource groups'
