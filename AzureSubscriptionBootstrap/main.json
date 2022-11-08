@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "4455108015343038759"
+      "templateHash": "14257628259948612201"
     }
   },
   "parameters": {
@@ -69,7 +69,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "12787532952562924348"
+              "templateHash": "7756182369221921234"
             }
           },
           "parameters": {
@@ -82,11 +82,15 @@
             },
             "today": {
               "type": "string",
-              "defaultValue": "[utcNow('yyyyMMddT')]"
+              "defaultValue": "[utcNow('yyyyMMddTHHmmssZ')]"
             }
           },
           "variables": {
-            "tomorrow": "[dateTimeAdd(parameters('today'), 'P1D')]"
+            "tomorrow": "[dateTimeAdd(parameters('today'), 'P1D', 'yyyy-MM-dd')]",
+            "automationStartTime": "[format('{0}T00:01:00+01:00', take(variables('tomorrow'), 10))]",
+            "runbookNames": [
+              "CleanRgResources"
+            ]
           },
           "resources": [
             {
@@ -127,7 +131,7 @@
               "apiVersion": "2022-08-08",
               "name": "[format('{0}/{1}', parameters('automationAccountName'), 'Midnight')]",
               "properties": {
-                "startTime": "[format('{0}00:01:00+01:00', variables('tomorrow'))]",
+                "startTime": "[variables('automationStartTime')]",
                 "expiryTime": "9999-12-31T23:59:00+00:00",
                 "interval": 1,
                 "frequency": "Day",
@@ -136,16 +140,34 @@
               "dependsOn": [
                 "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
               ]
+            },
+            {
+              "copy": {
+                "name": "automationJobSchedules",
+                "count": "[length(variables('runbookNames'))]"
+              },
+              "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+              "apiVersion": "2022-08-08",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), guid(variables('runbookNames')[copyIndex()], 'Midnight'))]",
+              "properties": {
+                "schedule": {
+                  "name": "Midnight"
+                },
+                "runbook": {
+                  "name": "[variables('runbookNames')[copyIndex()]]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]",
+                "[resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'), 'CleanRgResources')]",
+                "[resourceId('Microsoft.Automation/automationAccounts/schedules', parameters('automationAccountName'), 'Midnight')]"
+              ]
             }
           ],
           "outputs": {
             "automationAccountPrincipalId": {
               "type": "string",
               "value": "[reference(resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName')), '2022-08-08', 'full').identity.principalId]"
-            },
-            "utcTimeDebug": {
-              "type": "string",
-              "value": "[variables('tomorrow')]"
             }
           }
         }
