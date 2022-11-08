@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "13836937930986135588"
+      "templateHash": "4455108015343038759"
     }
   },
   "parameters": {
@@ -69,7 +69,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "6137749021820367026"
+              "templateHash": "12787532952562924348"
             }
           },
           "parameters": {
@@ -79,7 +79,14 @@
             "location": {
               "type": "string",
               "defaultValue": "[resourceGroup().location]"
+            },
+            "today": {
+              "type": "string",
+              "defaultValue": "[utcNow('yyyyMMddT')]"
             }
+          },
+          "variables": {
+            "tomorrow": "[dateTimeAdd(parameters('today'), 'P1D')]"
           },
           "resources": [
             {
@@ -120,7 +127,7 @@
               "apiVersion": "2022-08-08",
               "name": "[format('{0}/{1}', parameters('automationAccountName'), 'Midnight')]",
               "properties": {
-                "startTime": "2022-09-02T00:01:00+01:00",
+                "startTime": "[format('{0}00:01:00+01:00', variables('tomorrow'))]",
                 "expiryTime": "9999-12-31T23:59:00+00:00",
                 "interval": 1,
                 "frequency": "Day",
@@ -135,6 +142,10 @@
             "automationAccountPrincipalId": {
               "type": "string",
               "value": "[reference(resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName')), '2022-08-08', 'full').identity.principalId]"
+            },
+            "utcTimeDebug": {
+              "type": "string",
+              "value": "[variables('tomorrow')]"
             }
           }
         }
