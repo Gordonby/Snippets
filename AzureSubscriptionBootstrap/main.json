@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "4831951566939930372"
+      "templateHash": "14813777270846493860"
     }
   },
   "parameters": {
@@ -69,7 +69,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "18176865887242240612"
+              "templateHash": "3215698696822568089"
             }
           },
           "parameters": {
@@ -87,10 +87,10 @@
           },
           "variables": {
             "tomorrow": "[dateTimeAdd(parameters('today'), 'P1D', 'yyyy-MM-dd')]",
-            "automationStartTime": "[format('{0}T00:01:00+01:00', take(variables('tomorrow'), 10))]",
+            "automationStartTimeMidnight": "[format('{0}T00:01:00+00:00', take(variables('tomorrow'), 10))]",
+            "automationStartTime9am": "[format('{0}T09:00:00+00:00', take(variables('tomorrow'), 10))]",
             "runbookNames": [
               "CleanRgResources",
-              "TagResourceGroupsForDeletion",
               "DeleteResourceGroups"
             ]
           },
@@ -171,7 +171,23 @@
               "apiVersion": "2022-08-08",
               "name": "[format('{0}/{1}', parameters('automationAccountName'), 'Midnight')]",
               "properties": {
-                "startTime": "[variables('automationStartTime')]",
+                "startTime": "[variables('automationStartTimeMidnight')]",
+                "expiryTime": "9999-12-31T23:59:00+00:00",
+                "interval": 1,
+                "frequency": "Day",
+                "timeZone": "Europe/London",
+                "description": "Daily out of hours schedule"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Automation/automationAccounts/schedules",
+              "apiVersion": "2022-08-08",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), '9am')]",
+              "properties": {
+                "startTime": "[variables('automationStartTime9am')]",
                 "expiryTime": "9999-12-31T23:59:00+00:00",
                 "interval": 1,
                 "frequency": "Day",
@@ -184,7 +200,7 @@
             },
             {
               "copy": {
-                "name": "automationJobSchedules",
+                "name": "automationJobNightSchedules",
                 "count": "[length(variables('runbookNames'))]"
               },
               "type": "Microsoft.Automation/automationAccounts/jobSchedules",
@@ -202,7 +218,25 @@
                 "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]",
                 "[resourceId('Microsoft.Automation/automationAccounts/schedules', parameters('automationAccountName'), 'Midnight')]",
                 "[resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'), 'CleanRgResources')]",
-                "[resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'), 'DeleteResourceGroups')]",
+                "[resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'), 'DeleteResourceGroups')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Automation/automationAccounts/jobSchedules",
+              "apiVersion": "2022-08-08",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), guid('TagResourceGroupsForDeletion', 'Midnight'))]",
+              "properties": {
+                "schedule": {
+                  "name": "9am"
+                },
+                "runbook": {
+                  "name": "TagResourceGroupsForDeletion"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]",
+                "[resourceId('Microsoft.Automation/automationAccounts/schedules', parameters('automationAccountName'), '9am')]",
+                "[resourceId('Microsoft.Automation/automationAccounts/schedules', parameters('automationAccountName'), 'Midnight')]",
                 "[resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'), 'TagResourceGroupsForDeletion')]"
               ]
             }
