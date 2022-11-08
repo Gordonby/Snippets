@@ -96,7 +96,7 @@ resource automationScheduleMorn 'Microsoft.Automation/automationAccounts/schedul
 var runbookNames = [runbookCleanRG.name, runbookDeleteRGs.name]
 resource automationJobNightSchedules 'Microsoft.Automation/automationAccounts/jobSchedules@2022-08-08' = [for runbookName in runbookNames : {
   parent: automationAccount
-  name: guid(runbookName, automationScheduleNight.name)
+  name: guid(automationAccount.id, runbookName, automationScheduleNight.name)
   properties: {
     schedule: {
       name: automationScheduleNight.name
@@ -109,7 +109,7 @@ resource automationJobNightSchedules 'Microsoft.Automation/automationAccounts/jo
 
 resource automationJobMornSchedule 'Microsoft.Automation/automationAccounts/jobSchedules@2022-08-08' = {
   parent: automationAccount
-  name: guid(runbookUntaggedRGs.name, automationScheduleNight.name)
+  name: guid(automationAccount.id, runbookUntaggedRGs.name, automationScheduleNight.name)
   properties: {
     schedule: {
       name: automationScheduleMorn.name

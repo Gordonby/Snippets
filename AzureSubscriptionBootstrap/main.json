@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "11452646319960834256"
+      "templateHash": "2657317534122116202"
     }
   },
   "parameters": {
@@ -78,7 +78,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "3215698696822568089"
+              "templateHash": "13237270600702604279"
             }
           },
           "parameters": {
@@ -214,7 +214,7 @@
               },
               "type": "Microsoft.Automation/automationAccounts/jobSchedules",
               "apiVersion": "2022-08-08",
-              "name": "[format('{0}/{1}', parameters('automationAccountName'), guid(variables('runbookNames')[copyIndex()], 'Midnight'))]",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), guid(resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName')), variables('runbookNames')[copyIndex()], 'Midnight'))]",
               "properties": {
                 "schedule": {
                   "name": "Midnight"
@@ -233,7 +233,7 @@
             {
               "type": "Microsoft.Automation/automationAccounts/jobSchedules",
               "apiVersion": "2022-08-08",
-              "name": "[format('{0}/{1}', parameters('automationAccountName'), guid('TagResourceGroupsForDeletion', 'Midnight'))]",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), guid(resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName')), 'TagResourceGroupsForDeletion', 'Midnight'))]",
               "properties": {
                 "schedule": {
                   "name": "9am"
