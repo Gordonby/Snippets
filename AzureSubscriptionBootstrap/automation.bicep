@@ -18,7 +18,7 @@ resource automationAccount 'Microsoft.Automation/automationAccounts@2022-08-08' 
   }
 }
 
-resource automationRunbook 'Microsoft.Automation/automationAccounts/runbooks@2022-08-08' = {
+resource runbookCleanRG 'Microsoft.Automation/automationAccounts/runbooks@2022-08-08' = {
   parent: automationAccount
   name: 'CleanRgResources'
   location: location
@@ -34,6 +34,38 @@ resource automationRunbook 'Microsoft.Automation/automationAccounts/runbooks@202
   }
 }
 
+resource runbookUntaggedRGs 'Microsoft.Automation/automationAccounts/runbooks@2022-08-08' = {
+  parent: automationAccount
+  name: 'TagResourceGroupsForDeletion'
+  location: location
+  properties: {
+    logVerbose: true
+    logProgress: true
+    runbookType: 'Script'
+    publishContentLink: {
+      uri: 'https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureSubscriptionBootstrap/tagResourceGroups.ps1'
+      version: '1.0.0.0'
+    }
+    description: 'Deletes the resources in tagged resource groups'
+  }
+}
+
+resource runbookDeleteRGs 'Microsoft.Automation/automationAccounts/runbooks@2022-08-08' = {
+  parent: automationAccount
+  name: 'DeleteResourceGroups'
+  location: location
+  properties: {
+    logVerbose: true
+    logProgress: true
+    runbookType: 'Script'
+    publishContentLink: {
+      uri: 'https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureSubscriptionBootstrap/deleteResourceGroups.ps1'
+      version: '1.0.0.0'
+    }
+    description: 'Deletes resource groups'
+  }
+}
+
 resource automationSchedule 'Microsoft.Automation/automationAccounts/schedules@2022-08-08' = {
   parent: automationAccount
   name: 'Midnight'
@@ -43,10 +75,11 @@ resource automationSchedule 'Microsoft.Automation/automationAccounts/schedules@2
     interval: 1
     frequency: 'Day'
     timeZone: 'Europe/London'
+    description: 'Daily out of hours schedule'
   }
 }
 
-var runbookNames = [automationRunbook.name]
+var runbookNames = [runbookCleanRG.name, runbookUntaggedRGs.name, runbookDeleteRGs.name]
 resource automationJobSchedules 'Microsoft.Automation/automationAccounts/jobSchedules@2022-08-08' = [for runbookName in runbookNames : {
   parent: automationAccount
   name: guid(runbookName, automationSchedule.name)

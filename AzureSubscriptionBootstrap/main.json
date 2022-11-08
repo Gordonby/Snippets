@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "14257628259948612201"
+      "templateHash": "4831951566939930372"
     }
   },
   "parameters": {
@@ -69,7 +69,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "7756182369221921234"
+              "templateHash": "18176865887242240612"
             }
           },
           "parameters": {
@@ -89,7 +89,9 @@
             "tomorrow": "[dateTimeAdd(parameters('today'), 'P1D', 'yyyy-MM-dd')]",
             "automationStartTime": "[format('{0}T00:01:00+01:00', take(variables('tomorrow'), 10))]",
             "runbookNames": [
-              "CleanRgResources"
+              "CleanRgResources",
+              "TagResourceGroupsForDeletion",
+              "DeleteResourceGroups"
             ]
           },
           "resources": [
@@ -127,6 +129,44 @@
               ]
             },
             {
+              "type": "Microsoft.Automation/automationAccounts/runbooks",
+              "apiVersion": "2022-08-08",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), 'TagResourceGroupsForDeletion')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "logVerbose": true,
+                "logProgress": true,
+                "runbookType": "Script",
+                "publishContentLink": {
+                  "uri": "https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureSubscriptionBootstrap/tagResourceGroups.ps1",
+                  "version": "1.0.0.0"
+                },
+                "description": "Deletes the resources in tagged resource groups"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Automation/automationAccounts/runbooks",
+              "apiVersion": "2022-08-08",
+              "name": "[format('{0}/{1}', parameters('automationAccountName'), 'DeleteResourceGroups')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "logVerbose": true,
+                "logProgress": true,
+                "runbookType": "Script",
+                "publishContentLink": {
+                  "uri": "https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureSubscriptionBootstrap/deleteResourceGroups.ps1",
+                  "version": "1.0.0.0"
+                },
+                "description": "Deletes resource groups"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+              ]
+            },
+            {
               "type": "Microsoft.Automation/automationAccounts/schedules",
               "apiVersion": "2022-08-08",
               "name": "[format('{0}/{1}', parameters('automationAccountName'), 'Midnight')]",
@@ -135,7 +175,8 @@
                 "expiryTime": "9999-12-31T23:59:00+00:00",
                 "interval": 1,
                 "frequency": "Day",
-                "timeZone": "Europe/London"
+                "timeZone": "Europe/London",
+                "description": "Daily out of hours schedule"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
@@ -159,8 +200,10 @@
               },
               "dependsOn": [
                 "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]",
+                "[resourceId('Microsoft.Automation/automationAccounts/schedules', parameters('automationAccountName'), 'Midnight')]",
                 "[resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'), 'CleanRgResources')]",
-                "[resourceId('Microsoft.Automation/automationAccounts/schedules', parameters('automationAccountName'), 'Midnight')]"
+                "[resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'), 'DeleteResourceGroups')]",
+                "[resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'), 'TagResourceGroupsForDeletion')]"
               ]
             }
           ],
