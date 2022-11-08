@@ -3,7 +3,7 @@
 ## Creating automation
 
 The Automation Account runs 3 runbooks daily.
-It will flag resource groups for deletion, and clear the contents of other resource groups all based on tags.
+It will flag resource groups for subsequent deletion, and clear the contents of other resource groups all based on tags.
 
 The tag that is evaluated is `Cleanup`. 
 
