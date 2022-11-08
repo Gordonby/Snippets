@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "14813777270846493860"
+      "templateHash": "11452646319960834256"
     }
   },
   "parameters": {
@@ -29,6 +29,15 @@
       "location": "[parameters('location')]",
       "tags": {
         "Cleanup": "Never"
+      }
+    },
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "innerloop",
+      "location": "[parameters('location')]",
+      "tags": {
+        "Cleanup": "Automatically"
       }
     },
     {
