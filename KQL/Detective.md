@@ -188,3 +188,18 @@ Traffic
 | summarize carCount = count() by Ave, Street
 | where carCount >= 3
 ```
+
+## 5 
+
+```kql
+.execute database script <|
+// Create table for the books
+.create-merge table Prime(primey:long)
+// Import data for books
+// (Used data is utilzing catalogue from https://github.com/internetarchive/openlibrary )
+.ingest into table Prime ('https://kustodetectiveagency.blob.core.windows.net/prime-numbers/prime-numbers.csv.gz') with (ignoreFirstRecord=false)
+
+
+Prime
+| take 5
+```
