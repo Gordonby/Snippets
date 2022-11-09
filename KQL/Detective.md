@@ -1,3 +1,4 @@
+```kql
 //Find a specific book
 Books
 | where book_title == 'De Revolutionibus Magnis Data'
@@ -40,3 +41,4 @@ Shelves
 | extend dicrepancy = (total_weight - rfIdbookWeight)
 | order by dicrepancy desc 
 | take 5
+```
