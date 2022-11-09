@@ -193,13 +193,53 @@ Traffic
 
 ```kql
 .execute database script <|
-// Create table for the books
 .create-merge table Prime(primey:long)
-// Import data for books
-// (Used data is utilzing catalogue from https://github.com/internetarchive/openlibrary )
 .ingest into table Prime ('https://kustodetectiveagency.blob.core.windows.net/prime-numbers/prime-numbers.csv.gz') with (ignoreFirstRecord=false)
 
 
 Prime
+| sort by primey asc 
+| take 10
+
+//specials
+Prime
+| sort by primey asc 
+| extend prev1 = prev(primey,1) 
+| extend prev2 = prev(primey,2) 
+| extend specialIs = prev1 + prev2 + 1
+| take 10
+
+Prime
+| sort by primey asc 
+| extend prev1 = prev(primey,1) 
+| extend prev2 = prev(primey,2) 
+| extend specialIs = prev1 + prev2 + 1
+| where specialIs < 100000000
+| sort by specialIs desc
+| take 10
+
+Prime
+| sort by primey asc 
+| extend prev1 = prev(primey,1) 
+| extend prev2 = prev(primey,2) 
+| extend specialIs = prev1 + primey + 1
+| project specialIs
+| where  specialIs < 100000000
+| order by specialIs desc 
 | take 5
+
+
+let specials = Prime
+| sort by primey asc 
+| extend prev1 = prev(primey,1) 
+| extend prev2 = prev(primey,2) 
+//| extend specialIs = prev1 + prev2 + 1 // two neighboring prime numbers and 1
+| extend specialIs = prev1 + primey + 1 //this seems to be one neighbouring number, itself and 1. weird. but works.
+| project specialIs;
+Prime
+| join specials on $left.primey == $right.specialIs
+| where specialIs < 100000000
+| order by primey desc 
+| take 5
+
 ```
