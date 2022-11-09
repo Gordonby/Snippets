@@ -146,3 +146,45 @@ Votes
 | project vote, Percentage = round(Count*100.0 / Total, 1), Count
 | order by Count
 ```
+
+## 4
+
+```kql
+//check fields
+Traffic
+| take 5
+
+//get traffic data for when gang leave
+//for area near bank (bank located at 157th Ave / 148th Street)
+let bankCars = Traffic
+| where Timestamp between(datetime(2022-10-16T08:31:00Z) .. datetime(2022-10-16T08:40:00Z))
+| where Ave == 157
+| where Street == 148
+| project VIN
+| distinct VIN;
+
+//we need to grab traffic data to focus on end location now
+//filtering by the dataset above
+Traffic
+| where VIN in (bankCars)
+| where Timestamp between(datetime(2022-10-16T08:40:00Z) .. datetime(2022-10-16T11:00:00Z))
+| summarize count() by Ave, Street
+| where count_ > 2
+| order by count_ desc 
+
+//too much data :( 1442 results
+
+//trying arg_max (which seems to return the maximum value of a column)
+let bankCars = Traffic
+| where Timestamp between(datetime(2022-10-16T08:31:00Z) .. datetime(2022-10-16T08:40:00Z))
+| where Ave == 157
+| where Street == 148
+| project VIN
+| distinct VIN;
+Traffic
+| where Timestamp between(datetime(2022-10-16T08:40:00Z) .. datetime(2022-10-16T11:00:00Z))
+| where VIN in (bankCars)
+| summarize carStopDriving = arg_max(Timestamp, *) by VIN
+| summarize carCount = count() by Ave, Street
+| where carCount >= 3
+```
