@@ -121,4 +121,28 @@ Votes
 | extend Total = toscalar(T | summarize sum(Count))
 | project vote, Percentage = round(Count*100.0 / Total, 1), Count
 | order by Count
+
+//Ok, that method wasn't right... reboot.
+
+//Downscope to 1 second from 1 minute
+Votes
+| summarize count() by vote, via_ip, bin(Timestamp, 1s)
+| summarize avg(count_), max(count_) by vote
+
+//Analyse Suspicious time periods
+Votes
+| summarize count() by vote, via_ip, bin(Timestamp, 1s)
+| where count_ > 2
+| order by count_ asc 
+
+//Analyse Suspicious time periods
+//Real vote criteria
+Votes
+| summarize count() by vote, via_ip, bin(Timestamp, 1s)
+| where count_ <3
+| summarize Count=count() by vote
+| as hint.materialized=true T
+| extend Total = toscalar(T | summarize sum(Count))
+| project vote, Percentage = round(Count*100.0 / Total, 1), Count
+| order by Count
 ```
