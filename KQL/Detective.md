@@ -243,3 +243,81 @@ Prime
 | take 5
 
 ```
+
+## 6
+
+```kql
+//Split users, ips and channels to picture the users session
+let leftChannel = ChatLogs
+| where Message startswith "User "
+| where Message contains 'left the channel'
+| extend event = 'left'
+| extend user = substring(Message, 6,11)
+| extend channel = substring(Message, 37, 11)
+| project Timestamp, event, user, channel ;
+let sentToChannel = ChatLogs
+| where Message startswith "User "
+| where Message contains 'sent message to the channel'
+| extend event = 'sentmsg'
+| extend user = substring(Message, 6,11)
+| extend channel = substring(Message, 48, 11)
+| project Timestamp, event, user, channel ;
+let geoData =
+materialize (externaldata(network:string,geoname_id:string,continent_code:string,continent_name:string,
+country_iso_code:string,country_name:string,is_anonymous_proxy:string,is_satellite_provider:string)
+[@"https://raw.githubusercontent.com/datasets/geoip2-ipv4/master/data/geoip2-ipv4.csv"] with
+(ignoreFirstRecord=true, format="csv"));
+let userLogout = ChatLogs
+| where Message startswith "User "
+| where Message contains 'logged out from'
+| extend event = 'logout'
+| extend user = substring(Message, 6,11)
+| project Timestamp, event, user ;
+let userLogin = ChatLogs
+| where Message startswith "User "
+| where Message contains 'logged in from'
+| extend event = 'login'
+| extend user = substring(Message, 6,11)
+| extend ip = replace_regex(substring(Message, 34),"'","")
+//| evaluate ipv4_lookup(geoData, ip, network)
+| project Timestamp, event, user, ip ;
+let joinedChannel = ChatLogs
+| where Message startswith "User "
+| where Message contains 'joined the channel'
+| extend event = 'joined'
+| extend user = substring(Message, 6,11)
+| extend channel = substring(Message, 39,11)
+| project Timestamp, event, user, channel ;
+let session = userLogin
+| union joinedChannel, userLogout, sentToChannel, leftChannel
+| sort by user, Timestamp asc
+| extend rn=row_number()
+| extend counterbase= iif(event=='login',1,1)
+| extend eventStep=row_cumsum(counterbase,event == 'login')
+| extend sessionId = iif(event=='login',rn,rn-eventStep+1);
+session
+| take 10;
+// let suspiciousChannels = session
+// | summarize count(), didJoin=countif(event=='joined'), didSent=countif(event=='sentmsg'), user=max(user), ip=max(ip), channel=max(channel), min(Timestamp), max(Timestamp), JoinTime=minif(Timestamp, event=='joined') by sessionId
+// | where didJoin >0
+// | order by sessionId asc
+// | summarize count(user) by channel, bin(min_Timestamp,2m)
+// | where count_user == 4
+// | distinct channel;
+let suspiciousChannelTimes = session
+| where event == 'joined'
+| summarize count(user) by channel, bin(Timestamp, 1m)
+| where count_user ==4
+| project channel, timebin=Timestamp;
+let suspiciousChannels = suspiciousChannelTimes
+| distinct channel;
+session
+| where event == 'joined'
+| where channel in (suspiciousChannelTimes)
+| distinct channel, user
+| summarize distinctChannelUsers=count() by channel;
+session
+| summarize count(), didJoin=countif(event=='joined'), didSent=countif(event=='sentmsg'), user=max(user), ip=max(ip), channel=max(channel), min(Timestamp), max(Timestamp), JoinTime=minif(Timestamp, event=='joined') by sessionId
+| where channel == "cf053de3c7b"
+| distinct ip
+```
