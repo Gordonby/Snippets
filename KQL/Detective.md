@@ -1,3 +1,4 @@
+Full solutions in: https://github.com/Gordonby/kusto-detective-notes (private repo)
 
 ## 2
 
