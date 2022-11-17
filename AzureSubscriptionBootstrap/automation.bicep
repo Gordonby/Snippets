@@ -2,6 +2,9 @@ param automationAccountName string
 param location string = resourceGroup().location
 param today string = utcNow('yyyyMMddTHHmmssZ')
 
+@description('The timezone to align schedules to. (Eg. "Europe/London" or "America/Los_Angeles")')
+param timezone string = 'Etc/UTC'
+
 var tomorrow = dateTimeAdd(today, 'P1D','yyyy-MM-dd')
 var automationStartTimeMidnight = '${take(tomorrow,10)}T00:01:00+00:00'
 var automationStartTime9am = '${take(tomorrow,10)}T09:00:00+00:00'
@@ -75,7 +78,7 @@ resource automationScheduleNight 'Microsoft.Automation/automationAccounts/schedu
     expiryTime: '9999-12-31T23:59:00+00:00'
     interval: 1
     frequency: 'Day'
-    timeZone: 'Europe/London'
+    timeZone: timezone
     description: 'Daily out of hours schedule'
   }
 }
@@ -88,7 +91,7 @@ resource automationScheduleMorn 'Microsoft.Automation/automationAccounts/schedul
     expiryTime: '9999-12-31T23:59:00+00:00'
     interval: 1
     frequency: 'Day'
-    timeZone: 'Europe/London'
+    timeZone: timezone
     description: 'Daily out of hours schedule'
   }
 }
