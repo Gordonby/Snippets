@@ -1,5 +1,11 @@
 # Cheatsheet
 
+## get decoded secrets
+
+```
+kubectl get secrets/minecraft-storage-secret -n minecraft -o json | jq '.data | map_values(@base64d)'
+```
+
 ## scale up the nodepools
 
 ```powershell
