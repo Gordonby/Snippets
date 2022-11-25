@@ -12,3 +12,4 @@ az deployment group create -g $RG -u https://raw.githubusercontent.com/Gordonby/
 
 ### Check the deployed assets
 
+![image](https://user-images.githubusercontent.com/17914476/203985049-c1e873d8-eefa-441d-bb97-34cad4582853.png)
