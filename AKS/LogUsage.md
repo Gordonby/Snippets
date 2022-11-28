@@ -9,7 +9,7 @@ The compute cost is quite low as i'm using B-series VM's;
 
 ![image](https://user-images.githubusercontent.com/17914476/204270750-99800751-ed72-48a5-9dcf-2827ed679153.png)
 
-The logging cost racks in at $66
+The logging cost racks in at $66 for the same time period (Nov 1-27)
 
 ![image](https://user-images.githubusercontent.com/17914476/204271127-877806e5-412d-4421-80e5-852d9da72ba2.png)
 
