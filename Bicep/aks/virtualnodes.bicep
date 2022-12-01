@@ -1,6 +1,6 @@
 //Test file to see if VirtualNodes works via ARM.
 
-param nameseed string = 'gbtest3'
+param nameseed string = 'gbtest4'
 param location string = resourceGroup().location
 param virtualNodesSubnetName string = 'vnodes'
 param serviceCidr string = '172.10.0.0/16'
@@ -10,7 +10,7 @@ param dockerBridgeCidr string = '172.17.0.1/16'
 var aksSubnetName = 'aks'
 var aksSubnetId = '${virtualNetwork.id}/subnets/${aksSubnetName}'
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-05-01' = {
   name: 'vnet-${nameseed}'
   location: location
   properties: {
@@ -37,7 +37,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 }
 
 
-resource aksCluster 'Microsoft.ContainerService/managedClusters@2021-03-01' = {
+resource aksCluster 'Microsoft.ContainerService/managedClusters@2022-09-02-preview' = {
   name: 'aks-${nameseed}'
   location: location
   identity: {
