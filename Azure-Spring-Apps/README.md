@@ -36,3 +36,15 @@ Use the SQL Query Editor to run the SQL Commands
 
 ![image](https://user-images.githubusercontent.com/17914476/206221069-1e70d20e-71ae-4045-8529-c080dde0ede0.png)
 
+You can confirm the creation with this command
+
+```tsql
+SELECT name as username, create_date, 
+       modify_date, type_desc as type
+FROM sys.database_principals
+WHERE type not in ('A', 'G', 'R', 'X')
+      and sid is not null
+      and name != 'guest'
+```
+
+![image](https://user-images.githubusercontent.com/17914476/206222014-b94964bd-02a9-459a-8a8b-61f712b4c912.png)
