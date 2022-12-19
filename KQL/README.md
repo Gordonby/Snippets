@@ -21,3 +21,16 @@ print hasNonEmptyTable('KubeService')
 ContainerInventory |
 summarize count() by Repository, Image, ImageTag
 ```
+
+## AKS Container Logs - calculating start times from log times
+
+```kql
+ContainerLog
+| where LogEntry == 'Starting Bedrock server...' or LogEntry endswith 'Server started.'
+| project TimeGenerated, LogEntry
+| serialize TimeGenerated, LogEntry, SecondsToStart=datetime_diff('second', TimeGenerated, prev(TimeGenerated,1))
+| where LogEntry endswith 'Server started.' and SecondsToStart > 0
+| sort by TimeGenerated asc 
+| project format_datetime(TimeGenerated, 'yyyy-MM-dd'), SecondsToStart
+| render columnchart 
+```
