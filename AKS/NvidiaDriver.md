@@ -11,8 +11,11 @@ az deployment group create -g akspersist  --template-uri https://github.com/Azur
 
 ## Checking the driver version
 
-Running this command will create a pod where we can run some bash commands to check the installed version of the nvidia drivers.
+Grab the node name with `kubectl get nodes` then run this command with the name to check the host node for the current driver version.
 
 ```bash
-kubectl run -i --tty --rm bashdebug --image=ubuntu:latest --privileged=true --restart=Never -- bash
+kubectl debug node/aks-agentpool-53828973-vmss000000 -it --image=ubuntu:latest
 ```
+
+Then we can check the file system at;
+![image](https://user-images.githubusercontent.com/17914476/210365588-116a64be-8d22-42f9-aa03-1bd7de1234bd.png)
