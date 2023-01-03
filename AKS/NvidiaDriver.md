@@ -13,10 +13,17 @@ az deployment group create -g akspersist  --template-uri https://github.com/Azur
 	custom_vnet=true
 ```
 
+## Connect to the cluster
+
+```bash
+az aks get-credentials -g akspersist -n nvidiatest --admin
+
+kubectl get nodes
+```
 
 ## Checking the driver version
 
-Grab the node name with `kubectl get nodes` then run this command with the name to check the host node for the current driver version.
+Run this command to connect to the node, and inspect the Nvidia current driver version.
 
 ```bash
 kubectl debug node/aks-agentpool-53828973-vmss000000 -it --image=ubuntu:latest
@@ -25,3 +32,7 @@ kubectl debug node/aks-agentpool-53828973-vmss000000 -it --image=ubuntu:latest
 Then we can check the file system at;
 
 ![image](https://user-images.githubusercontent.com/17914476/210365588-116a64be-8d22-42f9-aa03-1bd7de1234bd.png)
+
+## Replacing the driver
+
+todo
