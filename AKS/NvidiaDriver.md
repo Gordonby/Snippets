@@ -18,4 +18,5 @@ kubectl debug node/aks-agentpool-53828973-vmss000000 -it --image=ubuntu:latest
 ```
 
 Then we can check the file system at;
+
 ![image](https://user-images.githubusercontent.com/17914476/210365588-116a64be-8d22-42f9-aa03-1bd7de1234bd.png)
