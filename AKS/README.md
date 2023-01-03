@@ -82,6 +82,12 @@ wget -O - https://mcr.microsoft.com/v2/aks/e2e/library-busybox/tags/list
 kubectl run -i --tty --rm debug --image=mcr.microsoft.com/aks/e2e/library-busybox:master.210526.1 --restart=Never -- sh
 ```
 
+## ubuntu for running bash
+
+```bash
+kubectl run -i --tty --rm bashdebug --image=ubuntu:latest --restart=Never -- bash
+```
+
 ## Create Namespace if exists
 
 ```bash
