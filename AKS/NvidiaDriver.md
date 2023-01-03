@@ -2,10 +2,15 @@
 
 ## Creating a test cluster
 
-Using AKSC, I'll create a cluster in a region where i have NVidia VM compute availability.
+Using [AKSC](https://azure.github.io/AKS-Construction/?ops=none&secure=low&deploy.rg=akspersist&deploy.clusterName=nvidiatest&cluster.SystemPoolType=none&cluster.agentCount=1&net.vnet_opt=custom&net.nsg=true&deploy.location=WestCentralUS&cluster.vmSize=Standard_NV6_Promo), I'll create a cluster in a region where i have NVidia VM compute availability.
 
 ```bash
-az deployment group create -g akspersist  --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.9.6/main.json -p resourceName=kubegeneralus agentCount=1 custom_vnet=true CreateNetworkSecurityGroups=true location=westcentralus
+az deployment group create -g akspersist  --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.9.6/main.json --parameters \
+	resourceName=nvidiatest \
+	agentCount=1 \
+	JustUseSystemPool=true \
+	agentVMSize=Standard_NV6_Promo \
+	custom_vnet=true
 ```
 
 
