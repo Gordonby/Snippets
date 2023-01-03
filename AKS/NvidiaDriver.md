@@ -14,5 +14,5 @@ az deployment group create -g akspersist  --template-uri https://github.com/Azur
 Running this command will create a pod where we can run some bash commands to check the installed version of the nvidia drivers.
 
 ```bash
-kubectl run -i --tty --rm bashdebug --image=ubuntu:latest --privileged=true --restart=Never -- bash`
+kubectl run -i --tty --rm bashdebug --image=ubuntu:latest --privileged=true --restart=Never -- bash
 ```
