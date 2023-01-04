@@ -5,7 +5,7 @@ These scripts show the creation of an AKS cluster and Azure Policy Deny effects.
 Note
 1. [Azure Policy uses Gatekeeper](https://learn.microsoft.com/azure/governance/policy/concepts/policy-for-kubernetes) which runs in cluster to enforce rules as an admission controller 
 2. Gatekeeper has a `fail open` behaviour as described [here](https://learn.microsoft.com/azure/governance/policy/troubleshoot/general#scenario-kubernetes-resource-gets-created-during-connectivity-failure-despite-deny-policy-being-assigned)
-3. There is a delay post cluster creation of ~15 minutes before Azure Policy/Gatekeeper
+3. There is a delay post cluster creation of ~15 minutes before Azure Policy/Gatekeeper enforces the policy controls
 
 ## Create cluster
 
