@@ -10,7 +10,9 @@ az deployment group create -g akspersist  --template-uri https://github.com/Azur
 	agentCount=1 \
 	JustUseSystemPool=true \
 	agentVMSize=Standard_NV6_Promo \
-	custom_vnet=true
+	custom_vnet=true \
+	omsagent=true \
+	retentionInDays=30
 ```
 
 ## Connect to the cluster
