@@ -38,7 +38,7 @@ It takes a little time before Azure Policy integrates with the new cluster.
 
 - 04/01/2023, 08:57:42 : deployment started
 - +3min 47s : deployment completed
-- + ~ 15mins : policy registered
+- +~ 15mins : policy registered
 
 ![image](https://user-images.githubusercontent.com/17914476/210522374-e70d1098-3f6e-430f-a396-55293e2769ac.png)
 
