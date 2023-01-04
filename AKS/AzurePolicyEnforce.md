@@ -50,6 +50,8 @@ kubectl run -i --tty --rm bashdebug --image=ubuntu:latest --privileged=true --re
 
 ![image](https://user-images.githubusercontent.com/17914476/210522526-93f536c6-6ca2-44d1-bdad-bf73a2ff3f97.png)
 
+Priviledged pod creation is prevented 👍
+
 ## Observed Behaviour
 
 Any priviledged pods created between cluster creation and azure policy enforcement will not be killed, their established sessions will continue to run
