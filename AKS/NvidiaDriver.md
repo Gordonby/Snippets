@@ -16,7 +16,7 @@ az deployment group create -g akspersist  --template-uri https://github.com/Azur
 ## Connect to the cluster
 
 ```bash
-az aks get-credentials -g akspersist -n nvidiatest --admin
+az aks get-credentials -g akspersist -n aks-nvidiatest --admin
 
 kubectl get nodes
 ```
