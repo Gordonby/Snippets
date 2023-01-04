@@ -9,7 +9,7 @@ Note
 
 ## Create cluster
 
-I used [AKSC](https://azure.github.io/AKS-Construction/?ops=none&secure=low&addons.azurepolicy=deny&addons.azurePolicyInitiative=Restricted&deploy.clusterName=policytest&deploy.rg=innerloop) to create a cluster of the correct spec.
+I used [AKSC](https://azure.github.io/AKS-Construction/?ops=none&secure=low&addons.azurepolicy=deny&addons.azurePolicyInitiative=Restricted&deploy.clusterName=policytest&deploy.rg=innerloop) to create a cluster of the correct spec. The bicep used for the Policy assignment can be seen [here](https://github.com/Azure/AKS-Construction/blob/839b85d7268cd5af7a823ecd5b55df7b0ca41b1e/bicep/main.bicep#L1331)
 
 ```bash
 # Create Resource Group
