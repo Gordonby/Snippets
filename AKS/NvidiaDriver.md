@@ -46,6 +46,9 @@ ls host/var/lib/dkms/nvidia/
 Starting out with alexeldeib's gist - we can download and customise this yaml file to replace the drivers
 https://gist.github.com/Gordonby/d330b451218f6d1a5e1fcafee272bc3e
 
+![image](https://user-images.githubusercontent.com/17914476/210591639-e033e38d-f9d6-4c80-be27-fca2172ccf25.png)
+
+
 ### Helm chart
 
 Refining the yaml file above a little results in a [small helm chart](https://github.com/Gordonby/minihelm/tree/gb-nvidia/samples/gpu-drivers). This helm chart can be installed on the cluster, easily varying the behaviour by tweaking the chart values.
