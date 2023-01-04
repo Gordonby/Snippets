@@ -53,3 +53,9 @@ https://gist.github.com/Gordonby/d330b451218f6d1a5e1fcafee272bc3e
 
 Refining the yaml file above a little results in a [small helm chart](https://github.com/Gordonby/minihelm/tree/gb-nvidia/samples/gpu-drivers). This helm chart can be installed on the cluster, easily varying the behaviour by tweaking the chart values.
 
+## Troubleshooting
+
+### Nc6 VM Size
+
+![image](https://user-images.githubusercontent.com/17914476/210595684-63b7888c-d788-4664-aeac-41030a20636d.png)
+
