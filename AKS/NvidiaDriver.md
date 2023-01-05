@@ -30,7 +30,6 @@ NODEPOOLNAME=$(az aks nodepool list -g akspersist --cluster-name aks-nvidiatest 
 az aks nodepool update -g akspersist --cluster-name aks-nvidiatest -n $NODEPOOLNAME --labels nvidiaDriver=515.65.01
 ```
 
-
 ## Checking the driver version
 
 Run this command to connect to the node, and inspect the Nvidia current driver version.
@@ -65,6 +64,13 @@ Refining the yaml file above a little results in a [small helm chart](https://gi
 helm upgrade --install gpudrivers525 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.1.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=525.60.13
 helm upgrade --install gpudrivers515 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.1.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=515.65.01
 ```
+
+![image](https://user-images.githubusercontent.com/17914476/210781836-83b33ef9-267f-4891-9f9f-cbd63932422f.png)
+
+![image](https://user-images.githubusercontent.com/17914476/210781901-da8f5f3d-649f-41e7-a890-49937a9b4ef9.png)
+
+![image](https://user-images.githubusercontent.com/17914476/210782129-a1d141b0-371b-495f-8312-be93f1685738.png)
+
 
 ## Troubleshooting
 
