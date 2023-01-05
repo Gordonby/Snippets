@@ -23,7 +23,7 @@ az aks get-credentials -g akspersist -n aks-nvidiatest --admin
 kubectl get nodes
 ```
 
-## Update node labels to specify node version
+## Update node labels to specify desired driver version
 
 ```bash
 NODEPOOLNAME=$(az aks nodepool list -g akspersist --cluster-name aks-nvidiatest --query [0].name -o tsv)
