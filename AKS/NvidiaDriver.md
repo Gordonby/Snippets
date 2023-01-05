@@ -23,6 +23,14 @@ az aks get-credentials -g akspersist -n aks-nvidiatest --admin
 kubectl get nodes
 ```
 
+## Update node labels to specify node version
+
+```bash
+NODEPOOLNAME=$(az aks nodepool list -g akspersist --cluster-name aks-nvidiatest --query [0].name -o tsv)
+az aks nodepool update -g akspersist --cluster-name aks-nvidiatest -n $NODEPOOLNAME --labels nvidiaDriver=515.65.01
+```
+
+
 ## Checking the driver version
 
 Run this command to connect to the node, and inspect the Nvidia current driver version.
