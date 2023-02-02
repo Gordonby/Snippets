@@ -15,4 +15,17 @@
   },
   "location": "westeurope"
 }
+
+{
+  "properties": {
+    "imageReference": {
+      "id": "/subscriptions/REDACTED/resourceGroups/REDACTED/providers/Microsoft.DevCenter/devcenters/REDACTED/galleries/default/images/microsoftwindowsdesktop_windows-ent-cpc_win11-22h2-ent-cpc-os"
+    },
+    "sku": {
+      "name": "general_a_4c16gb_v1"
+    },
+    "osStorageType": "ssd_1024gb"
+  },
+  "location": "westeurope"
+}
 ```
