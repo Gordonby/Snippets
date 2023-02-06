@@ -29,3 +29,30 @@
   "location": "westeurope"
 }
 ```
+
+ADE project environment type mapping
+```json
+{
+  "content": {
+    "properties": {
+      "deploymentTargetId": "/subscriptions/REDACTED",
+      "status": "Enabled",
+      "creatorRoleAssignment": {
+        "roles": {
+          "8e3af657-a8ff-443c-a75c-2fe8c4bcb635": {}
+        }
+      }
+    },
+    "identity": {
+      "type": "SystemAssigned"
+    },
+    "tags": {}
+  },
+  "httpMethod": "PUT",
+  "name": "Some-Random-GUID?",
+  "requestHeaderDetails": {
+    "commandName": "Microsoft_Azure_DevCenter.CreateProjectEnvironmentType"
+  },
+  "url": "https://management.azure.com/subscriptions/REDACTED/resourceGroups/REDACTED/providers/Microsoft.DevCenter/projects/developers/environmentTypes/Dev/?api-version=2022-11-11-preview"
+}
+```
