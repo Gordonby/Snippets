@@ -5,11 +5,11 @@
 Using [AKSC](https://azure.github.io/AKS-Construction/?ops=none&secure=low&deploy.rg=akspersist&deploy.clusterName=nvidiatest&cluster.SystemPoolType=none&cluster.agentCount=1&net.vnet_opt=custom&net.nsg=true&deploy.location=WestCentralUS&cluster.vmSize=Standard_NV6_Promo), I'll create a cluster in a region where i have NVidia VM compute availability.
 
 ```bash
-az deployment group create -g akspersist  --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.9.6/main.json --parameters \
+az deployment group create -g akspersist  --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.9.9/main.json --parameters \
 	resourceName=nvidiatest \
 	agentCount=1 \
 	JustUseSystemPool=true \
-	agentVMSize=Standard_NV6_Promo \
+	agentVMSize=standard_nc4as_t4_v3 \
 	custom_vnet=true \
 	omsagent=true \
 	retentionInDays=30
@@ -35,6 +35,9 @@ az aks nodepool update -g akspersist --cluster-name aks-nvidiatest -n $NODEPOOLN
 Run this command to connect to the node, and inspect the Nvidia current driver version.
 
 ```bash
+kubectl get nodes
+#Capture nodename then run debug
+
 kubectl debug node/aks-agentpool-53828973-vmss000000 -it --image=ubuntu:latest
 ```
 
@@ -61,8 +64,8 @@ https://gist.github.com/Gordonby/d330b451218f6d1a5e1fcafee272bc3e
 Refining the yaml file above a little results in a [small helm chart](https://github.com/Gordonby/minihelm/tree/main/samples/gpu-drivers). This helm chart can be installed on the cluster, easily varying the behaviour by tweaking the chart values.
 
 ```bash
-helm upgrade --install gpudrivers525 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.1.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=525.60.13
-helm upgrade --install gpudrivers515 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.1.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=515.65.01
+helm upgrade --install gpudrivers525 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.6.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=525.60.13
+helm upgrade --install gpudrivers515 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.6.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=515.65.01
 ```
 
 ![image](https://user-images.githubusercontent.com/17914476/210781836-83b33ef9-267f-4891-9f9f-cbd63932422f.png)
