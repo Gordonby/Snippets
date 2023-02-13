@@ -56,3 +56,20 @@ kubectl get nodes
 curl -sL https://github.com/Azure/AKS-Construction/releases/download/0.9.9/postdeploy.sh  | bash -s -- -r https://github.com/Azure/AKS-Construction/releases/download/0.9.9 \
 	-p ingress=traefik
 ```
+
+Still no joy with 1.25.5
+
+```output
+vents:
+  Type     Reason       Age   From               Message
+  ----     ------       ----  ----               -------
+  Normal   Scheduled    67s   default-scheduler  Successfully assigned ingress-basic/traefik-698fbdf876-np569 to aksnpwin1000000
+  Warning  FailedMount  68s   kubelet            MountVolume.SetUp failed for volume "kube-api-access-hqklr" : chown c:\var\lib\kubelet\pods\629fed07-5cf8-4292-949c-d18ef89665f8\volumes\kubernetes.io~projected\kube-api-access-hqklr\..2023_02_13_10_19_24.3854374129\token: not supported by windows
+  Warning  FailedMount  67s   kubelet            MountVolume.SetUp failed for volume "kube-api-access-hqklr" : chown c:\var\lib\kubelet\pods\629fed07-5cf8-4292-949c-d18ef89665f8\volumes\kubernetes.io~projected\kube-api-access-hqklr\..2023_02_13_10_19_25.3444154613\token: not supported by windows
+  Warning  FailedMount  66s   kubelet            MountVolume.SetUp failed for volume "kube-api-access-hqklr" : chown c:\var\lib\kubelet\pods\629fed07-5cf8-4292-949c-d18ef89665f8\volumes\kubernetes.io~projected\kube-api-access-hqklr\..2023_02_13_10_19_26.186096241\token: not supported by windows
+  Warning  FailedMount  64s   kubelet            MountVolume.SetUp failed for volume "kube-api-access-hqklr" : chown c:\var\lib\kubelet\pods\629fed07-5cf8-4292-949c-d18ef89665f8\volumes\kubernetes.io~projected\kube-api-access-hqklr\..2023_02_13_10_19_28.194380724\token: not supported by windows
+  Warning  FailedMount  60s   kubelet            MountVolume.SetUp failed for volume "kube-api-access-hqklr" : chown c:\var\lib\kubelet\pods\629fed07-5cf8-4292-949c-d18ef89665f8\volumes\kubernetes.io~projected\kube-api-access-hqklr\..2023_02_13_10_19_32.2622654037\token: not supported by windows
+  Warning  FailedMount  52s   kubelet            MountVolume.SetUp failed for volume "kube-api-access-hqklr" : chown c:\var\lib\kubelet\pods\629fed07-5cf8-4292-949c-d18ef89665f8\volumes\kubernetes.io~projected\kube-api-access-hqklr\..2023_02_13_10_19_40.873372529\token: not supported by windows
+  Warning  FailedMount  36s   kubelet            MountVolume.SetUp failed for volume "kube-api-access-hqklr" : chown c:\var\lib\kubelet\pods\629fed07-5cf8-4292-949c-d18ef89665f8\volumes\kubernetes.io~projected\kube-api-access-hqklr\..2023_02_13_10_19_56.2840237568\token: not supported by windows
+  Warning  FailedMount  4s    kubelet            MountVolume.SetUp failed for volume "kube-api-access-hqklr" : chown c:\var\lib\kubelet\pods\629fed07-5cf8-4292-949c-d18ef89665f8\volumes\kubernetes.io~projected\kube-api-access-hqklr\..2023_02_13_10_20_28.697201372\token: not supported by windows
+  ```
