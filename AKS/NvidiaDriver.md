@@ -23,6 +23,17 @@ az aks get-credentials -g akspersist -n aks-nvidiatest --admin
 kubectl get nodes
 ```
 
+## Check GPUs are not currently schedulable
+
+```bash
+kubectl describe nodes | grep nvidia.com/gpu:
+```
+
+This shows that GPU's are not schedulable
+
+![image](https://user-images.githubusercontent.com/17914476/218768561-970891f7-8575-4ab7-92df-9cae6ac46046.png)
+
+
 ## Update node labels to specify desired driver version
 
 ```bash
