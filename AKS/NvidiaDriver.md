@@ -38,8 +38,7 @@ Then we can check the file system at;
 ls host/var/lib/dkms/nvidia/
 ```
 
-
-## Check GPUs are not currently schedulable
+### Check GPUs are not currently schedulable
 
 ```bash
 kubectl describe nodes | grep nvidia.com/gpu:
@@ -50,6 +49,25 @@ This shows that GPU's are not schedulable
 ![image](https://user-images.githubusercontent.com/17914476/218768561-970891f7-8575-4ab7-92df-9cae6ac46046.png)
 
 
+### Creating the nvidia device plugin
+
+```bash
+kubectl create ns gpu-resources
+kubectl apply -f nvidiapluginaks.yml
+kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/main/nvidia-device-plugin.yml
+```
+
+### Check GPUs are not currently schedulable
+
+```bash
+kubectl describe nodes | grep nvidia.com/gpu:
+```
+
+You should find that they are now schedulable
+
+![image](https://user-images.githubusercontent.com/17914476/218795713-d0ebb2ef-d4a5-4d6e-bc01-2d85a1f5fb1f.png)
+
+
 ## Update node labels to specify desired driver version
 
 ```bash
@@ -57,20 +75,6 @@ NODEPOOLNAME=$(az aks nodepool list -g akspersist --cluster-name aks-nvidiatest 
 az aks nodepool update -g akspersist --cluster-name aks-nvidiatest -n $NODEPOOLNAME --labels nvidiaDriver=515.65.01
 ```
 
-## Checking the driver version (again!)
-
-Run this command to connect to the node, and inspect the Nvidia current driver version.
-
-```bash
-NODENAME=$(kubectl get nodes -o=jsonpath='{.items[0].metadata.name}')
-kubectl debug node/$NODENAME -it --image=ubuntu:latest
-```
-
-Then we can check the file system at;
-
-```bash
-ls host/var/lib/dkms/nvidia/
-```
 
 ![image](https://user-images.githubusercontent.com/17914476/210365588-116a64be-8d22-42f9-aa03-1bd7de1234bd.png)
 
@@ -91,6 +95,8 @@ Refining the yaml file above a little results in a [small helm chart](https://gi
 ```bash
 helm upgrade --install gpudrivers525 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.6.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=525.60.13
 helm upgrade --install gpudrivers515 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.6.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=515.65.01
+
+kubectl get all -n nvidiadriver
 ```
 
 ![image](https://user-images.githubusercontent.com/17914476/210781836-83b33ef9-267f-4891-9f9f-cbd63932422f.png)
@@ -99,6 +105,20 @@ helm upgrade --install gpudrivers515 https://github.com/Gordonby/minihelm/raw/ma
 
 ![image](https://user-images.githubusercontent.com/17914476/210782129-a1d141b0-371b-495f-8312-be93f1685738.png)
 
+## Checking the driver version (again!)
+
+Run this command to connect to the node, and inspect the Nvidia current driver version.
+
+```bash
+NODENAME=$(kubectl get nodes -o=jsonpath='{.items[0].metadata.name}')
+kubectl debug node/$NODENAME -it --image=ubuntu:latest
+```
+
+Then we can check the file system at;
+
+```bash
+ls host/var/lib/dkms/nvidia/
+```
 
 ## Troubleshooting
 
