@@ -18,10 +18,26 @@ az deployment group create -g akspersist  --template-uri https://github.com/Azur
 ## Connect to the cluster
 
 ```bash
-az aks get-credentials -g akspersist -n aks-nvidiatest --admin
+az aks get-credentials -g akspersist -n aks-nvidiatest --admin --overwrite-existing
 
 kubectl get nodes
 ```
+
+## Checking the driver version
+
+Run this command to connect to the node, and inspect the Nvidia current driver version.
+
+```bash
+NODENAME=$(kubectl get nodes -o=jsonpath='{.items[0].metadata.name}')
+kubectl debug node/$NODENAME -it --image=ubuntu:latest
+```
+
+Then we can check the file system at;
+
+```bash
+ls host/var/lib/dkms/nvidia/
+```
+
 
 ## Check GPUs are not currently schedulable
 
@@ -41,15 +57,13 @@ NODEPOOLNAME=$(az aks nodepool list -g akspersist --cluster-name aks-nvidiatest 
 az aks nodepool update -g akspersist --cluster-name aks-nvidiatest -n $NODEPOOLNAME --labels nvidiaDriver=515.65.01
 ```
 
-## Checking the driver version
+## Checking the driver version (again!)
 
 Run this command to connect to the node, and inspect the Nvidia current driver version.
 
 ```bash
-kubectl get nodes
-#Capture nodename then run debug
-
-kubectl debug node/aks-agentpool-53828973-vmss000000 -it --image=ubuntu:latest
+NODENAME=$(kubectl get nodes -o=jsonpath='{.items[0].metadata.name}')
+kubectl debug node/$NODENAME -it --image=ubuntu:latest
 ```
 
 Then we can check the file system at;
