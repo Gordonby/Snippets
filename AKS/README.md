@@ -8,6 +8,12 @@ NAMESPACE="default"
 k config set-context --current --namespace=$NAMESPACE
 ```
 
+## patch daemonset replacing arg value
+
+```bash
+kubectl patch daemonset.apps/gpudrivers515-gpu-drivers --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/args", "value": ["blah.sh"]}]'
+```
+
 ## delete first pod in namespace, wait and grab logs from newly created pod
 
 ```bash
