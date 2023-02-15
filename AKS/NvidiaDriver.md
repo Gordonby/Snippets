@@ -80,17 +80,9 @@ az aks nodepool update -g akspersist --cluster-name aks-nvidiatest -n $NODEPOOLN
 
 ## Replacing the driver
 
-### AdHoc daemonset
-
-Starting out with alexeldeib's gist - we can download and customise this yaml file to replace the drivers. This way to deploy does not leverage the node label we added earlier (that gets used by the helm chart), all config is set in the script itself.
-https://gist.github.com/Gordonby/d330b451218f6d1a5e1fcafee272bc3e
-
-![image](https://user-images.githubusercontent.com/17914476/210591639-e033e38d-f9d6-4c80-be27-fca2172ccf25.png)
-
-
 ### Helm chart
 
-Refining the yaml file above a little results in a [small helm chart](https://github.com/Gordonby/minihelm/tree/main/samples/gpu-drivers). This helm chart can be installed on the cluster, easily varying the behaviour by tweaking the chart values.
+A [small helm chart](https://github.com/Gordonby/minihelm/tree/main/samples/gpu-drivers) can be installed on the cluster, easily varying the behaviour (driver version, nodeSelectors) by tweaking the chart values.
 
 ```bash
 helm upgrade --install gpudrivers525 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.6.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=525.60.13
