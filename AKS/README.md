@@ -1,5 +1,28 @@
 # Cheatsheet
 
+## bootstrap
+
+```bash
+alias k="kubectl"
+$NAMESPACE="default"
+kubectl config set-context --current --namespace=$NAMESPACE
+```
+
+## delete first pod in namespace, wait and grab logs from newly created pod
+
+```bash
+PODNAME=$(k get po -o=jsonpath='{.items[0].metadata.name}');k delete po $PODNAME
+sleep 10s
+PODNAME=$(k get po -o=jsonpath='{.items[0].metadata.name}');k logs $PODNAME
+```
+
+## edit configmap with nano
+
+```bash
+KUBE_EDITOR="nano" kubectl edit configmap/gpudrivers515-gpu-drivers-script
+```
+
+
 ## debug as priviledged
 
 ```bash
