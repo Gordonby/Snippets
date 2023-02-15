@@ -57,7 +57,7 @@ kubectl apply -f nvidiapluginaks.yml
 kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/main/nvidia-device-plugin.yml
 ```
 
-### Check GPUs are not currently schedulable
+### Check GPUs are schedulable
 
 ```bash
 kubectl describe nodes | grep nvidia.com/gpu:
