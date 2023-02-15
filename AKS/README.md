@@ -4,8 +4,8 @@
 
 ```bash
 alias k="kubectl"
-$NAMESPACE="default"
-kubectl config set-context --current --namespace=$NAMESPACE
+NAMESPACE="default"
+k config set-context --current --namespace=$NAMESPACE
 ```
 
 ## delete first pod in namespace, wait and grab logs from newly created pod
