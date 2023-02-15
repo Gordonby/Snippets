@@ -112,7 +112,16 @@ ls host/var/lib/dkms/nvidia/
 
 ## Troubleshooting
 
+### EOF
+
+The kubectl logs command will fail if the node is not ready. This happens because the script restarts the kubelet. Just wait and try again.
+
+![image](https://user-images.githubusercontent.com/17914476/218998237-42a1f521-1ffa-49c2-8fe1-abe560faec20.png)
+
+
 ### Nc6 VM Size
+
+The NC6 is not compatible with the driver being pushed to it, here's what to expect in the logs.
 
 ![image](https://user-images.githubusercontent.com/17914476/210595684-63b7888c-d788-4664-aeac-41030a20636d.png)
 
