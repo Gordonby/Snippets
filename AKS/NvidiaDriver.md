@@ -52,8 +52,6 @@ This shows that GPU's are not schedulable
 ### Creating the nvidia device plugin
 
 ```bash
-kubectl create ns gpu-resources
-kubectl apply -f nvidiapluginaks.yml
 kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/main/nvidia-device-plugin.yml
 ```
 
