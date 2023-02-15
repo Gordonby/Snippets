@@ -1,5 +1,11 @@
 # Cheatsheet
 
+## debug as priviledged
+
+```bash
+kubectl run -i --tty --rm debug2 --image=mcr.microsoft.com/aks/e2e/library-busybox:master.210526.1 --restart=Never --overrides='{"spec": {"template": {"spec": {"containers": [{"securityContext": {"privileged": true} }]}}}}' -- sh
+```
+
 ## get decoded secrets
 
 ```
