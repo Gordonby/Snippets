@@ -5,7 +5,8 @@
 Using [AKSC](https://azure.github.io/AKS-Construction/?ops=none&secure=low&deploy.rg=akspersist&deploy.clusterName=nvidiatest&cluster.SystemPoolType=none&cluster.agentCount=1&net.vnet_opt=custom&net.nsg=true&deploy.location=WestCentralUS&cluster.vmSize=Standard_NV6_Promo), I'll create a cluster in a region where i have NVidia VM compute availability.
 
 ```bash
-az deployment group create -g akspersist  --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.9.9/main.json --parameters \
+RG="akspersist" #Settings Azure Resource Group Name
+az deployment group create -g $RG  --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.9.9/main.json --parameters \
 	resourceName=nvidiatest \
 	agentCount=1 \
 	JustUseSystemPool=true \
@@ -18,7 +19,7 @@ az deployment group create -g akspersist  --template-uri https://github.com/Azur
 ## Connect to the cluster
 
 ```bash
-az aks get-credentials -g akspersist -n aks-nvidiatest --admin --overwrite-existing
+az aks get-credentials -g $RG -n aks-nvidiatest --admin --overwrite-existing
 
 kubectl get nodes
 ```
@@ -69,8 +70,8 @@ You should find that they are now schedulable
 ## Update node labels to specify desired driver version
 
 ```bash
-NODEPOOLNAME=$(az aks nodepool list -g akspersist --cluster-name aks-nvidiatest --query [0].name -o tsv)
-az aks nodepool update -g akspersist --cluster-name aks-nvidiatest -n $NODEPOOLNAME --labels nvidiaDriver=515.65.01
+NODEPOOLNAME=$(az aks nodepool list -g $RG --cluster-name aks-nvidiatest --query [0].name -o tsv)
+az aks nodepool update -g $RG --cluster-name aks-nvidiatest -n $NODEPOOLNAME --labels nvidiaDriver=515.65.01
 ```
 
 
