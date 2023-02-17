@@ -86,7 +86,7 @@ helm upgrade --install --wait nvidiagpuop \
 
 The node labels from v1.11.0;
 
-![image](https://user-images.githubusercontent.com/17914476/219676287-2279215f-6ecb-4022-8f23-b5f3519cacd0.png)
+![image](https://user-images.githubusercontent.com/17914476/219677230-02f0f258-8d7c-4099-ae97-f767fb11b001.png)
 
 ![image](https://user-images.githubusercontent.com/17914476/219676669-973ec1a5-de28-4f55-9b96-e2a1cdd29090.png)
 
