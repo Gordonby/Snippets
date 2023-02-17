@@ -65,7 +65,7 @@ We can see that the AKS nodes are indeed labelled with `pre-installed`
 This [GitHub issue](https://github.com/NVIDIA/gpu-operator/issues/476) indicates that this is not a scenario that GPU Operator caters for;
 
  
-### Attempted Workaround
+### Attempted Workaround - old version
 
 In order to get GPU Operator controlling the nvidia plugin version AND the driver version, we can try a version of GPU Operator before the `pre-installed` check was added (v1.11.0).
 
@@ -92,3 +92,26 @@ The node labels from v1.11.0;
 
 So it looks like the upgrade is just skipped. 
 The new `pre-installed` label is not added, but the behaviour is unchanged.
+
+
+### Attempted Workaround - different image
+
+Trying to comment out the "skip uninstallation" code in the docker image and repointing the helm chart to the patched code to see if uninstall still works.
+
+```bash
+helm repo add nvidia https://helm.ngc.nvidia.com/nvidia
+helm repo update
+helm upgrade --install nvidiagpuop \
+   -n gpu-operator --create-namespace \
+   nvidia/gpu-operator \
+   --set driver.repository=docker.io/nvidia \
+   --set driver.version="515.65.01" \
+   --set driver.manager.repository=docker.io/alexeldeib \
+   --set driver.manager.image=k8s-driver-manager \
+   --set driver.manager.version=v0.6.0-ubi8 \
+   --set toolkit.enabled=true \
+   --set psp.enabled=false \
+   --set nfd.enabled=true
+
+ kubectl get pods -n gpu-operator
+```
