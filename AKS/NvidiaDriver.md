@@ -89,6 +89,8 @@ helm upgrade --install gpudrivers515 https://github.com/Gordonby/minihelm/raw/ma
 kubectl get all -n nvidiadriver
 ```
 
+> It'll take about 2 minutes for the uninstall + install to complete
+
 ![image](https://user-images.githubusercontent.com/17914476/210781836-83b33ef9-267f-4891-9f9f-cbd63932422f.png)
 
 ![image](https://user-images.githubusercontent.com/17914476/210781901-da8f5f3d-649f-41e7-a890-49937a9b4ef9.png)
