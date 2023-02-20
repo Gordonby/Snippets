@@ -74,7 +74,6 @@ NODEPOOLNAME=$(az aks nodepool list -g $RG --cluster-name aks-nvidiatest --query
 az aks nodepool update -g $RG --cluster-name aks-nvidiatest -n $NODEPOOLNAME --labels nvidiaDriver=515.65.01
 ```
 
-
 ![image](https://user-images.githubusercontent.com/17914476/210365588-116a64be-8d22-42f9-aa03-1bd7de1234bd.png)
 
 ## Replacing the driver
@@ -84,8 +83,8 @@ az aks nodepool update -g $RG --cluster-name aks-nvidiatest -n $NODEPOOLNAME --l
 A [small helm chart](https://github.com/Gordonby/minihelm/tree/main/samples/gpu-drivers) can be installed on the cluster, easily varying the behaviour (driver version, nodeSelectors) by tweaking the chart values.
 
 ```bash
-helm upgrade --install gpudrivers525 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.6.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=525.60.13
-helm upgrade --install gpudrivers515 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.1.6.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=515.65.01
+helm upgrade --install gpudrivers525 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.2.0.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=525.60.13
+helm upgrade --install gpudrivers515 https://github.com/Gordonby/minihelm/raw/main/samples/gpu-drivers-0.2.0.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=515.65.01
 
 kubectl get all -n nvidiadriver
 ```
