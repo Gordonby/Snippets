@@ -89,7 +89,7 @@ helm upgrade --install gpudrivers515 https://raw.githubusercontent.com/Gordonby/
 kubectl get all -n nvidiadriver
 ```
 
-> It'll take about 2 minutes for the uninstall + install to complete
+> It'll take about 2 minutes for the uninstall + install to complete, during which time the kubelet on the node will be restarted. This causes the node to report as `NotReady` when querying the node status.
 
 ![image](https://user-images.githubusercontent.com/17914476/210781836-83b33ef9-267f-4891-9f9f-cbd63932422f.png)
 
