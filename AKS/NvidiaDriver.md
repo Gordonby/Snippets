@@ -80,7 +80,7 @@ az aks nodepool update -g $RG --cluster-name aks-nvidiatest -n $NODEPOOLNAME --l
 
 ### Helm chart
 
-A [small helm chart](https://github.com/Gordonby/minihelm/tree/main/samples/gpu-drivers) can be installed on the cluster, easily varying the behaviour (driver version, nodeSelectors) by tweaking the chart values.
+A [helm chart](https://github.com/Gordonby/minihelm/tree/main/samples/gpu-drivers) is used to create a daemonset on this cluster. The `gpuDriverVersion` parameter in the helm values is used as a `NodeSelector` which maps to the Node Label we added in the last step. The daemonset ensures a shell script is run on each node which uninstalls & installs the NVidia driver.
 
 ```bash
 helm upgrade --install gpudrivers525 https://raw.githubusercontent.com/Gordonby/minihelm/main/samples/gpu-drivers-0.2.1.tgz -n nvidiadriver --create-namespace --set gpuDriverVersion=525.60.13
@@ -116,7 +116,7 @@ ls host/var/lib/dkms/nvidia/
 
 ### EOF
 
-The kubectl logs command will fail if the node is not ready. This happens because the script restarts the kubelet. Just wait and try again.
+The kubectl logs command will fail if the node is not ready. This happens because the script restarts the kubelet. Just wait and try again. Alternatively leverage Azure monitor (or your cluster logging solution) to query the Container Logs.
 
 ![image](https://user-images.githubusercontent.com/17914476/218998237-42a1f521-1ffa-49c2-8fe1-abe560faec20.png)
 
