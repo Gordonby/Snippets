@@ -5,7 +5,9 @@ A collection of scripts that can be leveraged;
 
 In order to fulfill easy workstation configuration, just run using the AzureVMCustomScript extension or in a local PowerShell window (admin priv. required).
 
-eg. Here's how i've used the PowerShell files to setup a new laptop;
+## Local Setup
+
+These steps represent what is run on my local workstation when a fresh setup is required.
 
 ### Windows PowerShell (as admin)
 
