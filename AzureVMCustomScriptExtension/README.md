@@ -17,7 +17,7 @@ Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/Azu
 #Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/devdotnet.ps1 -UseBasicParsing | Invoke-Expression
 
 # Create a well configured PowerShell Profile file for common aliases, etc.
-https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/PowerShellProfile.ps1
+Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/PowerShellProfile.ps1 -UseBasicParsing | Invoke-Expression
 
 Restart-Computer
 
