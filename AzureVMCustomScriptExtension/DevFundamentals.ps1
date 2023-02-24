@@ -6,10 +6,11 @@ Invoke-WebRequest https://chocolatey.org/install.ps1 -UseBasicParsing | Invoke-E
 choco install 7zip -y
 choco install adobereader -y
 choco install ffmpeg -y
-choco install Firefox -y
+choco install Firefox -y #
 choco install GoogleChrome -y
-choco install paint.net -y
-choco install pwsh -y
+choco install paint.net -y #DotNet based paint program thats free
+choco install pwsh -y #PowerShell (not Windows PowerShell :D)
+choco install lightshot -y #Better screengrabs
 
 #Install azure apps
 choco install azcopy10 -y
