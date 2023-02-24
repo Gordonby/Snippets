@@ -46,6 +46,7 @@ sudo apt update
 (These should be automation)
 
 1. Configure Docker-Desktop settings. Untick `Start Docker Desktop when you log in`
+1. Configure Docker-Desktop WSL integration. Settings > Resources > WSL Integration.
 1. Open VSCode, Enable Settings Sync, Sign in, Wait
 1. Open GitHub, Sign in, Follow Configure Git prompts
 2. 
