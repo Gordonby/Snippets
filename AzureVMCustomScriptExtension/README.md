@@ -47,3 +47,5 @@ sudo apt update
 
 1. Configure Docker-Desktop settings. Untick `Start Docker Desktop when you log in`
 1. Open VSCode, Enable Settings Sync, Sign in, Wait
+1. Open GitHub, Sign in, Follow Configure Git prompts
+2. 
