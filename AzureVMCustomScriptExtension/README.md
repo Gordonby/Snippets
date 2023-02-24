@@ -7,6 +7,8 @@ In order to fulfill easy workstation configuration, just run using the AzureVMCu
 
 eg. Here's how i've used the PowerShell files to setup a new laptop;
 
+### Windows PowerShell (as admin)
+
 ```powershell
 If ((Get-ExecutionPolicy) -ne 'RemoteSigned') {Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force}
 
@@ -16,9 +18,23 @@ Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/Azu
 # Install dotnet developer persona applications
 #Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/devdotnet.ps1 -UseBasicParsing | Invoke-Expression
 
-# Create a well configured PowerShell Profile file for common aliases, etc.
-Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/PowerShellProfile.ps1 -UseBasicParsing | Invoke-Expression
-
 Restart-Computer
 
 ```
+
+### Pwsh (as admin)
+
+```powershell
+If ((Get-ExecutionPolicy) -ne 'RemoteSigned') {Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force}
+
+# Create a well configured PowerShell Profile file for common aliases, etc.
+Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/PowerShellProfile.ps1 -UseBasicParsing | Invoke-Expression
+
+```
+
+### Manual steps
+
+(These should be automation)
+
+1. Configure Docker-Desktop settings. Untick `Start Docker Desktop when you log in`
+
