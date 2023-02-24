@@ -3,7 +3,7 @@ A collection of scripts that can be leveraged;
 - During creation of an Azure Virtual Machine
 - From within a Virtual Machine or local workstation
 
-In order to fulfill easy workstation configuration.
+In order to fulfill easy workstation configuration, just run using the AzureVMCustomScript extension or in a local PowerShell window (admin priv. required).
 
 eg.
 
