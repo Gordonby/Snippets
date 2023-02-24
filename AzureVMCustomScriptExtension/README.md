@@ -32,6 +32,9 @@ If ((Get-ExecutionPolicy) -ne 'RemoteSigned') {Set-ExecutionPolicy -ExecutionPol
 # Create a well configured PowerShell Profile file for common aliases, etc.
 Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/PowerShellProfile.ps1 -UseBasicParsing | Invoke-Expression
 
+# Setup VSCode extensions
+Invoke-WebRequest  https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/VsCodeExtensions.ps1 -UseBasicParsing | Invoke-Expression
+
 # Windows Subsystem for linux
 Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/wsl.ps1 -UseBasicParsing | Invoke-Expression
 
