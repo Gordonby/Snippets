@@ -9,6 +9,8 @@ spec:
       app: azure-vote-back
   template:
     metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
       labels:
         app: azure-vote-back
         role: backend
@@ -38,7 +40,8 @@ kind: Deployment
 metadata:
   name: azure-vote-front
 spec:
-  replicas: 1
+  replicas: 3
+  maxUnavailable: 1
   selector:
     matchLabels:
       app: azure-vote-front
@@ -49,6 +52,8 @@ spec:
   minReadySeconds: 5 
   template:
     metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
       labels:
         app: azure-vote-front
         role: frontend
