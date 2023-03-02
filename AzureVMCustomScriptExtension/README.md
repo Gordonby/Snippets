@@ -60,6 +60,6 @@ sudo apt update
 
 
 #### Windows personalisation
-1. Change the mouse pointer style to custom, turqoise colour and size 3.
+1. Change the mouse pointer style to custom, turqoise colour and size 2.
 2. 
 
