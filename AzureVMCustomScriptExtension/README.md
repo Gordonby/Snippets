@@ -62,4 +62,5 @@ sudo apt update
 #### Windows personalisation
 1. Change the mouse pointer style to custom, turqoise colour and size 2.
 2. Add a new Edge browser profile for other profiles (eg. independant azure tenant, other GitHub account)
+3. Windows terminal pin to start
 
