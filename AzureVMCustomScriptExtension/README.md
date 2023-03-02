@@ -48,7 +48,7 @@ sudo apt update
 
 ### Manual steps
 
-(These should be automation)
+(These should be automation.. at some point, but might need registry hacks)
 
 1. Configure Docker-Desktop settings. Untick `Start Docker Desktop when you log in`
 1. Configure Docker-Desktop WSL integration. Settings > Resources > WSL Integration.
@@ -57,5 +57,9 @@ sudo apt update
 
 #### Hardware specific
 1. Download and install the Microsoft Mouse and Keyboard Center software (MS Precision mouse) https://go.microsoft.com/fwlink/?linkid=849754
+
+
+#### Windows personalisation
+1. Change the mouse pointer style to custom, turqoise colour and size 3.
 2. 
 
