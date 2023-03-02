@@ -12,6 +12,7 @@ choco install paint.net -y #DotNet based paint program thats free
 choco install pwsh -y #PowerShell (not Windows PowerShell :D)
 choco install lightshot -y #Better screengrabs
 choco install screentogif -y #Animated gif maker
+choco install remote-desktop-client -y
 
 #Install azure apps
 choco install azcopy10 -y
