@@ -9,6 +9,9 @@ sudo snap install powershell --classic
 sudo snap install helm --classic
 sudo snap install kubectl --classic
 
+#Install other tools
+sudo apt install jq
+
 #Install Node16
 curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
