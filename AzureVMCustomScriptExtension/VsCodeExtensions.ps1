@@ -1,3 +1,4 @@
+code --install-extension humao.rest-client
 code --install-extension Acrolinx.vscode-sidebar
 code --install-extension AzurePolicy.azurepolicyextension
 code --install-extension Azurite.azurite
