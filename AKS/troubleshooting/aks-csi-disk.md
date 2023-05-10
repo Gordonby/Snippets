@@ -13,4 +13,6 @@ I opted out of the CSI disk driver as none of the existing workloads on the clus
 
 ## The fix
 
+```bash
 az aks update -n <clustername> -g <resourcegroup> --enable-disk-driver
+```
