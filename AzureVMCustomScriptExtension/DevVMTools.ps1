@@ -8,6 +8,7 @@ choco install kubernetes-cli -y
 choco install git -y
 choco install kubernetes-helm -y
 choco install flux -y
+choco install postman -y
 
 new-alias k kubectl
 
