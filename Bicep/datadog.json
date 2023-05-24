@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.17.1.54307",
+      "templateHash": "5964597579557460092"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Datadog/monitors",
+      "apiVersion": "2022-06-01",
+      "name": "dd1",
+      "location": "westus2",
+      "properties": {
+        "datadogOrganizationProperties": {
+          "name": "Contoso",
+          "apiKey": "blergh"
+        },
+        "monitoringStatus": "Disabled",
+        "userInfo": {
+          "emailAddress": "gobyers@microsoft.com",
+          "name": "Gordon",
+          "phoneNumber": "555-555-5555"
+        },
+        "sku": {
+          "name": "payg_v2_Monthly"
+        }
+      }
+    }
+  ]
+}
