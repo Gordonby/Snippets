@@ -18,3 +18,11 @@ DetectiveCases
 | summarize count(b_Bounty), sum(toint(b_Bounty)) by DetectiveId
 | order by sum_b_Bounty desc 
 ```
+
+## 2
+
+Consumption 
+| summarize max(Consumed) by HouseholdId, Timestamp, MeterType
+| summarize sum(max_Consumed) by  MeterType
+| join Costs on MeterType
+| summarize sum(sum_max_Consumed * Cost)
