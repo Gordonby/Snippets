@@ -21,8 +21,10 @@ DetectiveCases
 
 ## 2
 
+```kql
 Consumption 
 | summarize max(Consumed) by HouseholdId, Timestamp, MeterType
 | summarize sum(max_Consumed) by  MeterType
 | join Costs on MeterType
 | summarize sum(sum_max_Consumed * Cost)
+```
