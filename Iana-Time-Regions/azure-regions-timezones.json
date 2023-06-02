@@ -1,0 +1,308 @@
+[
+  {
+    "name": "eastus",
+    "long": "-79.8164",
+    "lat": "37.3719",
+    "timeZone": "America/New_York"
+  },
+  {
+    "name": "eastus2",
+    "long": "-78.3889",
+    "lat": "36.6681",
+    "timeZone": "America/New_York"
+  },
+  {
+    "name": "southcentralus",
+    "long": "-98.5",
+    "lat": "29.4167",
+    "timeZone": "America/Chicago"
+  },
+  {
+    "name": "westus2",
+    "long": "-119.852",
+    "lat": "47.233",
+    "timeZone": "America/Los_Angeles"
+  },
+  {
+    "name": "westus3",
+    "long": "-112.074036",
+    "lat": "33.448376",
+    "timeZone": "America/Phoenix"
+  },
+  {
+    "name": "australiaeast",
+    "long": "151.2094",
+    "lat": "-33.86",
+    "timeZone": "Australia/Sydney"
+  },
+  {
+    "name": "southeastasia",
+    "long": "103.833",
+    "lat": "1.283",
+    "timeZone": "Asia/Singapore"
+  },
+  {
+    "name": "northeurope",
+    "long": "-6.2597",
+    "lat": "53.3478",
+    "timeZone": "Europe/Dublin"
+  },
+  {
+    "name": "swedencentral",
+    "long": "17.14127",
+    "lat": "60.67488",
+    "timeZone": "Europe/Stockholm"
+  },
+  {
+    "name": "uksouth",
+    "long": "-0.799",
+    "lat": "50.941",
+    "timeZone": "Europe/London"
+  },
+  {
+    "name": "westeurope",
+    "long": "4.9",
+    "lat": "52.3667",
+    "timeZone": "Europe/Amsterdam"
+  },
+  {
+    "name": "centralus",
+    "long": "-93.6208",
+    "lat": "41.5908",
+    "timeZone": "America/Chicago"
+  },
+  {
+    "name": "southafricanorth",
+    "long": "28.21837",
+    "lat": "-25.73134",
+    "timeZone": "Africa/Johannesburg"
+  },
+  {
+    "name": "centralindia",
+    "long": "73.9197",
+    "lat": "18.5822",
+    "timeZone": "Asia/Kolkata"
+  },
+  {
+    "name": "eastasia",
+    "long": "114.188",
+    "lat": "22.267",
+    "timeZone": "Asia/Hong_Kong"
+  },
+  {
+    "name": "japaneast",
+    "long": "139.77",
+    "lat": "35.68",
+    "timeZone": "Asia/Tokyo"
+  },
+  {
+    "name": "koreacentral",
+    "long": "126.978",
+    "lat": "37.5665",
+    "timeZone": "Asia/Seoul"
+  },
+  {
+    "name": "canadacentral",
+    "long": "-79.383",
+    "lat": "43.653",
+    "timeZone": "America/Toronto"
+  },
+  {
+    "name": "francecentral",
+    "long": "2.373",
+    "lat": "46.3772",
+    "timeZone": "Europe/Paris"
+  },
+  {
+    "name": "germanywestcentral",
+    "long": "8.682127",
+    "lat": "50.110924",
+    "timeZone": "Europe/Berlin"
+  },
+  {
+    "name": "norwayeast",
+    "long": "10.752245",
+    "lat": "59.913868",
+    "timeZone": "Europe/Oslo"
+  },
+  {
+    "name": "polandcentral",
+    "long": "21.01666",
+    "lat": "52.23334",
+    "timeZone": "Europe/Warsaw"
+  },
+  {
+    "name": "switzerlandnorth",
+    "long": "8.564572",
+    "lat": "47.451542",
+    "timeZone": "Europe/Zurich"
+  },
+  {
+    "name": "uaenorth",
+    "long": "55.316666",
+    "lat": "25.266666",
+    "timeZone": "Asia/Dubai"
+  },
+  {
+    "name": "brazilsouth",
+    "long": "-46.633",
+    "lat": "-23.55",
+    "timeZone": "America/Sao_Paulo"
+  },
+  {
+    "name": "centraluseuap",
+    "long": "-93.6208",
+    "lat": "41.5908",
+    "timeZone": "America/Chicago"
+  },
+  {
+    "name": "eastus2euap",
+    "long": "-78.3889",
+    "lat": "36.6681",
+    "timeZone": "America/New_York"
+  },
+  {
+    "name": "qatarcentral",
+    "long": "51.439327",
+    "lat": "25.551462",
+    "timeZone": "Asia/Qatar"
+  },
+  {
+    "name": "eastusstg",
+    "long": "-79.8164",
+    "lat": "37.3719",
+    "timeZone": "America/New_York"
+  },
+  {
+    "name": "northcentralus",
+    "long": "-87.6278",
+    "lat": "41.8819",
+    "timeZone": "America/Chicago"
+  },
+  {
+    "name": "westus",
+    "long": "-122.417",
+    "lat": "37.783",
+    "timeZone": "America/Los_Angeles"
+  },
+  {
+    "name": "jioindiawest",
+    "long": "70.05773",
+    "lat": "22.470701",
+    "timeZone": "Asia/Kolkata"
+  },
+  {
+    "name": "southcentralusstg",
+    "long": "-98.5",
+    "lat": "29.4167",
+    "timeZone": "America/Chicago"
+  },
+  {
+    "name": "westcentralus",
+    "long": "-110.234",
+    "lat": "40.89",
+    "timeZone": "America/Denver"
+  },
+  {
+    "name": "southafricawest",
+    "long": "18.843266",
+    "lat": "-34.075691",
+    "timeZone": "Africa/Johannesburg"
+  },
+  {
+    "name": "australiacentral",
+    "long": "149.1244",
+    "lat": "-35.3075",
+    "timeZone": "Australia/Sydney"
+  },
+  {
+    "name": "australiacentral2",
+    "long": "149.1244",
+    "lat": "-35.3075",
+    "timeZone": "Australia/Sydney"
+  },
+  {
+    "name": "australiasoutheast",
+    "long": "144.9631",
+    "lat": "-37.8136",
+    "timeZone": "Australia/Melbourne"
+  },
+  {
+    "name": "japanwest",
+    "long": "135.5022",
+    "lat": "34.6939",
+    "timeZone": "Asia/Tokyo"
+  },
+  {
+    "name": "jioindiacentral",
+    "long": "79.08886",
+    "lat": "21.146633",
+    "timeZone": "Asia/Kolkata"
+  },
+  {
+    "name": "koreasouth",
+    "long": "129.0756",
+    "lat": "35.1796",
+    "timeZone": "Asia/Seoul"
+  },
+  {
+    "name": "southindia",
+    "long": "80.1636",
+    "lat": "12.9822",
+    "timeZone": "Asia/Kolkata"
+  },
+  {
+    "name": "westindia",
+    "long": "72.868",
+    "lat": "19.088",
+    "timeZone": "Asia/Kolkata"
+  },
+  {
+    "name": "canadaeast",
+    "long": "-71.217",
+    "lat": "46.817",
+    "timeZone": "America/Toronto"
+  },
+  {
+    "name": "francesouth",
+    "long": "2.1972",
+    "lat": "43.8345",
+    "timeZone": "Europe/Paris"
+  },
+  {
+    "name": "germanynorth",
+    "long": "8.806422",
+    "lat": "53.073635",
+    "timeZone": "Europe/Berlin"
+  },
+  {
+    "name": "norwaywest",
+    "long": "5.733107",
+    "lat": "58.969975",
+    "timeZone": "Europe/Oslo"
+  },
+  {
+    "name": "switzerlandwest",
+    "long": "6.143158",
+    "lat": "46.204391",
+    "timeZone": "Europe/Zurich"
+  },
+  {
+    "name": "ukwest",
+    "long": "-3.084",
+    "lat": "53.427",
+    "timeZone": "Europe/London"
+  },
+  {
+    "name": "uaecentral",
+    "long": "54.366669",
+    "lat": "24.466667",
+    "timeZone": "Asia/Dubai"
+  },
+  {
+    "name": "brazilsoutheast",
+    "long": "-43.2075",
+    "lat": "-22.90278",
+    "timeZone": "America/Sao_Paulo"
+  }
+]
