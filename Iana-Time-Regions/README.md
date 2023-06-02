@@ -31,6 +31,6 @@ $regions | Select-Object name, timeZone | ConvertTo-Json | Out-File azure-region
 I also want the Json in a custom format, which would be easy in Bash with JQ, but in PowerShell is a bit more dirty
 
 ```powershell
-$jsonHack = $regions | % { Write-Output """$($_.name)"" : ""$($_.timeZone)"""  } | Join-String -Separator ','
+$jsonHack = $regions | Sort-Object Name | % { Write-Output """$($_.name)"" : ""$($_.timeZone)"""  } | Join-String -Separator ','
 "{$($jsonHack)}" | Out-File ./azure-region-lookup.json
 ```
