@@ -1,0 +1,488 @@
+[
+  {
+    "geo": "US",
+    "lat": "37.3719",
+    "long": "-79.8164",
+    "name": "eastus"
+  },
+  {
+    "geo": "US",
+    "lat": "36.6681",
+    "long": "-78.3889",
+    "name": "eastus2"
+  },
+  {
+    "geo": "US",
+    "lat": "29.4167",
+    "long": "-98.5",
+    "name": "southcentralus"
+  },
+  {
+    "geo": "US",
+    "lat": "47.233",
+    "long": "-119.852",
+    "name": "westus2"
+  },
+  {
+    "geo": "US",
+    "lat": "33.448376",
+    "long": "-112.074036",
+    "name": "westus3"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "-33.86",
+    "long": "151.2094",
+    "name": "australiaeast"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "1.283",
+    "long": "103.833",
+    "name": "southeastasia"
+  },
+  {
+    "geo": "Europe",
+    "lat": "53.3478",
+    "long": "-6.2597",
+    "name": "northeurope"
+  },
+  {
+    "geo": "Europe",
+    "lat": "60.67488",
+    "long": "17.14127",
+    "name": "swedencentral"
+  },
+  {
+    "geo": "Europe",
+    "lat": "50.941",
+    "long": "-0.799",
+    "name": "uksouth"
+  },
+  {
+    "geo": "Europe",
+    "lat": "52.3667",
+    "long": "4.9",
+    "name": "westeurope"
+  },
+  {
+    "geo": "US",
+    "lat": "41.5908",
+    "long": "-93.6208",
+    "name": "centralus"
+  },
+  {
+    "geo": "Africa",
+    "lat": "-25.73134",
+    "long": "28.21837",
+    "name": "southafricanorth"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "18.5822",
+    "long": "73.9197",
+    "name": "centralindia"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "22.267",
+    "long": "114.188",
+    "name": "eastasia"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "35.68",
+    "long": "139.77",
+    "name": "japaneast"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "37.5665",
+    "long": "126.978",
+    "name": "koreacentral"
+  },
+  {
+    "geo": "Canada",
+    "lat": "43.653",
+    "long": "-79.383",
+    "name": "canadacentral"
+  },
+  {
+    "geo": "Europe",
+    "lat": "46.3772",
+    "long": "2.373",
+    "name": "francecentral"
+  },
+  {
+    "geo": "Europe",
+    "lat": "50.110924",
+    "long": "8.682127",
+    "name": "germanywestcentral"
+  },
+  {
+    "geo": "Europe",
+    "lat": "59.913868",
+    "long": "10.752245",
+    "name": "norwayeast"
+  },
+  {
+    "geo": "Europe",
+    "lat": "52.23334",
+    "long": "21.01666",
+    "name": "polandcentral"
+  },
+  {
+    "geo": "Europe",
+    "lat": "47.451542",
+    "long": "8.564572",
+    "name": "switzerlandnorth"
+  },
+  {
+    "geo": "Middle East",
+    "lat": "25.266666",
+    "long": "55.316666",
+    "name": "uaenorth"
+  },
+  {
+    "geo": "South America",
+    "lat": "-23.55",
+    "long": "-46.633",
+    "name": "brazilsouth"
+  },
+  {
+    "geo": "US",
+    "lat": "41.5908",
+    "long": "-93.6208",
+    "name": "centraluseuap"
+  },
+  {
+    "geo": "US",
+    "lat": "36.6681",
+    "long": "-78.3889",
+    "name": "eastus2euap"
+  },
+  {
+    "geo": "Middle East",
+    "lat": "25.551462",
+    "long": "51.439327",
+    "name": "qatarcentral"
+  },
+  {
+    "geo": "US",
+    "lat": null,
+    "long": null,
+    "name": "centralusstage"
+  },
+  {
+    "geo": "US",
+    "lat": null,
+    "long": null,
+    "name": "eastusstage"
+  },
+  {
+    "geo": "US",
+    "lat": null,
+    "long": null,
+    "name": "eastus2stage"
+  },
+  {
+    "geo": "US",
+    "lat": null,
+    "long": null,
+    "name": "northcentralusstage"
+  },
+  {
+    "geo": "US",
+    "lat": null,
+    "long": null,
+    "name": "southcentralusstage"
+  },
+  {
+    "geo": "US",
+    "lat": null,
+    "long": null,
+    "name": "westusstage"
+  },
+  {
+    "geo": "US",
+    "lat": null,
+    "long": null,
+    "name": "westus2stage"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "asia"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "asiapacific"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "australia"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "brazil"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "canada"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "europe"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "france"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "germany"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "global"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "india"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "japan"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "korea"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "norway"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "singapore"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "southafrica"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "switzerland"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "uae"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "uk"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "unitedstates"
+  },
+  {
+    "geo": null,
+    "lat": null,
+    "long": null,
+    "name": "unitedstateseuap"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": null,
+    "long": null,
+    "name": "eastasiastage"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": null,
+    "long": null,
+    "name": "southeastasiastage"
+  },
+  {
+    "geo": "South America",
+    "lat": "0",
+    "long": "0",
+    "name": "brazilus"
+  },
+  {
+    "geo": "US",
+    "lat": "37.3719",
+    "long": "-79.8164",
+    "name": "eastusstg"
+  },
+  {
+    "geo": "US",
+    "lat": "41.8819",
+    "long": "-87.6278",
+    "name": "northcentralus"
+  },
+  {
+    "geo": "US",
+    "lat": "37.783",
+    "long": "-122.417",
+    "name": "westus"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "22.470701",
+    "long": "70.05773",
+    "name": "jioindiawest"
+  },
+  {
+    "geo": "US",
+    "lat": "29.4167",
+    "long": "-98.5",
+    "name": "southcentralusstg"
+  },
+  {
+    "geo": "US",
+    "lat": "40.89",
+    "long": "-110.234",
+    "name": "westcentralus"
+  },
+  {
+    "geo": "Africa",
+    "lat": "-34.075691",
+    "long": "18.843266",
+    "name": "southafricawest"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "-35.3075",
+    "long": "149.1244",
+    "name": "australiacentral"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "-35.3075",
+    "long": "149.1244",
+    "name": "australiacentral2"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "-37.8136",
+    "long": "144.9631",
+    "name": "australiasoutheast"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "34.6939",
+    "long": "135.5022",
+    "name": "japanwest"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "21.146633",
+    "long": "79.08886",
+    "name": "jioindiacentral"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "35.1796",
+    "long": "129.0756",
+    "name": "koreasouth"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "12.9822",
+    "long": "80.1636",
+    "name": "southindia"
+  },
+  {
+    "geo": "Asia Pacific",
+    "lat": "19.088",
+    "long": "72.868",
+    "name": "westindia"
+  },
+  {
+    "geo": "Canada",
+    "lat": "46.817",
+    "long": "-71.217",
+    "name": "canadaeast"
+  },
+  {
+    "geo": "Europe",
+    "lat": "43.8345",
+    "long": "2.1972",
+    "name": "francesouth"
+  },
+  {
+    "geo": "Europe",
+    "lat": "53.073635",
+    "long": "8.806422",
+    "name": "germanynorth"
+  },
+  {
+    "geo": "Europe",
+    "lat": "58.969975",
+    "long": "5.733107",
+    "name": "norwaywest"
+  },
+  {
+    "geo": "Europe",
+    "lat": "46.204391",
+    "long": "6.143158",
+    "name": "switzerlandwest"
+  },
+  {
+    "geo": "Europe",
+    "lat": "53.427",
+    "long": "-3.084",
+    "name": "ukwest"
+  },
+  {
+    "geo": "Middle East",
+    "lat": "24.466667",
+    "long": "54.366669",
+    "name": "uaecentral"
+  },
+  {
+    "geo": "South America",
+    "lat": "-22.90278",
+    "long": "-43.2075",
+    "name": "brazilsoutheast"
+  }
+]
