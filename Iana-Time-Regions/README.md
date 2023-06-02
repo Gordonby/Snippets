@@ -14,5 +14,12 @@ az account list-locations --query "[].{name:name, lat:metadata.latitude, long:me
 Get-AzLocation | Where-Object Longitude -ne $null | Select-Object -property @{N='name';E={$_.Location}}, @{N='long';E={$_.Longitude}}, @{N='lat';E={$_.Latitude}} | ConvertTo-Json | Out-File azure-regions.json
 ```
 
-## Enriching the file from 
+## Enriching with TimeZones
 
+I'll use timeapi to enrich the json file with the Iana time zone
+
+```powershell
+$regions = Get-Content ./azure-regions.json | ConvertFrom-Json | Add-Member -PassThru -type NoteProperty -name timeZone -value ""
+$regions | % {$url="https://timeapi.io/api/TimeZone/coordinate?latitude=$($_.lat)&longitude=$($_.long)"; write-verbose $url; $time=$(Invoke-WebRequest $url).Content; $timeZone= $time | ConvertFrom-Json | Select-Object -ExpandProperty timeZone; $_.timeZone=$timeZone} | ConvertTo-Json | Out-File azure-regions-timezones.json
+$regions | ConvertTo-Json | Out-File azure-regions-timezones.json
+```
