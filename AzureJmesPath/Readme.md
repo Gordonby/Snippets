@@ -1,5 +1,11 @@
 # Jmespath sample snippets
 
+## Azure locations
+
+```bash
+az account list-locations --query "[].{name:name, lat:metadata.latitude, long:metadata.longitude, geo:metadata.geographyGroup}" -o json
+```
+
 ## Azure CLI - properties with hypens
 
 ```bash
