@@ -21,5 +21,5 @@ I'll use timeapi to enrich the json file with the Iana time zone
 ```powershell
 $regions = Get-Content ./azure-regions.json | ConvertFrom-Json | Add-Member -PassThru -type NoteProperty -name timeZone -value ""
 $regions | % {$url="https://timeapi.io/api/TimeZone/coordinate?latitude=$($_.lat)&longitude=$($_.long)"; write-verbose $url; $time=$(Invoke-WebRequest $url).Content; $timeZone= $time | ConvertFrom-Json | Select-Object -ExpandProperty timeZone; $_.timeZone=$timeZone} | ConvertTo-Json | Out-File azure-regions-timezones.json
-$regions | ConvertTo-Json | Out-File azure-regions-timezones.json
+$regions | Select-Object name, timeZone | ConvertTo-Json | Out-File azure-regions-timezones.json
 ```
