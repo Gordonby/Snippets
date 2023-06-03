@@ -28,3 +28,23 @@ Consumption
 | join Costs on MeterType
 | summarize sum(sum_max_Consumed * Cost)
 ```
+
+## 3
+
+```kql
+PhoneCalls
+| distinct EventType
+
+let disconnections = PhoneCalls
+| where EventType == 'Disconnect'
+| project CallEnd=Timestamp, EventType, CallConnectionId, DisconnectedBy=Properties.DisconnectedBy;
+PhoneCalls
+| where EventType == 'Connect'
+| join kind=inner disconnections on CallConnectionId 
+| project CallStart=Timestamp, CallConnectionId, Origin=tostring(Properties.Origin), Properties.Destination, IsHidden=toboolean(Properties.IsHidden), CallEnd, DisconnectedBy=tostring(DisconnectedBy), CallLength=CallEnd-Timestamp
+| where DisconnectedBy=='Destination'
+| where IsHidden==true
+| summarize calls=count() by bin(CallLength, 1min), Origin
+| sort by calls
+| take 100
+```
