@@ -4,8 +4,6 @@
 AzureActivity
 | where OperationNameValue == 'MICROSOFT.RESOURCES/DEPLOYMENTS/WRITE'
 | where Level == 'Information'
-| sort by TimeGenerated desc 
-| take 50
 | extend props=parse_json(Properties)
 | project TimeGenerated, ResourceGroup, Caller, Resource=props.resource
 | summarize count() by ResourceGroup, Caller, Day=bin(TimeGenerated, 1d)
