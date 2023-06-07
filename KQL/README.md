@@ -1,3 +1,15 @@
+## Activity Logs - Deployments, distinct resources created. (per user/day)
+
+```kql
+AzureActivity
+| where OperationNameValue == 'MICROSOFT.RESOURCES/DEPLOYMENTS/WRITE'
+| where Level == 'Information'
+| extend props=parse_json(Properties)
+| project TimeGenerated, ResourceGroup, Caller, Resource=tostring(props.resource)
+| summarize DistinctResources=dcount(Resource), Deployments=count() by Caller, Day=bin(TimeGenerated, 1d)
+| sort by Day desc 
+```
+
 ## Activity Logs - Deployments per user, per RG, per day
 
 ```kql
