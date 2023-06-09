@@ -1,0 +1,2795 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2021-09-09/uiFormDefinition.schema.json",
+    "view": {
+        "kind": "Form",
+        "properties": {
+            "title": "AKS Construction 0.9.15",
+            "steps": [
+                {
+                    "name": "basics",
+                    "label": "Basics",
+                    "elements": [
+                        {
+                            "name": "resourceScope",
+                            "type": "Microsoft.Common.ResourceScope",
+                            "location": {
+                                "resourceTypes": [
+                                    "microsoft.resources/resourcegroups"
+                                ]
+                            }
+                        },
+                        {
+                            "name": "location",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Location",
+                            "subLabel": "",
+                            "defaultValue": "[[resourceGroup().location]",
+                            "toolTip": "The location to use for the deployment. defaults to Resource Groups location.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').location),and(not(startsWith(steps('basics').location,'[[')),startsWith(steps('basics').location,'['),endsWith(steps('basics').location,']'),greater(indexOf(steps('basics').location,'('),-1),greater(indexOf(steps('basics').location,')'),-1))),greaterOrEquals(length(steps('basics').location),2))]",
+                                        "message": "The value must have a length of at least 2."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "resourceName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Resource Name",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "Used to name all resources",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": "", 
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').resourceName),and(not(startsWith(steps('basics').resourceName,'[[')),startsWith(steps('basics').resourceName,'['),endsWith(steps('basics').resourceName,']'),greater(indexOf(steps('basics').resourceName,'('),-1),greater(indexOf(steps('basics').resourceName,')'),-1))),greaterOrEquals(length(steps('basics').resourceName),3))]",
+                                        "message": "The value must have a length of at least 3."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').resourceName),and(not(startsWith(steps('basics').resourceName,'[[')),startsWith(steps('basics').resourceName,'['),endsWith(steps('basics').resourceName,']'),greater(indexOf(steps('basics').resourceName,'('),-1),greater(indexOf(steps('basics').resourceName,')'),-1))),lessOrEquals(length(steps('basics').resourceName),20))]",
+                                        "message": "The value must have a length of at most 20."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "custom_vnet",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Custom_vnet",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Are you providing your own vNet CIDR blocks",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "byoAKSSubnetId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Byo AKS Subnet Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "Full resource id path of an existing subnet to use for AKS",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "byoAKSPodSubnetId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Byo AKS Pod Subnet Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "Full resource id path of an existing pod subnet to use for AKS",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "byoAGWSubnetId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Byo AGW Subnet Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "Full resource id path of an existing subnet to use for Application Gateway",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "byoUaiName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Byo Uai Name",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "The name of an existing User Assigned Identity to use for the AKS Control Plane (in the same resouce group), requires rbac assignments to be done outside of this template",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "vnetAddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Vnet Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "10.240.0.0/16",
+                            "toolTip": "The address range for the custom vnet",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetAddressPrefix),and(not(startsWith(steps('basics').vnetAddressPrefix,'[[')),startsWith(steps('basics').vnetAddressPrefix,'['),endsWith(steps('basics').vnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetAddressPrefix,')'),-1))),greaterOrEquals(length(steps('basics').vnetAddressPrefix),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetAddressPrefix),and(not(startsWith(steps('basics').vnetAddressPrefix,'[[')),startsWith(steps('basics').vnetAddressPrefix,'['),endsWith(steps('basics').vnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetAddressPrefix,')'),-1))),lessOrEquals(length(steps('basics').vnetAddressPrefix),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "vnetAksSubnetAddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Vnet Aks Subnet Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "10.240.0.0/22",
+                            "toolTip": "The address range for AKS in your custom vnet",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetAksSubnetAddressPrefix),and(not(startsWith(steps('basics').vnetAksSubnetAddressPrefix,'[[')),startsWith(steps('basics').vnetAksSubnetAddressPrefix,'['),endsWith(steps('basics').vnetAksSubnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetAksSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetAksSubnetAddressPrefix,')'),-1))),greaterOrEquals(length(steps('basics').vnetAksSubnetAddressPrefix),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetAksSubnetAddressPrefix),and(not(startsWith(steps('basics').vnetAksSubnetAddressPrefix,'[[')),startsWith(steps('basics').vnetAksSubnetAddressPrefix,'['),endsWith(steps('basics').vnetAksSubnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetAksSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetAksSubnetAddressPrefix,')'),-1))),lessOrEquals(length(steps('basics').vnetAksSubnetAddressPrefix),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "vnetAppGatewaySubnetAddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Vnet App Gateway Subnet Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "10.240.5.0/24",
+                            "toolTip": "The address range for the App Gateway in your custom vnet",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetAppGatewaySubnetAddressPrefix),and(not(startsWith(steps('basics').vnetAppGatewaySubnetAddressPrefix,'[[')),startsWith(steps('basics').vnetAppGatewaySubnetAddressPrefix,'['),endsWith(steps('basics').vnetAppGatewaySubnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetAppGatewaySubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetAppGatewaySubnetAddressPrefix,')'),-1))),greaterOrEquals(length(steps('basics').vnetAppGatewaySubnetAddressPrefix),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetAppGatewaySubnetAddressPrefix),and(not(startsWith(steps('basics').vnetAppGatewaySubnetAddressPrefix,'[[')),startsWith(steps('basics').vnetAppGatewaySubnetAddressPrefix,'['),endsWith(steps('basics').vnetAppGatewaySubnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetAppGatewaySubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetAppGatewaySubnetAddressPrefix,')'),-1))),lessOrEquals(length(steps('basics').vnetAppGatewaySubnetAddressPrefix),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "acrAgentPoolSubnetAddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Acr Agent Pool Subnet Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "10.240.4.64/26",
+                            "toolTip": "The address range for the ACR in your custom vnet",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').acrAgentPoolSubnetAddressPrefix),and(not(startsWith(steps('basics').acrAgentPoolSubnetAddressPrefix,'[[')),startsWith(steps('basics').acrAgentPoolSubnetAddressPrefix,'['),endsWith(steps('basics').acrAgentPoolSubnetAddressPrefix,']'),greater(indexOf(steps('basics').acrAgentPoolSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').acrAgentPoolSubnetAddressPrefix,')'),-1))),greaterOrEquals(length(steps('basics').acrAgentPoolSubnetAddressPrefix),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').acrAgentPoolSubnetAddressPrefix),and(not(startsWith(steps('basics').acrAgentPoolSubnetAddressPrefix,'[[')),startsWith(steps('basics').acrAgentPoolSubnetAddressPrefix,'['),endsWith(steps('basics').acrAgentPoolSubnetAddressPrefix,']'),greater(indexOf(steps('basics').acrAgentPoolSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').acrAgentPoolSubnetAddressPrefix,')'),-1))),lessOrEquals(length(steps('basics').acrAgentPoolSubnetAddressPrefix),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "bastionSubnetAddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Bastion Subnet Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "10.240.4.128/26",
+                            "toolTip": "The address range for Azure Bastion in your custom vnet",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').bastionSubnetAddressPrefix),and(not(startsWith(steps('basics').bastionSubnetAddressPrefix,'[[')),startsWith(steps('basics').bastionSubnetAddressPrefix,'['),endsWith(steps('basics').bastionSubnetAddressPrefix,']'),greater(indexOf(steps('basics').bastionSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').bastionSubnetAddressPrefix,')'),-1))),greaterOrEquals(length(steps('basics').bastionSubnetAddressPrefix),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').bastionSubnetAddressPrefix),and(not(startsWith(steps('basics').bastionSubnetAddressPrefix,'[[')),startsWith(steps('basics').bastionSubnetAddressPrefix,'['),endsWith(steps('basics').bastionSubnetAddressPrefix,']'),greater(indexOf(steps('basics').bastionSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').bastionSubnetAddressPrefix,')'),-1))),lessOrEquals(length(steps('basics').bastionSubnetAddressPrefix),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "privateLinkSubnetAddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Private Link Subnet Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "10.240.4.192/26",
+                            "toolTip": "The address range for private link in your custom vnet",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').privateLinkSubnetAddressPrefix),and(not(startsWith(steps('basics').privateLinkSubnetAddressPrefix,'[[')),startsWith(steps('basics').privateLinkSubnetAddressPrefix,'['),endsWith(steps('basics').privateLinkSubnetAddressPrefix,']'),greater(indexOf(steps('basics').privateLinkSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').privateLinkSubnetAddressPrefix,')'),-1))),greaterOrEquals(length(steps('basics').privateLinkSubnetAddressPrefix),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').privateLinkSubnetAddressPrefix),and(not(startsWith(steps('basics').privateLinkSubnetAddressPrefix,'[[')),startsWith(steps('basics').privateLinkSubnetAddressPrefix,'['),endsWith(steps('basics').privateLinkSubnetAddressPrefix,']'),greater(indexOf(steps('basics').privateLinkSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').privateLinkSubnetAddressPrefix,')'),-1))),lessOrEquals(length(steps('basics').privateLinkSubnetAddressPrefix),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "vnetFirewallSubnetAddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Vnet Firewall Subnet Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "10.240.50.0/24",
+                            "toolTip": "The address range for Azure Firewall in your custom vnet",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetFirewallSubnetAddressPrefix),and(not(startsWith(steps('basics').vnetFirewallSubnetAddressPrefix,'[[')),startsWith(steps('basics').vnetFirewallSubnetAddressPrefix,'['),endsWith(steps('basics').vnetFirewallSubnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetFirewallSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetFirewallSubnetAddressPrefix,')'),-1))),greaterOrEquals(length(steps('basics').vnetFirewallSubnetAddressPrefix),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetFirewallSubnetAddressPrefix),and(not(startsWith(steps('basics').vnetFirewallSubnetAddressPrefix,'[[')),startsWith(steps('basics').vnetFirewallSubnetAddressPrefix,'['),endsWith(steps('basics').vnetFirewallSubnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetFirewallSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetFirewallSubnetAddressPrefix,')'),-1))),lessOrEquals(length(steps('basics').vnetFirewallSubnetAddressPrefix),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "vnetFirewallManagementSubnetAddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Vnet Firewall Management Subnet Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "10.240.51.0/26",
+                            "toolTip": "The address range for Azure Firewall Management in your custom vnet",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetFirewallManagementSubnetAddressPrefix),and(not(startsWith(steps('basics').vnetFirewallManagementSubnetAddressPrefix,'[[')),startsWith(steps('basics').vnetFirewallManagementSubnetAddressPrefix,'['),endsWith(steps('basics').vnetFirewallManagementSubnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetFirewallManagementSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetFirewallManagementSubnetAddressPrefix,')'),-1))),greaterOrEquals(length(steps('basics').vnetFirewallManagementSubnetAddressPrefix),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').vnetFirewallManagementSubnetAddressPrefix),and(not(startsWith(steps('basics').vnetFirewallManagementSubnetAddressPrefix,'[[')),startsWith(steps('basics').vnetFirewallManagementSubnetAddressPrefix,'['),endsWith(steps('basics').vnetFirewallManagementSubnetAddressPrefix,']'),greater(indexOf(steps('basics').vnetFirewallManagementSubnetAddressPrefix,'('),-1),greater(indexOf(steps('basics').vnetFirewallManagementSubnetAddressPrefix,')'),-1))),lessOrEquals(length(steps('basics').vnetFirewallManagementSubnetAddressPrefix),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "privateLinks",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Private Links",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable support for private links (required custom_vnet)",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "acrPrivatePool",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Acr Private Pool",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable support for ACR private pool",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "bastion",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Bastion",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Deploy Azure Bastion to your vnet. (works with Custom Networking only, not BYO)",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "CreateNetworkSecurityGroups",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Create Network Security Groups",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Deploy NSGs to your vnet subnets. (works with Custom Networking only, not BYO)",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "CreateNetworkSecurityGroupFlowLogs",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Create Network Security Group Flow Logs",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Configure Flow Logs for Network Security Groups in the NetworkWatcherRG resource group. Requires Contributor RBAC on NetworkWatcherRG and Reader on Subscription.",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "dnsZoneId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Dns Zone Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "The full Azure resource ID of the DNS zone to use for the AKS cluster",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "keyVaultCreate",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Key Vault Create",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Creates a KeyVault",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "keyVaultSoftDelete",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Key Vault Soft Delete",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "If soft delete protection is enabled",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "keyVaultPurgeProtection",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Key Vault Purge Protection",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "If purge protection is enabled",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "keyVaultIPAllowlist",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Key Vault IP Allowlist",
+                            "subLabel": "",
+                            "defaultValue": "[[]",
+                            "toolTip": "Add IP to KV firewall allow-list",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "keyVaultAksCSI",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Key Vault Aks CSI",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Installs the AKS KV CSI provider",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "keyVaultAksCSIPollInterval",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Key Vault Aks CSI Poll Interval",
+                            "subLabel": "",
+                            "defaultValue": "2m",
+                            "toolTip": "Rotation poll interval for the AKS KV CSI provider",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "keyVaultOfficerRolePrincipalId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Key Vault Officer Role Principal Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "The principal ID of the user or service principal that requires access to the Key Vault. Set automatedDeployment to toggle between user and service prinicpal",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "keyVaultKmsCreate",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Key Vault Kms Create",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable encryption at rest for Kubernetes etcd data",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "keyVaultKmsByoKeyId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Key Vault Kms Byo Key Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "Bring an existing Key from an existing Key Vault",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "keyVaultKmsByoRG",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Key Vault Kms Byo RG",
+                            "subLabel": "",
+                            "defaultValue": "[[resourceGroup().name]",
+                            "toolTip": "The resource group for the existing KMS Key Vault",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "keyVaultKmsOfficerRolePrincipalId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Key Vault Kms Officer Role Principal Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "The PrincipalId of the deploying user, which is necessary when creating a Kms Key",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "registries_sku",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Registries_sku",
+                            "subLabel": "",
+                            "defaultValue": "Basic",
+                            "toolTip": "The SKU to use for the Container Registry",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "",
+                                        "value": ""
+                                    },
+                                    {
+                                        "label": "Basic",
+                                        "value": "Basic"
+                                    },
+                                    {
+                                        "label": "Standard",
+                                        "value": "Standard"
+                                    },
+                                    {
+                                        "label": "Premium",
+                                        "value": "Premium"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "enableACRTrustPolicy",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Enable ACR Trust Policy",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable the ACR Content Trust Policy, SKU must be set to Premium",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "acrUntaggedRetentionPolicyEnabled",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Acr Untagged Retention Policy Enabled",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable removing of untagged manifests from ACR",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "acrUntaggedRetentionPolicy",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Acr Untagged Retention Policy",
+                            "subLabel": "",
+                            "defaultValue": "30",
+                            "toolTip": "The number of days to retain untagged manifests for",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "acrPushRolePrincipalId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Acr Push Role Principal Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "The principal ID of the service principal to assign the push role to the ACR",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "imageNames",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Image Names",
+                            "subLabel": "",
+                            "defaultValue": "[[]",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "azureFirewalls",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Azure Firewalls",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Create an Azure Firewall, requires custom_vnet",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "certManagerFW",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Cert Manager FW",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Add application rules to the firewall for certificate management.",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "azureFirewallSku",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Azure Firewall Sku",
+                            "subLabel": "",
+                            "defaultValue": "Standard",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "Basic",
+                                        "value": "Basic"
+                                    },
+                                    {
+                                        "label": "Premium",
+                                        "value": "Premium"
+                                    },
+                                    {
+                                        "label": "Standard",
+                                        "value": "Standard"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "ingressApplicationGateway",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Ingress Application Gateway",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Create an Application Gateway",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "appGWcount",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "App G Wcount",
+                            "subLabel": "",
+                            "defaultValue": "2",
+                            "toolTip": "The number of applciation gateway instances",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "appGWmaxCount",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "App G Wmax Count",
+                            "subLabel": "",
+                            "defaultValue": "0",
+                            "toolTip": "The maximum number of application gateway instances",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "privateIpApplicationGateway",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Private Ip Application Gateway",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "A known private ip in the Application Gateway subnet range to be allocated for internal traffic",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').privateIpApplicationGateway),and(not(startsWith(steps('basics').privateIpApplicationGateway,'[[')),startsWith(steps('basics').privateIpApplicationGateway,'['),endsWith(steps('basics').privateIpApplicationGateway,']'),greater(indexOf(steps('basics').privateIpApplicationGateway,'('),-1),greater(indexOf(steps('basics').privateIpApplicationGateway,')'),-1))),lessOrEquals(length(steps('basics').privateIpApplicationGateway),15))]",
+                                        "message": "The value must have a length of at most 15."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "appgwKVIntegration",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Appgw KV Integration",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable key vault integration for application gateway",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "appGWsku",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "App G Wsku",
+                            "subLabel": "",
+                            "defaultValue": "WAF_v2",
+                            "toolTip": "The SKU for AppGw",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "Standard_v2",
+                                        "value": "Standard_v2"
+                                    },
+                                    {
+                                        "label": "WAF_v2",
+                                        "value": "WAF_v2"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "appGWenableFirewall",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "App G Wenable Firewall",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Enable the WAF Firewall, valid for WAF_v2 SKUs",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "appGwFirewallMode",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "App Gw Firewall Mode",
+                            "subLabel": "",
+                            "defaultValue": "Prevention",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "Prevention",
+                                        "value": "Prevention"
+                                    },
+                                    {
+                                        "label": "Detection",
+                                        "value": "Detection"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "dnsPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Dns Prefix",
+                            "subLabel": "",
+                            "defaultValue": "[[format('{0}-dns', parameters('resourceName'))]",
+                            "toolTip": "DNS prefix. Defaults to {resourceName}-dns",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "kubernetesVersion",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Kubernetes Version",
+                            "subLabel": "",
+                            "defaultValue": "1.25.6",
+                            "toolTip": "Kubernetes Version",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "enable_aad",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Enable_aad",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable Azure AD integration on AKS",
+                            "constraints": {
+                                "required": true,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "aad_tenant_id",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Aad_tenant_id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "The ID of the Azure AD tenant",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "omsagent",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Omsagent",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Create, and use a new Log Analytics workspace for AKS logs",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "containerLogsV2BasicLogs",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Container Logs V2Basic Logs",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enables the ContainerLogsV2 table to be of type Basic",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "enableAzureRBAC",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Enable Azure RBAC",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Enable RBAC using AAD",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "kedaAddon",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Keda Addon",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enables Kubernetes Event-driven Autoscaling (KEDA)",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "openServiceMeshAddon",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Open Service Mesh Addon",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enables Open Service Mesh",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "sgxPlugin",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Sgx Plugin",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enables SGX Confidential Compute plugin",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "blobCSIDriver",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Blob CSI Driver",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enables the Blob CSI driver",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "fileCSIDriver",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "File CSI Driver",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Enables the File CSI driver",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "diskCSIDriver",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Disk CSI Driver",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Enables the Disk CSI driver",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "upgradeChannel",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Upgrade Channel",
+                            "subLabel": "",
+                            "defaultValue": "stable",
+                            "toolTip": "AKS upgrade channel",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "none",
+                                        "value": "none"
+                                    },
+                                    {
+                                        "label": "patch",
+                                        "value": "patch"
+                                    },
+                                    {
+                                        "label": "stable",
+                                        "value": "stable"
+                                    },
+                                    {
+                                        "label": "rapid",
+                                        "value": "rapid"
+                                    },
+                                    {
+                                        "label": "node-image",
+                                        "value": "node-image"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "osDiskType",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Os Disk Type",
+                            "subLabel": "",
+                            "defaultValue": "Ephemeral",
+                            "toolTip": "OS disk type",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "Ephemeral",
+                                        "value": "Ephemeral"
+                                    },
+                                    {
+                                        "label": "Managed",
+                                        "value": "Managed"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "agentVMSize",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Agent VM Size",
+                            "subLabel": "",
+                            "defaultValue": "Standard_DS3_v2",
+                            "toolTip": "VM SKU",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "osDiskSizeGB",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Os Disk Size GB",
+                            "subLabel": "",
+                            "defaultValue": "0",
+                            "toolTip": "Disk size in GB",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "agentCount",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Agent Count",
+                            "subLabel": "",
+                            "defaultValue": "1",
+                            "toolTip": "The number of agents for the user node pool",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "agentCountMax",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Agent Count Max",
+                            "subLabel": "",
+                            "defaultValue": "3",
+                            "toolTip": "The maximum number of nodes for the user node pool",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "nodePoolName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Node Pool Name",
+                            "subLabel": "",
+                            "defaultValue": "npuser01",
+                            "toolTip": "Name for user node pool",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').nodePoolName),and(not(startsWith(steps('basics').nodePoolName,'[[')),startsWith(steps('basics').nodePoolName,'['),endsWith(steps('basics').nodePoolName,']'),greater(indexOf(steps('basics').nodePoolName,'('),-1),greater(indexOf(steps('basics').nodePoolName,')'),-1))),greaterOrEquals(length(steps('basics').nodePoolName),3))]",
+                                        "message": "The value must have a length of at least 3."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').nodePoolName),and(not(startsWith(steps('basics').nodePoolName,'[[')),startsWith(steps('basics').nodePoolName,'['),endsWith(steps('basics').nodePoolName,']'),greater(indexOf(steps('basics').nodePoolName,'('),-1),greater(indexOf(steps('basics').nodePoolName,')'),-1))),lessOrEquals(length(steps('basics').nodePoolName),12))]",
+                                        "message": "The value must have a length of at most 12."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "cniDynamicIpAllocation",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Cni Dynamic Ip Allocation",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Allocate pod ips dynamically",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "maxPods",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Max Pods",
+                            "subLabel": "",
+                            "defaultValue": "30",
+                            "toolTip": "The maximum number of pods per node.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').maxPods),and(not(startsWith(steps('basics').maxPods,'[[')),startsWith(steps('basics').maxPods,'['),endsWith(steps('basics').maxPods,']'),greater(indexOf(steps('basics').maxPods,'('),-1),greater(indexOf(steps('basics').maxPods,')'),-1))),greaterOrEquals(if(regex(steps('basics').maxPods,'[a-zA-Z]+'),9,steps('basics').maxPods),10))]",
+                                        "message": "The value must be at least 10."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').maxPods),and(not(startsWith(steps('basics').maxPods,'[[')),startsWith(steps('basics').maxPods,'['),endsWith(steps('basics').maxPods,']'),greater(indexOf(steps('basics').maxPods,'('),-1),greater(indexOf(steps('basics').maxPods,')'),-1))),lessOrEquals(if(regex(steps('basics').maxPods,'[a-zA-Z]+'),251,steps('basics').maxPods),250))]",
+                                        "message": "The value must be at most 250."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "networkPlugin",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Network Plugin",
+                            "subLabel": "",
+                            "defaultValue": "azure",
+                            "toolTip": "The network plugin type",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "azure",
+                                        "value": "azure"
+                                    },
+                                    {
+                                        "label": "kubenet",
+                                        "value": "kubenet"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "networkPluginMode",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Network Plugin Mode",
+                            "subLabel": "",
+                            "defaultValue": "Overlay",
+                            "toolTip": "The network plugin type",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "",
+                                        "value": ""
+                                    },
+                                    {
+                                        "label": "Overlay",
+                                        "value": "Overlay"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "ebpfDataplane",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Ebpf Dataplane",
+                            "subLabel": "",
+                            "defaultValue": "cilium",
+                            "toolTip": "Use Cilium dataplane (requires azure networkPlugin)",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "",
+                                        "value": ""
+                                    },
+                                    {
+                                        "label": "cilium",
+                                        "value": "cilium"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "networkPolicy",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Network Policy",
+                            "subLabel": "",
+                            "defaultValue": "cilium",
+                            "toolTip": "The network policy to use.",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "",
+                                        "value": ""
+                                    },
+                                    {
+                                        "label": "azure",
+                                        "value": "azure"
+                                    },
+                                    {
+                                        "label": "calico",
+                                        "value": "calico"
+                                    },
+                                    {
+                                        "label": "cilium",
+                                        "value": "cilium"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "azurepolicy",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Azurepolicy",
+                            "subLabel": "",
+                            "defaultValue": "audit",
+                            "toolTip": "Enable the Azure Policy addon",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "",
+                                        "value": ""
+                                    },
+                                    {
+                                        "label": "audit",
+                                        "value": "audit"
+                                    },
+                                    {
+                                        "label": "deny",
+                                        "value": "deny"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "azurePolicyInitiative",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Azure Policy Initiative",
+                            "subLabel": "",
+                            "defaultValue": "Baseline",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "Baseline",
+                                        "value": "Baseline"
+                                    },
+                                    {
+                                        "label": "Restricted",
+                                        "value": "Restricted"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "authorizedIPRanges",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Authorized IP Ranges",
+                            "subLabel": "",
+                            "defaultValue": "[[]",
+                            "toolTip": "The IP addresses that are allowed to access the API server",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "enablePrivateCluster",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Enable Private Cluster",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable private cluster",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "privateClusterDnsMethod",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Private Cluster Dns Method",
+                            "subLabel": "",
+                            "defaultValue": "system",
+                            "toolTip": "Private cluster dns advertisment method, leverages the dnsApiPrivateZoneId parameter",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "system",
+                                        "value": "system"
+                                    },
+                                    {
+                                        "label": "none",
+                                        "value": "none"
+                                    },
+                                    {
+                                        "label": "privateDnsZone",
+                                        "value": "privateDnsZone"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "dnsApiPrivateZoneId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Dns Api Private Zone Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "The full Azure resource ID of the privatelink DNS zone to use for the AKS cluster API Server",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "availabilityZones",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Availability Zones",
+                            "subLabel": "",
+                            "defaultValue": "[]",
+                            "toolTip": "The zones to use for a node pool",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "AksDisableLocalAccounts",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Aks Disable Local Accounts",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Disable local K8S accounts for AAD enabled clusters",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "AksPaidSkuForSLA",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Aks Paid Sku For SLA",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Use the paid sku for SLA rather than SLO",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "podCidr",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Pod Cidr",
+                            "subLabel": "",
+                            "defaultValue": "10.240.100.0/22",
+                            "toolTip": "The address range to use for pods",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').podCidr),and(not(startsWith(steps('basics').podCidr,'[[')),startsWith(steps('basics').podCidr,'['),endsWith(steps('basics').podCidr,']'),greater(indexOf(steps('basics').podCidr,'('),-1),greater(indexOf(steps('basics').podCidr,')'),-1))),greaterOrEquals(length(steps('basics').podCidr),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').podCidr),and(not(startsWith(steps('basics').podCidr,'[[')),startsWith(steps('basics').podCidr,'['),endsWith(steps('basics').podCidr,']'),greater(indexOf(steps('basics').podCidr,'('),-1),greater(indexOf(steps('basics').podCidr,')'),-1))),lessOrEquals(length(steps('basics').podCidr),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "serviceCidr",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Service Cidr",
+                            "subLabel": "",
+                            "defaultValue": "172.10.0.0/16",
+                            "toolTip": "The address range to use for services",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').serviceCidr),and(not(startsWith(steps('basics').serviceCidr,'[[')),startsWith(steps('basics').serviceCidr,'['),endsWith(steps('basics').serviceCidr,']'),greater(indexOf(steps('basics').serviceCidr,'('),-1),greater(indexOf(steps('basics').serviceCidr,')'),-1))),greaterOrEquals(length(steps('basics').serviceCidr),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').serviceCidr),and(not(startsWith(steps('basics').serviceCidr,'[[')),startsWith(steps('basics').serviceCidr,'['),endsWith(steps('basics').serviceCidr,']'),greater(indexOf(steps('basics').serviceCidr,'('),-1),greater(indexOf(steps('basics').serviceCidr,')'),-1))),lessOrEquals(length(steps('basics').serviceCidr),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "dnsServiceIP",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Dns Service IP",
+                            "subLabel": "",
+                            "defaultValue": "172.10.0.10",
+                            "toolTip": "The IP address to reserve for DNS",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').dnsServiceIP),and(not(startsWith(steps('basics').dnsServiceIP,'[[')),startsWith(steps('basics').dnsServiceIP,'['),endsWith(steps('basics').dnsServiceIP,']'),greater(indexOf(steps('basics').dnsServiceIP,'('),-1),greater(indexOf(steps('basics').dnsServiceIP,')'),-1))),greaterOrEquals(length(steps('basics').dnsServiceIP),7))]",
+                                        "message": "The value must have a length of at least 7."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').dnsServiceIP),and(not(startsWith(steps('basics').dnsServiceIP,'[[')),startsWith(steps('basics').dnsServiceIP,'['),endsWith(steps('basics').dnsServiceIP,']'),greater(indexOf(steps('basics').dnsServiceIP,'('),-1),greater(indexOf(steps('basics').dnsServiceIP,')'),-1))),lessOrEquals(length(steps('basics').dnsServiceIP),15))]",
+                                        "message": "The value must have a length of at most 15."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "dockerBridgeCidr",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Docker Bridge Cidr",
+                            "subLabel": "",
+                            "defaultValue": "172.17.0.1/16",
+                            "toolTip": "The address range to use for the docker bridge",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').dockerBridgeCidr),and(not(startsWith(steps('basics').dockerBridgeCidr,'[[')),startsWith(steps('basics').dockerBridgeCidr,'['),endsWith(steps('basics').dockerBridgeCidr,']'),greater(indexOf(steps('basics').dockerBridgeCidr,'('),-1),greater(indexOf(steps('basics').dockerBridgeCidr,')'),-1))),greaterOrEquals(length(steps('basics').dockerBridgeCidr),9))]",
+                                        "message": "The value must have a length of at least 9."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').dockerBridgeCidr),and(not(startsWith(steps('basics').dockerBridgeCidr,'[[')),startsWith(steps('basics').dockerBridgeCidr,'['),endsWith(steps('basics').dockerBridgeCidr,']'),greater(indexOf(steps('basics').dockerBridgeCidr,'('),-1),greater(indexOf(steps('basics').dockerBridgeCidr,')'),-1))),lessOrEquals(length(steps('basics').dockerBridgeCidr),18))]",
+                                        "message": "The value must have a length of at most 18."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "defenderForContainers",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Defender For Containers",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable Microsoft Defender for Containers (preview)",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "JustUseSystemPool",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Just Use System Pool",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Only use the system node pool",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "SystemPoolType",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "System Pool Type",
+                            "subLabel": "",
+                            "defaultValue": "CostOptimised",
+                            "toolTip": "The System Pool Preset sizing",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "CostOptimised",
+                                        "value": "CostOptimised"
+                                    },
+                                    {
+                                        "label": "Standard",
+                                        "value": "Standard"
+                                    },
+                                    {
+                                        "label": "HighSpec",
+                                        "value": "HighSpec"
+                                    },
+                                    {
+                                        "label": "Custom",
+                                        "value": "Custom"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "SystemPoolCustomPreset",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "System Pool Custom Preset",
+                            "subLabel": "",
+                            "defaultValue": "{}",
+                            "toolTip": "A custom system pool spec",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "AutoscaleProfile",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Autoscale Profile",
+                            "subLabel": "",
+                            "defaultValue": "{\"balance-similar-node-groups\":\"true\",\"expander\":\"random\",\"max-empty-bulk-delete\":\"10\",\"max-graceful-termination-sec\":\"600\",\"max-node-provision-time\":\"15m\",\"max-total-unready-percentage\":\"45\",\"new-pod-scale-up-delay\":\"0s\",\"ok-total-unready-count\":\"3\",\"scale-down-delay-after-add\":\"10m\",\"scale-down-delay-after-delete\":\"20s\",\"scale-down-delay-after-failure\":\"3m\",\"scale-down-unneeded-time\":\"10m\",\"scale-down-unready-time\":\"20m\",\"scale-down-utilization-threshold\":\"0.5\",\"scan-interval\":\"10s\",\"skip-nodes-with-local-storage\":\"true\",\"skip-nodes-with-system-pods\":\"true\"}",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "aksOutboundTrafficType",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Aks Outbound Traffic Type",
+                            "subLabel": "",
+                            "defaultValue": "userAssignedNATGateway",
+                            "toolTip": "Outbound traffic type for the egress traffic of your cluster",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "loadBalancer",
+                                        "value": "loadBalancer"
+                                    },
+                                    {
+                                        "label": "managedNATGateway",
+                                        "value": "managedNATGateway"
+                                    },
+                                    {
+                                        "label": "userAssignedNATGateway",
+                                        "value": "userAssignedNATGateway"
+                                    },
+                                    {
+                                        "label": "userDefinedRouting",
+                                        "value": "userDefinedRouting"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "createNatGateway",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Create Nat Gateway",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Create a new Nat Gateway, applies to custom networking only",
+                            "constraints": {
+                                "required": true,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "natGwIpCount",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Nat Gw Ip Count",
+                            "subLabel": "",
+                            "defaultValue": "2",
+                            "toolTip": "The effective outbound IP resources of the cluster NAT gateway",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').natGwIpCount),and(not(startsWith(steps('basics').natGwIpCount,'[[')),startsWith(steps('basics').natGwIpCount,'['),endsWith(steps('basics').natGwIpCount,']'),greater(indexOf(steps('basics').natGwIpCount,'('),-1),greater(indexOf(steps('basics').natGwIpCount,')'),-1))),greaterOrEquals(if(regex(steps('basics').natGwIpCount,'[a-zA-Z]+'),0,steps('basics').natGwIpCount),1))]",
+                                        "message": "The value must be at least 1."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').natGwIpCount),and(not(startsWith(steps('basics').natGwIpCount,'[[')),startsWith(steps('basics').natGwIpCount,'['),endsWith(steps('basics').natGwIpCount,']'),greater(indexOf(steps('basics').natGwIpCount,'('),-1),greater(indexOf(steps('basics').natGwIpCount,')'),-1))),lessOrEquals(if(regex(steps('basics').natGwIpCount,'[a-zA-Z]+'),17,steps('basics').natGwIpCount),16))]",
+                                        "message": "The value must be at most 16."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "natGwIdleTimeout",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Nat Gw Idle Timeout",
+                            "subLabel": "",
+                            "defaultValue": "30",
+                            "toolTip": "Outbound flow idle timeout in minutes for NatGw",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').natGwIdleTimeout),and(not(startsWith(steps('basics').natGwIdleTimeout,'[[')),startsWith(steps('basics').natGwIdleTimeout,'['),endsWith(steps('basics').natGwIdleTimeout,']'),greater(indexOf(steps('basics').natGwIdleTimeout,'('),-1),greater(indexOf(steps('basics').natGwIdleTimeout,')'),-1))),greaterOrEquals(if(regex(steps('basics').natGwIdleTimeout,'[a-zA-Z]+'),3,steps('basics').natGwIdleTimeout),4))]",
+                                        "message": "The value must be at least 4."
+                                    },
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').natGwIdleTimeout),and(not(startsWith(steps('basics').natGwIdleTimeout,'[[')),startsWith(steps('basics').natGwIdleTimeout,'['),endsWith(steps('basics').natGwIdleTimeout,']'),greater(indexOf(steps('basics').natGwIdleTimeout,'('),-1),greater(indexOf(steps('basics').natGwIdleTimeout,')'),-1))),lessOrEquals(if(regex(steps('basics').natGwIdleTimeout,'[a-zA-Z]+'),121,steps('basics').natGwIdleTimeout),120))]",
+                                        "message": "The value must be at most 120."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "oidcIssuer",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Oidc Issuer",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Configures the cluster as an OIDC issuer for use with Workload Identity",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "workloadIdentity",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Workload Identity",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Installs Azure Workload Identity into the cluster",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "enableNodePublicIP",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Enable Node Public IP",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Assign a public IP per node for user node pools",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "warIngressNginx",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "War Ingress Nginx",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "managedNodeResourceGroup",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Managed Node Resource Group",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "The name of the NEW resource group to create the AKS cluster managed resources in",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": [
+                                    {
+                                        "isValid": "[or(or(empty(steps('basics').managedNodeResourceGroup),and(not(startsWith(steps('basics').managedNodeResourceGroup,'[[')),startsWith(steps('basics').managedNodeResourceGroup,'['),endsWith(steps('basics').managedNodeResourceGroup,']'),greater(indexOf(steps('basics').managedNodeResourceGroup,'('),-1),greater(indexOf(steps('basics').managedNodeResourceGroup,')'),-1))),lessOrEquals(length(steps('basics').managedNodeResourceGroup),80))]",
+                                        "message": "The value must have a length of at most 80."
+                                    }
+                                ]
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "restrictionLevelNodeResourceGroup",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Restriction Level Node Resource Group",
+                            "subLabel": "",
+                            "defaultValue": "Unrestricted",
+                            "toolTip": "The restriction level applied to the cluster node resource group",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "ReadOnly",
+                                        "value": "ReadOnly"
+                                    },
+                                    {
+                                        "label": "Unrestricted",
+                                        "value": "Unrestricted"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "osType",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Os Type",
+                            "subLabel": "",
+                            "defaultValue": "Linux",
+                            "toolTip": "The User Node pool OS",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "Linux",
+                                        "value": "Linux"
+                                    },
+                                    {
+                                        "label": "Windows",
+                                        "value": "Windows"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "osSKU",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Os SKU",
+                            "subLabel": "",
+                            "defaultValue": "Ubuntu",
+                            "toolTip": "The User Node pool OS SKU",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "Ubuntu",
+                                        "value": "Ubuntu"
+                                    },
+                                    {
+                                        "label": "Windows2019",
+                                        "value": "Windows2019"
+                                    },
+                                    {
+                                        "label": "Windows2022",
+                                        "value": "Windows2022"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "automatedDeployment",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Automated Deployment",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "If automated deployment, for the 3 automated user assignments, set Principal Type on each to \"ServicePrincipal\" rarter than \"User\"",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "adminPrincipalId",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Admin Principal Id",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "The principal ID to assign the AKS admin role.",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "fluxGitOpsAddon",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Flux Git Ops Addon",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "daprAddon",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Dapr Addon",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Add the Dapr extension",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "daprAddonHA",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Dapr Addon HA",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable high availability (HA) mode for the Dapr control plane",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "AksDiagCategories",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Aks Diag Categories",
+                            "subLabel": "",
+                            "defaultValue": "[[\"cluster-autoscaler\",\"kube-controller-manager\",\"kube-audit-admin\",\"guard\"]",
+                            "toolTip": "Diagnostic categories to log",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "enableSysLog",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Enable Sys Log",
+                            "subLabel": "",
+                            "defaultValue": "false",
+                            "toolTip": "Enable SysLogs and send to log analytics",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "createAksMetricAlerts",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Create Aks Metric Alerts",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Enable Metric Alerts",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "AksMetricAlertMetricFrequencyModel",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Aks Metric Alert Metric Frequency Model",
+                            "subLabel": "",
+                            "defaultValue": "Long",
+                            "toolTip": "Which Metric polling frequency model to use",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "Short",
+                                        "value": "Short"
+                                    },
+                                    {
+                                        "label": "Long",
+                                        "value": "Long"
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "retentionInDays",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Retention In Days",
+                            "subLabel": "",
+                            "defaultValue": "30",
+                            "toolTip": "The Log Analytics retention period",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "logDataCap",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Log Data Cap",
+                            "subLabel": "",
+                            "defaultValue": "2",
+                            "toolTip": "The Log Analytics daily data cap (GB) (0=no limit)",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": false
+                        },
+                        {
+                            "name": "createEventGrid",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Create Event Grid",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Create an Event Grid System Topic for AKS events",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "enableTelemetry",
+                            "type": "Microsoft.Common.DropDown",
+                            "label": "Enable Telemetry",
+                            "subLabel": "",
+                            "defaultValue": "true",
+                            "toolTip": "Enable usage and telemetry feedback to Microsoft.",
+                            "constraints": {
+                                "required": false,
+                                "allowedValues": [
+                                    {
+                                        "label": "true",
+                                        "value": true
+                                    },
+                                    {
+                                        "label": "false",
+                                        "value": false
+                                    }
+                                ],
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "outputs": {
+            "parameters": {
+                "location": "[steps('basics').location]",
+                "resourceName": "[steps('basics').resourceName]",
+                "custom_vnet": "[steps('basics').custom_vnet]",
+                "byoAKSSubnetId": "[steps('basics').byoAKSSubnetId]",
+                "byoAKSPodSubnetId": "[steps('basics').byoAKSPodSubnetId]",
+                "byoAGWSubnetId": "[steps('basics').byoAGWSubnetId]",
+                "byoUaiName": "[steps('basics').byoUaiName]",
+                "vnetAddressPrefix": "[steps('basics').vnetAddressPrefix]",
+                "vnetAksSubnetAddressPrefix": "[steps('basics').vnetAksSubnetAddressPrefix]",
+                "vnetAppGatewaySubnetAddressPrefix": "[steps('basics').vnetAppGatewaySubnetAddressPrefix]",
+                "acrAgentPoolSubnetAddressPrefix": "[steps('basics').acrAgentPoolSubnetAddressPrefix]",
+                "bastionSubnetAddressPrefix": "[steps('basics').bastionSubnetAddressPrefix]",
+                "privateLinkSubnetAddressPrefix": "[steps('basics').privateLinkSubnetAddressPrefix]",
+                "vnetFirewallSubnetAddressPrefix": "[steps('basics').vnetFirewallSubnetAddressPrefix]",
+                "vnetFirewallManagementSubnetAddressPrefix": "[steps('basics').vnetFirewallManagementSubnetAddressPrefix]",
+                "privateLinks": "[steps('basics').privateLinks]",
+                "acrPrivatePool": "[steps('basics').acrPrivatePool]",
+                "bastion": "[steps('basics').bastion]",
+                "CreateNetworkSecurityGroups": "[steps('basics').CreateNetworkSecurityGroups]",
+                "CreateNetworkSecurityGroupFlowLogs": "[steps('basics').CreateNetworkSecurityGroupFlowLogs]",
+                "dnsZoneId": "[steps('basics').dnsZoneId]",
+                "keyVaultCreate": "[steps('basics').keyVaultCreate]",
+                "keyVaultSoftDelete": "[steps('basics').keyVaultSoftDelete]",
+                "keyVaultPurgeProtection": "[steps('basics').keyVaultPurgeProtection]",
+                "keyVaultIPAllowlist": "[steps('basics').keyVaultIPAllowlist]",
+                "keyVaultAksCSI": "[steps('basics').keyVaultAksCSI]",
+                "keyVaultAksCSIPollInterval": "[steps('basics').keyVaultAksCSIPollInterval]",
+                "keyVaultOfficerRolePrincipalId": "[steps('basics').keyVaultOfficerRolePrincipalId]",
+                "keyVaultKmsCreate": "[steps('basics').keyVaultKmsCreate]",
+                "keyVaultKmsByoKeyId": "[steps('basics').keyVaultKmsByoKeyId]",
+                "keyVaultKmsByoRG": "[steps('basics').keyVaultKmsByoRG]",
+                "keyVaultKmsOfficerRolePrincipalId": "[steps('basics').keyVaultKmsOfficerRolePrincipalId]",
+                "registries_sku": "[steps('basics').registries_sku]",
+                "enableACRTrustPolicy": "[steps('basics').enableACRTrustPolicy]",
+                "acrUntaggedRetentionPolicyEnabled": "[steps('basics').acrUntaggedRetentionPolicyEnabled]",
+                "acrUntaggedRetentionPolicy": "[steps('basics').acrUntaggedRetentionPolicy]",
+                "acrPushRolePrincipalId": "[steps('basics').acrPushRolePrincipalId]",
+                "imageNames": "[steps('basics').imageNames]",
+                "azureFirewalls": "[steps('basics').azureFirewalls]",
+                "certManagerFW": "[steps('basics').certManagerFW]",
+                "azureFirewallSku": "[steps('basics').azureFirewallSku]",
+                "ingressApplicationGateway": "[steps('basics').ingressApplicationGateway]",
+                "appGWcount": "[steps('basics').appGWcount]",
+                "appGWmaxCount": "[steps('basics').appGWmaxCount]",
+                "privateIpApplicationGateway": "[steps('basics').privateIpApplicationGateway]",
+                "appgwKVIntegration": "[steps('basics').appgwKVIntegration]",
+                "appGWsku": "[steps('basics').appGWsku]",
+                "appGWenableFirewall": "[steps('basics').appGWenableFirewall]",
+                "appGwFirewallMode": "[steps('basics').appGwFirewallMode]",
+                "dnsPrefix": "[steps('basics').dnsPrefix]",
+                "kubernetesVersion": "[steps('basics').kubernetesVersion]",
+                "enable_aad": "[steps('basics').enable_aad]",
+                "aad_tenant_id": "[steps('basics').aad_tenant_id]",
+                "omsagent": "[steps('basics').omsagent]",
+                "containerLogsV2BasicLogs": "[steps('basics').containerLogsV2BasicLogs]",
+                "enableAzureRBAC": "[steps('basics').enableAzureRBAC]",
+                "kedaAddon": "[steps('basics').kedaAddon]",
+                "openServiceMeshAddon": "[steps('basics').openServiceMeshAddon]",
+                "sgxPlugin": "[steps('basics').sgxPlugin]",
+                "blobCSIDriver": "[steps('basics').blobCSIDriver]",
+                "fileCSIDriver": "[steps('basics').fileCSIDriver]",
+                "diskCSIDriver": "[steps('basics').diskCSIDriver]",
+                "upgradeChannel": "[steps('basics').upgradeChannel]",
+                "osDiskType": "[steps('basics').osDiskType]",
+                "agentVMSize": "[steps('basics').agentVMSize]",
+                "osDiskSizeGB": "[steps('basics').osDiskSizeGB]",
+                "agentCount": "[steps('basics').agentCount]",
+                "agentCountMax": "[steps('basics').agentCountMax]",
+                "nodePoolName": "[steps('basics').nodePoolName]",
+                "cniDynamicIpAllocation": "[steps('basics').cniDynamicIpAllocation]",
+                "maxPods": "[steps('basics').maxPods]",
+                "networkPlugin": "[steps('basics').networkPlugin]",
+                "networkPluginMode": "[steps('basics').networkPluginMode]",
+                "ebpfDataplane": "[steps('basics').ebpfDataplane]",
+                "networkPolicy": "[steps('basics').networkPolicy]",
+                "azurepolicy": "[steps('basics').azurepolicy]",
+                "azurePolicyInitiative": "[steps('basics').azurePolicyInitiative]",
+                "authorizedIPRanges": "[steps('basics').authorizedIPRanges]",
+                "enablePrivateCluster": "[steps('basics').enablePrivateCluster]",
+                "privateClusterDnsMethod": "[steps('basics').privateClusterDnsMethod]",
+                "dnsApiPrivateZoneId": "[steps('basics').dnsApiPrivateZoneId]",
+                "availabilityZones": "[steps('basics').availabilityZones]",
+                "AksDisableLocalAccounts": "[steps('basics').AksDisableLocalAccounts]",
+                "AksPaidSkuForSLA": "[steps('basics').AksPaidSkuForSLA]",
+                "podCidr": "[steps('basics').podCidr]",
+                "serviceCidr": "[steps('basics').serviceCidr]",
+                "dnsServiceIP": "[steps('basics').dnsServiceIP]",
+                "dockerBridgeCidr": "[steps('basics').dockerBridgeCidr]",
+                "defenderForContainers": "[steps('basics').defenderForContainers]",
+                "JustUseSystemPool": "[steps('basics').JustUseSystemPool]",
+                "SystemPoolType": "[steps('basics').SystemPoolType]",
+                "SystemPoolCustomPreset": "[steps('basics').SystemPoolCustomPreset]",
+                "AutoscaleProfile": "[steps('basics').AutoscaleProfile]",
+                "aksOutboundTrafficType": "[steps('basics').aksOutboundTrafficType]",
+                "createNatGateway": "[steps('basics').createNatGateway]",
+                "natGwIpCount": "[steps('basics').natGwIpCount]",
+                "natGwIdleTimeout": "[steps('basics').natGwIdleTimeout]",
+                "oidcIssuer": "[steps('basics').oidcIssuer]",
+                "workloadIdentity": "[steps('basics').workloadIdentity]",
+                "enableNodePublicIP": "[steps('basics').enableNodePublicIP]",
+                "warIngressNginx": "[steps('basics').warIngressNginx]",
+                "managedNodeResourceGroup": "[steps('basics').managedNodeResourceGroup]",
+                "restrictionLevelNodeResourceGroup": "[steps('basics').restrictionLevelNodeResourceGroup]",
+                "osType": "[steps('basics').osType]",
+                "osSKU": "[steps('basics').osSKU]",
+                "automatedDeployment": "[steps('basics').automatedDeployment]",
+                "adminPrincipalId": "[steps('basics').adminPrincipalId]",
+                "fluxGitOpsAddon": "[steps('basics').fluxGitOpsAddon]",
+                "daprAddon": "[steps('basics').daprAddon]",
+                "daprAddonHA": "[steps('basics').daprAddonHA]",
+                "AksDiagCategories": "[steps('basics').AksDiagCategories]",
+                "enableSysLog": "[steps('basics').enableSysLog]",
+                "createAksMetricAlerts": "[steps('basics').createAksMetricAlerts]",
+                "AksMetricAlertMetricFrequencyModel": "[steps('basics').AksMetricAlertMetricFrequencyModel]",
+                "retentionInDays": "[steps('basics').retentionInDays]",
+                "logDataCap": "[steps('basics').logDataCap]",
+                "createEventGrid": "[steps('basics').createEventGrid]",
+                "enableTelemetry": "[steps('basics').enableTelemetry]"
+            },
+            "kind": "ResourceGroup",
+            "location": "[steps('basics').resourceScope.location.name]",
+            "resourceGroupId": "[steps('basics').resourceScope.resourceGroup.id]"
+        }
+    }
+}
