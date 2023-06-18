@@ -48,3 +48,23 @@ PhoneCalls
 | sort by calls
 | take 100
 ```
+
+## 4
+
+```kql
+StolenCars | take 50
+
+let lastKnownLocationStolen=CarsTraffic
+| summarize arg_max(Timestamp, Ave, Street) by VIN
+| join StolenCars on VIN;
+let CarsLastLog=CarsTraffic
+| summarize arg_max(Timestamp, Ave, Street) by VIN;
+let CarsFirstLog=CarsTraffic
+| summarize arg_min(Timestamp, Ave, Street) by VIN;
+lastKnownLocationStolen
+| join CarsFirstLog on Ave, Street 
+| where Timestamp1 > Timestamp
+| extend TimeStampDiffHours=datetime_diff('hour',Timestamp1,Timestamp)
+| where TimeStampDiffHours <=2
+| join CarsLastLog on $left.VIN2==$right.VIN
+```
