@@ -1,5 +1,6 @@
+cd C:\ReposGitHub\Snippets\Hue
 
-$hueBridgeLocalIpAddress="192.168.1.1"
+$hueBridgeLocalIpAddress="192.168.1.64"
 
 $baseUrl="http://$hueBridgeLocalIpAddress"
 
@@ -17,6 +18,12 @@ $apiUser = get-content localBridge.json | ConvertFrom-Json | Select-Object -Expa
 
 #This is how you turn a light on
 $bodyLightOn = '{"on":true}'
+$lightNumber=1
+$authApiUrl="$apiBaseUrl/$apiUser/lights/$lightNumber/state/"
+Invoke-RestMethod -Method PUT -Uri $authApiUrl -ContentType "application/json" -Body $bodyLightOn;
+
+#This is how you turn the light up to 100% brightness
+$bodyLightOn = '{"on":true,"bri":254}'
 $lightNumber=1
 $authApiUrl="$apiBaseUrl/$apiUser/lights/$lightNumber/state/"
 Invoke-RestMethod -Method PUT -Uri $authApiUrl -ContentType "application/json" -Body $bodyLightOn;
