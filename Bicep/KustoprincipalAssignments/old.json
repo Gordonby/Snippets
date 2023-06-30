@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clusterName": {
+            "type": "string"
+        },
+        "databaseName": {
+            "type": "string"
+        },
+        "aadTenantId": {
+            "type": "string"
+        },
+        "databasePrincipalAssignments": {
+            "type": "array"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "copy": {
+                "name": "dbPrincipalResources",
+                "count": "[length(parameters('databasePrincipalAssignments'))]"
+            },
+            "type": "Microsoft.Kusto/clusters/databases/principalAssignments",
+            "apiVersion": "2022-02-01",
+            "name": "[format('{0}/{1}/{2}', parameters('clusterName'), parameters('databaseName'), format('{0}_{1}_{2}_{3}', parameters('databasePrincipalAssignments')[copyIndex()].principalId, parameters('databasePrincipalAssignments')[copyIndex()].principalType, parameters('databasePrincipalAssignments')[copyIndex()].role, copyIndex()))]",
+            "properties": {
+                "principalId": "[parameters('databasePrincipalAssignments')[copyIndex()].principalId]",
+                "role": "[parameters('databasePrincipalAssignments')[copyIndex()].role]",
+                "tenantId": "[parameters('aadTenantId')]",
+                "principalType": "[parameters('databasePrincipalAssignments')[copyIndex()].principalType]"
+            }
+        }
+    ]
+}
