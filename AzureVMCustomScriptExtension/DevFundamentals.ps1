@@ -34,6 +34,7 @@ choco install gnupg -y
 choco install jq -y
 choco install servicebusexplorer -y
 choco install vscode -y
+choco install vscode-insiders -y
 
 #IaC
 choco install terraform -y
