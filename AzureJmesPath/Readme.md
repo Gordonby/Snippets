@@ -1,5 +1,11 @@
 # Jmespath sample snippets
 
+## Azure Functions
+
+```bash
+az webapp deployment list-publishing-profiles -g innerloop -n functionName --query "[?publishMethod == 'MSDeploy'].{userName:userName,userPWD:userPWD,publishUrl:publishUrl}"
+```
+
 ## Azure locations
 
 ```bash
