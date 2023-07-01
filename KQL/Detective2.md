@@ -68,3 +68,25 @@ lastKnownLocationStolen
 | where TimeStampDiffHours <=2
 | join CarsLastLog on $left.VIN2==$right.VIN
 ```
+
+## 5
+
+```kql
+IpInfo
+| take 10
+
+NetworkMetrics | take 10
+
+NetworkMetrics | 
+summarize TotalNewConnections=sum(NewConnections), sum(BytesReceived), sum(BytesSent) by ClientIP |
+evaluate ipv4_lookup(IpInfo, ClientIP, IpCidr) |
+summarize sum(sum_BytesReceived), sum(sum_BytesSent), sum(TotalNewConnections) by Info |
+order by sum_TotalNewConnections
+
+
+NetworkMetrics | 
+where NewConnections==1 |
+summarize TotalBytesReceived=sum(BytesReceived) by ClientIP |
+evaluate ipv4_lookup(IpInfo, ClientIP, IpCidr) |
+order by TotalBytesReceived desc
+```
