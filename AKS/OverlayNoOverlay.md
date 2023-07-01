@@ -23,3 +23,23 @@ az deployment group create -g innerloop  --template-uri https://github.com/Azure
 
 ## Validating cluster config
 
+![image](https://github.com/Gordonby/Snippets/assets/17914476/92a2451c-3b30-432a-bd3e-3ceeb001243c)
+
+## Disabling Overlay config
+
+```bicep
+az deployment group create -g innerloop  --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.10.0/main.json --parameters \
+        resourceName=nooverlay \
+        agentCount=1 \
+        JustUseSystemPool=true \
+        osDiskType=Managed \
+        osDiskSizeGB=32 \
+        custom_vnet=true \
+        automationAccountScheduledStartStop=Weekday
+```
+
+## Checking if it works
+
+It doesn't
+
+![image](https://github.com/Gordonby/Snippets/assets/17914476/17982f45-581f-4838-a364-eac6883ad8f5)
