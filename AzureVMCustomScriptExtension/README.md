@@ -33,7 +33,8 @@ If ((Get-ExecutionPolicy) -ne 'RemoteSigned') {Set-ExecutionPolicy -ExecutionPol
 Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/PowerShellProfile.ps1 -UseBasicParsing | Invoke-Expression
 
 # Setup VSCode extensions
-Invoke-WebRequest  https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/VsCodeExtensions.ps1 -UseBasicParsing | Invoke-Expression
+# Invoke-WebRequest  https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/VsCodeExtensions.ps1 -UseBasicParsing | Invoke-Expression
+# If you sign into VSCode and `Sync Settings`, there's no need to run this ps1 script file.
 
 # Windows Subsystem for linux
 Invoke-WebRequest https://raw.githubusercontent.com/Gordonby/Snippets/master/AzureVMCustomScriptExtension/wsl.ps1 -UseBasicParsing | Invoke-Expression
