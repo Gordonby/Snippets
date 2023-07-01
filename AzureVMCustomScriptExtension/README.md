@@ -56,6 +56,7 @@ sudo apt update
 1. Open GitHub, Sign in, Follow Configure Git prompts
 1. Install Kusto Explorer: https://aka.ms/ke
 1. Install brm : `dotnet tool install --global Azure.Bicep.RegistryModuleTool`
+1. Configure lightshot screengrab key to ctrl + prntscrn
 
 #### Hardware specific
 1. Download and install the Microsoft Mouse and Keyboard Center software (MS Precision mouse) https://go.microsoft.com/fwlink/?linkid=849754
