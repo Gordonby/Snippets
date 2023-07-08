@@ -2,4 +2,4 @@ If ((Get-ExecutionPolicy) -ne 'RemoteSigned') {Set-ExecutionPolicy -ExecutionPol
 iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 
 choco install dotnet -y
-choco install dotnet-6.0-sdk -y
+choco install dotnet-7.0-sdk -y
