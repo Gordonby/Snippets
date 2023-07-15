@@ -3,15 +3,15 @@
 SUB="PseudoProd"
 RG="MinecraftBedrock"
 LOC="uksouth"
-STOR="minecraftfilespremium"
-SHARE="bworldaks10"
-CONT="bworldaks10"
+STOR="minecraftdataby"
+SHARE="minecraftdata"
+CONT="aci-minecraftby"
 WORLD="byers-ultimate-world"
 ACRNAME="gbpseudoprod"
 
 az account set -s $SUB
 
-KEY=$(az storage account keys list -n minecraftfilespremium -g MinecraftBedrock -o tsv --query '[0].value')
+KEY=$(az storage account keys list -n $STOR -g $RG -o tsv --query '[0].value')
 
 az container create \
     --resource-group $RG \
