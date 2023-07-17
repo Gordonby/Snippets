@@ -90,3 +90,33 @@ summarize TotalBytesReceived=sum(BytesReceived) by ClientIP |
 evaluate ipv4_lookup(IpInfo, ClientIP, IpCidr) |
 order by TotalBytesReceived desc
 ```
+
+## 6
+
+```kql
+let spikeyHosts=StorageArchiveLogs
+    | parse EventText with "Read blob transaction: '" BlobURI "' read access (" ReadCount:long " reads) were detected on the origin"
+    | extend Host = tostring(parse_url(BlobURI).Host) 
+    | summarize sum(ReadCount) by Host, Day=bin(Timestamp, 1d)
+    | where sum_ReadCount > 1000 //spikes
+    | distinct Host;
+let totalBlobReads=StorageArchiveLogs
+    | parse EventText with "Read blob transaction: '" BlobURI "' read access (" ReadCount:long " reads) were detected on the origin"
+    | summarize BlobReads=sum(ReadCount) by BlobURI;
+let CreatedBlobs=StorageArchiveLogs
+    | parse EventText with TransactionType " blob transaction: '" BlobURI "' backup is created on " bkp
+    | extend Host = tostring(parse_url(BlobURI).Host) 
+    | where Host in (spikeyHosts)
+    | where TransactionType == 'Create'
+    | project CreateDate=Timestamp, BlobURI, bkp;
+StorageArchiveLogs
+    | parse EventText with TransactionType " blob transaction: '" BlobURI "'" *
+    | extend Host = tostring(parse_url(BlobURI).Host) 
+    | where TransactionType == 'Delete'
+    | join CreatedBlobs on BlobURI
+    | join kind=leftouter totalBlobReads on BlobURI //leftouter as maybe zero read transactions
+    | project Life=datetime_diff('minute',Timestamp,CreateDate), BlobReads, BlobURI, Host, CreateDate,bkp
+    | where Life < 500 //500 minutes from create to delete, not sure why i chose 500 :D
+    | sort by BlobReads asc, Life asc
+    | take 20 //top 20 culprits
+```
