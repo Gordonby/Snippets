@@ -3,6 +3,13 @@ sudo apt update && sudo apt upgrade
 #Install Azure CLI
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
+#Install PowerShell
+sudo dpkg -i powershell-lts_7.3.6-1.deb_amd64.deb
+sudo apt-get install -f
+
+#Install PowerShell Modules
+Install-Module -Name Az -Repository PSGallery -Force
+
 #Install stuff with snap
 sudo apt install snapd
 sudo snap install powershell --classic
