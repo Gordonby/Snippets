@@ -159,5 +159,17 @@ let EscapePlanes=Flights
 | where Timestamp between(datetime(2023-08-11T03:30:00Z) .. datetime(2023-08-11T05:30:00Z))
 | where onground==true
 | distinct callsign;
-EscapePlanes
+Flights
+| where Timestamp > datetime(2023-08-11T05:30:00Z)
+| where callsign in (EscapePlanes)
+| where onground==true
+| order by callsign
+//| summarize planeLanded = arg_max(Timestamp, *) by VIN
+
+
+Airports
+| where municipality == 'London'
+| where iso_region == "GB-ENG"
+| extend DistanceInMeters=round(geo_distance_2points(lon, lat, -0.158474, 51.523769))
+| summarize arg_min(DistanceInMeters, Name, Type)
 ```
