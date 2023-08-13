@@ -134,3 +134,30 @@ NationalGalleryArt
 | where ObjectWord=='41701/11' or ObjectWord=='131736/0'
 // Can you find WHERE this word is located in the MUSEUM data?
 ```
+
+## 8 
+
+```kql
+Flights
+| take 5
+
+Airports
+| take 5
+
+//Doha Airports
+Airports 
+| where municipality  == 'Doha'
+
+//Potential Doha planes used to escape
+let PointsNearBy = (Lon1:double, Lat1:double, Lon2:double, Lat2:double, s2_precision:int)
+{
+    geo_point_to_s2cell(Lon1, Lat1, s2_precision) ==
+    geo_point_to_s2cell(Lon2, Lat2, s2_precision) 
+};
+let EscapePlanes=Flights
+| where PointsNearBy(lon, lat, 51.608056, 25.273056, s2_precision = 13) // Level: 13 is ~1km
+| where Timestamp between(datetime(2023-08-11T03:30:00Z) .. datetime(2023-08-11T05:30:00Z))
+| where onground==true
+| distinct callsign;
+EscapePlanes
+```
