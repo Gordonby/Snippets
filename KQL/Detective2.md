@@ -120,3 +120,16 @@ StorageArchiveLogs
     | sort by BlobReads asc, Life asc
     | take 20 //top 20 culprits
 ```
+
+## 7
+
+```kql
+// Hint1 : Can you find 41701/11 this word is located in the 131736/0 data?
+// First part is the ObjectId, and the second relates to a field... Could be one of the many text fields but only ProvenanceText is not null for both books and has 11 words
+NationalGalleryArt
+| where ObjectId==41701 or ObjectId==131736
+| project ObjectId, Word = extract_all(@'(\w+)', ProvenanceText)
+| mv-expand with_itemindex=index Word
+| extend ObjectWord = strcat(tostring(ObjectId), '/', index)
+| where ObjectWord=='41701/11' or ObjectWord=='131736/0'
+```
