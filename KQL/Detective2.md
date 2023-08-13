@@ -132,4 +132,5 @@ NationalGalleryArt
 | mv-expand with_itemindex=index Word
 | extend ObjectWord = strcat(tostring(ObjectId), '/', index)
 | where ObjectWord=='41701/11' or ObjectWord=='131736/0'
+// Can you find WHERE this word is located in the MUSEUM data?
 ```
