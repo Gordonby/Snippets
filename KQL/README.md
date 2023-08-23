@@ -1,3 +1,23 @@
+## Azure Activity - Top change Authors 
+
+```kql
+let adu = datatable(AadResolvedName:string, objid:string)
+[
+ "Azure Security RP","2d9f1d0a-c6db-430a-a031-6b5dce2c5382",
+ "Microsoft Defender", "3d9f1d0a-c6db-430a-a031-6b5dce2c5382",
+ "Windows 365", "4d9f1d0a-c6db-430a-a031-6b5dce2c5382",
+];
+AzureActivity
+| where OperationNameValue endswith_cs "/WRITE"
+| where Level == 'Information'
+| where ActivityStatusValue == 'Accept'
+| join kind=leftouter adu on $left.Caller==$right.objid
+| distinct CorrelationId, AADUser=iif(AadResolvedName=="", Caller, AadResolvedName), CallerIpAddress, SubscriptionId, OperationNameValue
+| summarize count() by AADUser
+| sort by count_ desc
+| take 20
+```
+
 ## Activity Logs - Deployments, distinct resources created. (per user/day)
 
 ```kql
