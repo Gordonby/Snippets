@@ -1,3 +1,14 @@
+## Kubernetes clusters - all clusters, nodes used
+
+```kql
+resources
+| where type == "microsoft.containerservice/managedclusters"
+| project name, location, K8SVersion=properties.kubernetesVersion, NodePools=properties.agentPoolProfiles
+| mv-expand NodePools
+| project name, location, VmSku=tostring(NodePools.vmSize), OsDiskSize=tostring(NodePools.osDiskSizeGB), OsDiskType=tostring(NodePools.osDiskType), PoolMode=tostring(NodePools.mode), Instances=toint(NodePools.['count'])
+| summarize sum(Instances) by VmSku
+```
+
 ## Azure Activity - Top change Authors 
 
 ```kql
