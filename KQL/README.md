@@ -1,3 +1,17 @@
+# Useful KQL snippets
+
+## VM RDP connections
+
+Azure Monitor Virtual Machine Insights logging to a Log Analytics Workspace puts the relevant data into `VMConnection`.
+
+```kql
+VMConnection
+| where Direction == "inbound"
+| where Protocol == "tcp"
+| where DestinationPort == 3389
+| summarize FirstEvent = min(TimeGenerated), LastEvent = max(TimeGenerated),NumberOfConnections = count() by Computer, RemoteIp
+```
+
 ## Kubernetes clusters - all clusters, nodes used
 
 ```kql
