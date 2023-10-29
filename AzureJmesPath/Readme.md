@@ -1,5 +1,23 @@
 # Jmespath sample snippets
 
+## Networks
+
+```bash
+ az network vnet list --query "[].{name:name, location:location, addressPrefixCount:length(addressSpace.addressPrefixes), firstAddressPrefix:addressSpace.addressPrefixes[0], peerings:length(virtualNetworkPeerings)}"
+```
+
+```output
+[
+  {
+    "addressPrefixCount": 1,
+    "firstAddressPrefix": "10.0.0.0/22",
+    "location": "eastus",
+    "name": "vnet-gordcorp-hub-01",
+    "peerings": 2
+  },
+```
+      
+
 ## Azure Functions
 
 ```bash
