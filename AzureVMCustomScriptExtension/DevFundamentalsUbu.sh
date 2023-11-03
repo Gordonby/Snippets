@@ -1,5 +1,7 @@
 sudo apt update && sudo apt upgrade
 
+sudo apt install curl
+
 #Install Azure CLI
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
