@@ -6,8 +6,9 @@ sudo apt install curl
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
 #Install PowerShell
-sudo dpkg -i powershell-lts_7.3.6-1.deb_amd64.deb
-sudo apt-get install -f
+sudo apt-get install -y wget apt-transport-https software-properties-common
+source /etc/os-release
+wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
 
 #Install PowerShell Modules
 Install-Module -Name Az -Repository PSGallery -Force
