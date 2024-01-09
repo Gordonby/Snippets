@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.ServiceFabric.Services" Version="3.1.274" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.0-rc1-final" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="4.0.4.403061554" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.7.0" />
     <PackageReference Include="WindowsAzure.ServiceBus" Version="4.2.2-preview" />
   </ItemGroup>
   <ItemGroup>
