@@ -168,8 +168,45 @@ Flights
 
 
 Airports
-| where municipality == 'London'
-| where iso_region == "GB-ENG"
-| extend DistanceInMeters=round(geo_distance_2points(lon, lat, -0.158474, 51.523769))
-| summarize arg_min(DistanceInMeters, Name, Type)
+| where municipality == "Doha"
+| extend geos2=geo_point_to_s2cell(lon, lat)
+
+Flights
+| where Timestamp between (datetime(2023-08-11 3:30) .. datetime(2023-08-11 5:30))
+| where onground == true
+| extend geos2=geo_point_to_s2cell(lon, lat)
+| where geos2 == "3e45c8c" //Doha
+| distinct callsign
+
+let AboutToTakeOff = Flights
+| where Timestamp between (datetime(2023-08-11 3:30) .. datetime(2023-08-11 5:30))
+| where onground == true //on ground so he can board at airport
+| extend geos2=geo_point_to_s2cell(lon, lat)
+| where geos2 == "3e45c8c" //Doha
+| distinct callsign;
+Flights
+| extend geos2=geo_point_to_s2cell(lon, lat)
+| where callsign in (AboutToTakeOff)
+| where Timestamp > datetime(2023-08-11 05:30)
+| join kind=inner (
+    Flights
+        | extend geos2=geo_point_to_s2cell(lon, lat)
+        ) on geos2, Timestamp
+| where callsign <> callsign1 //this whole join and difference makes a weird fuzzy dataset to try to join to other aircraft.. getting a bit lost on how to match otherwise. match with other planes at the same place and time
+| extend AltitudeDiff = geoaltitude - geoaltitude1
+| where round(heading - heading1,0) == 0 //planes are pointing in the same direction, to a degree of precision anyway ()
+| where round(velocity - velocity1,0) == 0 // planes are speed matched
+| where AltitudeDiff < 2500 //planes are close
+| project callsign, callsign1
+
+Flights
+| where callsign in ("OJIT393" , "HFID97")
+| extend geos2=geo_point_to_s2cell(lon, lat)
+| where onground == true
+| summarize min(Timestamp) by callsign, geos2
+
+Airports
+| extend geos2=geo_point_to_s2cell(lon, lat)
+| where geos2=="486711c" or geos2 == "12a49e4"
+| distinct Name, municipality
 ```
