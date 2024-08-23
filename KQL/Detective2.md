@@ -210,3 +210,120 @@ Airports
 | where geos2=="486711c" or geos2 == "12a49e4"
 | distinct Name, municipality
 ```
+
+## 9
+
+some weird suduko bullshit going on here :D.
+
+```kql
+// Secret Message intercepted    
+let city_code=datatable(c1:long,c2:long,c3:long,c4:long)
+[1, 14, 14,  4, 
+ 11, 7, 6,  9,
+ 8, 10, 10, 5,
+ 13, 2, 3, 15];  
+print Key=SecretCodeToKey(city_code), Message=
+@'0SOHpSdTgidfqXFOYeIOjktOjXFcjktPjwzHgSABgsctZknJZKfEjBAygipOgS\\pBNEjknCVedTpSdyjk7EZKFHVSOa8i7E8SOCZedfgSOTgSA'
+@'tYPFaYB4TjXFHZ[\OVkNT17mzgSv\VPFHjknHjKFnVedygSvuVBvOYBxDgS4HgiztVkAyYyFujPFupwgEpiztjKFmVaIOVaImV[nHgS\\pBNEYB'
+@'d\Z[\OjXFb8SNEjk4yYyFujPFb8SNEKbIFqEbo7adbgSjOZwgEVBAbqXFc6KFDVeO\VXFCV[tyZkIOYyfEjBAygipOgiv5Zk2DgSnupXFeZwjOY'
+@'PFBYBAcgSAtYPFfZwI5gKFzjPF\VaOb8SOTjyfEp[NEY[\\VSfE8knbjknH8kjngSAtYPFOjBjuYaIHgidTpSODgiI5jKFqIssEZeztVkzDjwME'
+@'ZBdTjk4b8XFupwgEjBdOpXxvXJJEZ[4TVBAbgiv5ZwzOgiIuVyFcpkv5gS4bgiI58wMEpSOcjKfEZadbgizOYe7EZwvHpwzOjXfEp[NEZwzOgiz'
+@'tVBnmVBYEVedygXzHVkAQjKFbjwvbYygDgSzupSEEjBOapwz\pSO[jk2ngS4TjXF2pkObjKFD8wIOYB4DViJT17mN8Sdngiv5Zk2DgSdxYSAHjK'
+@'Fb8SNEKbIFzeMEp[d\8[nOYevOYyF\VB7E8SdyZk2JgSObYyFOYSOCgSIup[nBZk2DqEbo17mUVeYDgS2OpXFtYyF\jSIyjwvHgiI5jKFcZwIbj'
+@'wgEV[ZEVwJEp[dDVXtPjkOTjyxEKKFtVBIOYavbZknJgiI5Zw7EpS\OYBNE8wMEZKFaYBd\pXFJjk4DgSABgSvtYBOuY[Ob6KFyjkp\YBImVBYE'
+@'VwJEY[4BjwInqPrvXJ2OpXFcjKF\YevtYBNE6kAtqXFmpXFeZwMEZk2DgSsEVk4bpSdygSABgSOcYSdCZ[4PVSNEpSOc8knaqPFUVyFJVedPpXF'
+@'c6KFCV[nTjkvb8knagSjD8kp5pXFeZwMEZkxEjw\fjwzmjknCjKFujPF\gS2mjBdb8ktOg7bodSAugSz\jXFc6KFDpkpaZkpOgSj\8k2OjXFbVy'
+@'FlV[OTgStOgSATgiI58wMEpS\y8k2D8knagSmupwzTjwJ\g15m175vXJztpXFBjk4ygSnupXfEVwJEjazmjknJYyfEVSd\pBOTjyFb8SOTjeMEp'
+@'SREZ[\\VBvOgSOHgSnupXFc6KFHpiODjKxEKKF5ZwjOgS4HY[dcZB2OjXF\giIOZkbEV[ZEVSAnZkfEZBAJ6kptZwzJYyfvXap5VyFcVejOgipm'
+@'pSEEVkNEVSOQjKFOVidH8wjOgiF5ZknbV[tHqXFOVavtYBOTjyFc6KFmVajmVBvmZBOD8wInqPFFpXF\VaJEj[O[jkxEpSOcjKfEZw7EVSd\Ye7'
+@'EpipugSABgiI5jkbEjSOHZezOjwID67boY[\\jSAegStngSd[jwzngStupBNDgSd[jkxEjidy8knagStngSdx8SODZwz\pSOTjyFypknHgiI5YB'
+@'Atj[EEpS\OgSvmpiJTg4Iypk2nqXFzgSjOjkfEpknbVedC8S4PVSNTgs4TjXFDjw7EVkNEpSdDVXFnVeND17mb8SOHgSvmpiJE8wMEZKF58kIJj'
+@'kxEj[dcgKFzpXFujBjOYaMEZkxEZkztVBI\VBvOgSABgSt\YajOVSAtYyFHYSAbYyFe8SdyjKFuVBNEZ[4TgSOTjidDj[NE8kxEZKFyjkjyjwv5'
+@'8knagiv5ZkcOgS4BpSdy17mCV[n2pkdy8knagSsEZazOZwI5pS4Q8knag1sfKyFypkxTgsObgSOHgSsEYSdyjBdCpXFPVSdTjXFujPFc8wvC8SO'
+@'OjPF\VB7EYBdlpwjOVB4b8kATqXF\gSIOVSOa8iIBpkfEZ[ATZ[ACpSOuVPFb8S4bgSjtjk2HgStngivbYBdTjeI5qEbo17m0VyfEVwJEjBdDVS'
+@'AegizujedOYyfEVSdbgidHgScOjwrEVedygSdnjwMEjBOxjk7EV[xEpS\OgiI\YBpOpXxEKKFe8k2DgizOpBd\VXFcVezOgSIOpS4mViMEZkzup'
+@'w7EVedygiFDZknHgSOTgSItjKFb8ktOqPrvXOFyjwF\YBNE6kAtYavOVijOYyFbVyFe8wITjwvHgiI5jKFHYSdCpS4Cpk2\YPFJVepTjB4DVXFu'
+@'jPFb8SNEKbIFqXF\YyFejKFyjk2OVaIDjwvHViJEjizmVSfE8knbVyFmpiMEZ[AyjKF\pXFBpk2DgivfjkdJg7bogrboKeznYiIu'
+| invoke Dekrypt()
+| project Result
+```
+
+## 11
+
+```kql
+KuandaLogs
+| take 50
+
+KuandaLogs
+| summarize count() by Message
+
+KuandaLogs
+| extend messagewords = split(Message, ' ')
+| extend firstword = tostring(messagewords[0])
+| summarize count(), take_any(Message) by firstword //take_any Arbitrarily chooses one record for each group
+//Operation	343178
+//User	662084
+//Sending	192
+
+//Dekrypt function is bering used, but needs a user token. (DetectiveId == user)
+Dekrypt(@'3sO9bqbkbBHkbUg7bUeibs0ibs0ybB09bB09bLXYONkKW3zHWxGs1wm61wOca8vFYwmy13ecW3Ec1wmTpdOynfEce6K4pf9cY67cpwvsYZGkh3YTWwuoOlQKafGs1wm61wmsOIu4ONLVuZG9a8Qq1wVspdmsOIu4OlL6p6oHOIuR1wVoOIVzaduopxGRW3SFaTN=', 
+strcat_array(<active-user-encryption-tokens>, ''))
+
+//users
+KuandaLogs
+| extend messagewords = split(Message, ' ')
+| extend firstword = tostring(messagewords[0])
+| where firstword == "User"
+| summarize count() by Message
+
+//sending (Dekrypt function)
+KuandaLogs
+| extend messagewords = split(Message, ' ')
+| extend firstword = tostring(messagewords[0])
+| where firstword == "Sending"
+| summarize count() by Message
+
+//Operations
+KuandaLogs
+| parse Message with "Operation id=" startOpID " started ('" CaseStatus "'). Captured user encryption token: '" token "'."
+| parse Message with "Operation id=" completeOpID " completed: user encryption token for this operation is disposed."
+| partition hint.strategy=native by DetectiveId //Totes stole this partition bit.
+(
+    order by Timestamp asc
+    | scan with_match_id=id  declare(OperationId2Token:dynamic) with (
+        step start:
+            Message has 'User entered the system' or 
+		    Message has 'User session reset' =>
+		    OperationId2Token = dynamic({}) // Initialize
+		    ;
+		step capture: 
+		  Message has 'Captured user encryption token' or Message has "completed" => 		  
+		  OperationId2Token = 
+		      iff(Message has 'Captured user encryption token', 
+		          bag_merge(capture.OperationId2Token, bag_pack(startOpID, token)),      // If add token
+		          bag_remove_keys(capture.OperationId2Token, pack_array(completeOpID)))  // Else, invalidate token
+		  ;
+		step end:
+		 Message has 'Sending' => 
+		  OperationId2Token = capture.OperationId2Token
+		  ;
+    )
+   | order by id asc, Timestamp asc
+)
+| extend TotalKey = strcat_array(extract_all(@':\"([a-z]*)\",?', tostring(OperationId2Token)), "")
+// Parsing the encrypted message
+| parse-where Message with "Sending an encrypted message, will use Dekrypt(@'" Encrypted "', strcat_array(<active-user-encryption-tokens>, '')) for decoding."
+| project DetectiveId, Key = TotalKey, Message = Encrypted
+// Invoking to dekrypt
+| invoke Dekrypt()
+| project-reorder Result
+| extend resultWords = split(Result, ' ')
+| extend firstword = tostring(resultWords[1])
+| summarize count(), take_any(Result) by firstword
+| order by count_ desc 
+
+range answer from 0 to 2147483647 step 1
+| where bitset_count_ones(hash_many('kvcw8h26jm4hmdggn10nze', tostring(answer))) > 54
+| project answer
+| limit 1
+```
